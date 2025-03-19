@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Bin {
+  id      Int     @id @default(autoincrement())
+  name    String  @db.VarChar(256)
+  is_full Boolean @default(false)
+  items Item[]
+}
+
+model Item {
+  id     Int     @id @default(autoincrement())
+  name   String  @db.VarChar(256)
+  sold   Boolean @default(false)
+  bin   Bin @relation(fields: [bin_id], references: [id])
+  bin_id Int
+}
