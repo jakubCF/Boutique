@@ -14,6 +14,6 @@ const RouteHandler = express.Router();
 
 
 RouteHandler.use("/bins", BinsRouter);
-RouteHandler.use("items", ItemsRouter)
+RouteHandler.use("/items", ItemsRouter)
 
 export default RouteHandler;
