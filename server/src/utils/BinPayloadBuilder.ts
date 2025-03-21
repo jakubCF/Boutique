@@ -5,5 +5,6 @@ export const payloadBuilder = (
         data: BinReturnMessage["data"], 
         message: BinReturnMessage["message"],
         status_code: BinReturnMessage["status_code"],
-        errors: BinReturnMessage["errors"]
+        errors: BinReturnMessage["errors"],
+        operationComplete: BinReturnMessage["operationComplete"]
 }):BinReturnMessage => { return {...props} };

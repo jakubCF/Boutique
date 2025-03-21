@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { NextFunction, Request, RequestHandler, Response } from "express";
 import { getBin, getBins } from "../../Controllers/bins.controller";
 import { param, validationResult } from "express-validator";
 import { BinReturnMessage } from "../../utils/Interfaces/BinReturnMessage";
@@ -18,17 +18,19 @@ BinsRouter.get("/", async (_: Request, res: Response, __: NextFunction): Promise
             data: bins,
             message: "success",
             status_code: 200,
-            errors: "none"
+            errors: "none",
+            operationComplete: true
         });
     } catch (error) {
         payload = payloadBuilder({
             data: [],
             message: "failure",
             status_code: 500,
-            errors: error
+            errors: error,
+            operationComplete: false
         });
     }
-    
+
     return res.status(payload.status_code).send(payload);
 });
 
@@ -44,7 +46,8 @@ BinsRouter.get("/:id", param("id").isInt() , async (req: Request, res: Response)
                 data: bin,
                 message: "success",
                 status_code: 200,
-                errors: "none"
+                errors: "none",
+                operationComplete: true
             });
         }
         catch(error) {
@@ -52,7 +55,8 @@ BinsRouter.get("/:id", param("id").isInt() , async (req: Request, res: Response)
                 data: [],
                 message: "failure",
                 status_code: 500,
-                errors: error
+                errors: error,
+                operationComplete: false
             });
         }
     } 
@@ -61,10 +65,31 @@ BinsRouter.get("/:id", param("id").isInt() , async (req: Request, res: Response)
             data: [],
             message: "failure",
             status_code: 400,
-            errors: result.array()
+            errors: result.array(),
+            operationComplete: false
         });
     }
     return res.status(payload.status_code).send(payload);
-})
+});
+
+BinsRouter.post("/create", async (req: Request, res: Response) : Promise<any> => {
+    
+});
+
+BinsRouter.delete("/delete/:id", async (req: Request, res: Response) : Promise<any> => {
+});
+
+BinsRouter.patch("/update/:id/name/:value", async (req: Request, res: Response) : Promise<any> => {
+});
+
+BinsRouter.patch("/update/:id/is_full/:value", async (req: Request, res: Response) : Promise<any> => {
+});
+
+BinsRouter.patch("/update/:id/add_item/:item_id", async (req: Request, res: Response) : Promise<any> => {
+});
+
+BinsRouter.patch("/update/:id/remove_item/:item_id", async (req: Request, res: Response) : Promise<any> => {
+});
+
 
 export default BinsRouter
