@@ -69,3 +69,69 @@ export const updateBinName = async (id: number, name: string) => {
         throw error;
     }
 }
+
+export const updateBinIsFull = async (id: number, isFull: 1 | 0) => {
+    let validation: boolean;
+    switch(isFull) {
+        case 1:
+            validation = true;
+            break;
+        case 0:
+            validation = false;
+            break;
+        default:
+            throw new Error("Invalid value for isFull");
+            break;
+    }
+    console.log(validation);
+    try {
+        let bin = await prisma.bin.update({
+            where: { id: id },
+            data: { is_full: validation },
+            select: DEFAULT_SELECT
+        })
+        return bin;
+    } catch (error) {
+        console.log(error);
+
+        throw error;
+    }
+}
+
+export const addItemToBin = async (id: number, item_id: number) => {
+    try {
+        let bin = await prisma.bin.update({
+            where: { id: id },
+            data: {
+                items: {
+                    connect: {
+                        id: item_id
+                    }
+                }
+            },
+            select: DEFAULT_SELECT
+        })
+        return bin;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const removeItemFromBin = async (id: number, item_id: number) => {
+    try {
+        let bin = await prisma.bin.update({
+            where: { id: id },
+            data: {
+                items: {
+                    disconnect: {
+                        id: item_id
+                    }
+                }
+            },
+            select: DEFAULT_SELECT
+        })
+        return bin;
+    } catch (error) {
+        throw error;
+    }
+}

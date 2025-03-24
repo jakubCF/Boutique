@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
-import { createBin, deleteBin, getBin, getBins, updateBinName } from "../../Controllers/bins.controller";
+import { createBin, deleteBin, getBin, getBins, updateBinIsFull, updateBinName, addItemToBin } from "../../Controllers/bins.controller";
 import { param, validationResult } from "express-validator";
 import { BinReturnMessage } from "../../utils/Interfaces/BinReturnMessage";
 import { payloadBuilder } from "../../utils/BinPayloadBuilder";
@@ -9,7 +9,15 @@ const BinsRouter = express.Router();
 // Every function should have 1 return 
 // If request has 1 param, it should be invoked through req.params, more than 1 param should use the request body 
 
-BinsRouter.get("/", async (_: Request, res: Response, __: NextFunction): Promise<any> => {
+interface BinParams {
+    id: number,
+    name ?: string,
+    value ?: string,
+    item_id ?: number,
+    bool ?: 1 | 0
+}
+
+BinsRouter.get("/", async (_: Request<BinParams>, res: Response, __: NextFunction): Promise<any> => {
     let payload: BinReturnMessage;
 
     try {
@@ -34,14 +42,14 @@ BinsRouter.get("/", async (_: Request, res: Response, __: NextFunction): Promise
     return res.status(payload.status_code).send(payload);
 });
 
-BinsRouter.get("/:id", param("id").isInt() , async (req: Request, res: Response) : Promise<any> => {
+BinsRouter.get("/:id", param("id").isInt().toInt() , async (req: Request<BinParams>, res: Response) : Promise<any> => {
     const result = validationResult(req); // Validate errors 
-    
+    let { id } = req.params; // Destructure id from request params
     let payload: BinReturnMessage;
 
     if(result.isEmpty()) { // Passes test calls controller function
         try {
-            const bin = await getBin(parseInt(req.params.id));
+            const bin = await getBin(id);
 
             payload = payloadBuilder({
                 data: bin,
@@ -74,16 +82,20 @@ BinsRouter.get("/:id", param("id").isInt() , async (req: Request, res: Response)
 });
 
 BinsRouter.post("/create/:name", 
-    param("name").isString().exists().trim(), 
+    param("name")
+        .isString()
+        .exists()
+        .trim(), 
     async (req: Request, res: Response) : Promise<any> => {
     
         const result = validationResult(req);
 
+        let { name } = req.params;
         let payload: BinReturnMessage;
 
         if(result.isEmpty()) {
             try {
-                const bin = await createBin(req.params.name);
+                const bin = await createBin(name);
 
                 payload = payloadBuilder({
                     data: bin,
@@ -115,39 +127,45 @@ BinsRouter.post("/create/:name",
         return res.status(payload.status_code).send(payload);
 });
 
-BinsRouter.delete("/delete/:id", param("id").isInt(), async (req: Request, res: Response) : Promise<any> => {
-    const result = validationResult(req);
+BinsRouter.delete("/delete/:id", 
+    param("id")
+        .isInt()
+        .toInt(), 
+    async (req: Request<BinParams>, res: Response) : Promise<any> => {
+        const result = validationResult(req);
 
-    let payload: BinReturnMessage;
+        let payload: BinReturnMessage;
+        let { id } = req.params;
 
-    if(result.isEmpty()) {
-        try {
-            const bin = await deleteBin(parseInt(req.params.id)); // Returns boolean on delete
+        if(result.isEmpty()) {
+            try {
+                const bin = await deleteBin(id); // Returns boolean on delete
 
-            payload = payloadBuilder({
-                data: [],
-                message: "success",
-                status_code: 200,
-                errors: "none",
-                operationComplete: bin // Boolean
-            });
-        } catch (error) {
+                payload = payloadBuilder({
+                    data: [],
+                    message: "success",
+                    status_code: 200,
+                    errors: "none",
+                    operationComplete: bin // Boolean
+                });
+            } 
+            catch (error) {
+                payload = payloadBuilder({
+                    data: [],
+                    message: "failure",
+                    status_code: 500,
+                    errors: error,
+                    operationComplete: false
+                });
+            }
+        }
+        else {
             payload = payloadBuilder({
                 data: [],
                 message: "failure",
-                status_code: 500,
-                errors: error,
+                status_code: 400,
+                errors: result.array(),
                 operationComplete: false
-            });
-        }
-    }
-    else {
-            payload = payloadBuilder({
-            data: [],
-            message: "failure",
-            status_code: 400,
-            errors: result.array(),
-            operationComplete: false
             });
         }
 
@@ -155,16 +173,71 @@ BinsRouter.delete("/delete/:id", param("id").isInt(), async (req: Request, res: 
 });
 
 BinsRouter.patch("/update/:id/name/:value",
-    param("id").isInt(),
-    param("value").isString().exists().trim(),
-    async (req: Request, res: Response) : Promise<any> => {
+    param("id")
+        .isInt()
+        .toInt(),
+    param("value")
+        .isString()
+        .exists()
+        .trim(),
+    async (req: Request<BinParams>, res: Response) : Promise<any> => {
         const result = validationResult(req);
 
+        let { id, value } = req.params;
         let payload: BinReturnMessage;
 
         if(result.isEmpty()) {
             try {
-                const bin = await updateBinName(parseInt(req.params.id), req.params.value);
+                const bin = await updateBinName(id, value);
+
+                payload = payloadBuilder({
+                    data: bin,
+                    message: "success",
+                    status_code: 200,
+                    errors: "none",
+                    operationComplete: true
+                });
+            } 
+            catch (error) {
+                payload = payloadBuilder({
+                    data: [],
+                    message: "failure",
+                    status_code: 500,
+                    errors: error,
+                    operationComplete: false
+                });
+            }
+        }
+        else {
+            payload = payloadBuilder({
+                data: [],
+                message: "failure",
+                status_code: 400,
+                errors: result.array(),
+                operationComplete: false
+            });
+        }
+
+        return res.status(payload.status_code).send(payload);
+});
+
+BinsRouter.patch("/update/:id/is_full/:bool",
+    param("id")
+        .isInt()
+        .toInt(),
+    param("bool")
+        .isIn([1, 0])
+        .withMessage("Value must be 0 or 1")
+        .toInt(),
+    async (req: Request<BinParams>, res: Response) : Promise<any> => {
+        const result = validationResult(req);
+
+        let { id, bool } = req.params;
+        let payload: BinReturnMessage;
+
+        if(result.isEmpty()) {
+            try {
+                const bin = await updateBinIsFull(id, bool);
 
                 payload = payloadBuilder({
                     data: bin,
@@ -196,12 +269,53 @@ BinsRouter.patch("/update/:id/name/:value",
         return res.status(payload.status_code).send(payload);
 });
 
-BinsRouter.patch("/update/:id/is_full/:value", async (req: Request, res: Response) : Promise<any> => {
-    
-});
+BinsRouter.patch("/update/:id/add/item/:item_id",
+    param("id")
+        .isInt()
+        .toInt(),
+    param("item_id")
+        .isInt()
+        .toInt(),
+    async (req: Request<BinParams>, res: Response) : Promise<any> => {
+        const result = validationResult(req);
 
-BinsRouter.patch("/update/:id/add_item/:item_id", async (req: Request, res: Response) : Promise<any> => {
-});
+        let { id, item_id } = req.params;
+        let payload: BinReturnMessage;
+
+        if(result.isEmpty()) {
+            try {
+                const bin = await addItemToBin(id, item_id);
+
+                payload = payloadBuilder({
+                    data: bin,
+                    message: "success",
+                    status_code: 200,
+                    errors: "none",
+                    operationComplete: true
+                });
+            } catch (error) {
+                payload = payloadBuilder({
+                    data: [],
+                    message: "failure",
+                    status_code: 500,
+                    errors: error,
+                    operationComplete: false
+                });
+            }
+        }
+        else {
+            payload = payloadBuilder({
+                data: [],
+                message: "failure",
+                status_code: 400,
+                errors: result.array(),
+                operationComplete: false
+            });
+        }
+
+        return res.status(payload.status_code).send(payload);
+    }
+);
 
 BinsRouter.patch("/update/:id/remove_item/:item_id", async (req: Request, res: Response) : Promise<any> => {
 });
