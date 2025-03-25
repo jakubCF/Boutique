@@ -2,7 +2,7 @@ import { ValidationError } from "express-validator";
 
 export interface BinReturnMessage {
     message: string | "success" | "fail",
-    data ?: {
+    data : {
         id: number,
         name: string,
         is_full: boolean,
@@ -22,7 +22,7 @@ export interface BinReturnMessage {
             sold: boolean;
             bin_id: number;
         }[];
-    },
+    } | [],
     operationComplete: boolean
     errors: Error[] | "none" | Error | ValidationError[],
     status_code: number

@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
-import { createBin, deleteBin, getBin, getBins, updateBinIsFull, updateBinName, addItemToBin } from "../../Controllers/bins.controller";
+import { createBin, deleteBin, getBin, getBins, updateBinIsFull, updateBinName, addItemToBin, removeItemFromBin } from "../../Controllers/bins.controller";
 import { param, validationResult } from "express-validator";
 import { BinReturnMessage } from "../../utils/Interfaces/BinReturnMessage";
 import { payloadBuilder } from "../../utils/BinPayloadBuilder";
@@ -317,7 +317,51 @@ BinsRouter.patch("/update/:id/add/item/:item_id",
     }
 );
 
-BinsRouter.patch("/update/:id/remove_item/:item_id", async (req: Request, res: Response) : Promise<any> => {
+BinsRouter.patch("/update/:id/remove/item/:item_id",
+    param("id")
+        .isInt()
+        .toInt(),
+    param("item_id")
+        .isInt()
+        .toInt(),
+    async (req: Request<BinParams>, res: Response) : Promise<any> => {
+        const result = validationResult(req);
+
+        let { id, item_id } = req.params;
+        let payload: BinReturnMessage;
+
+        if(result.isEmpty()) {
+            try {
+                const bin = await removeItemFromBin(id, item_id);
+
+                payload = payloadBuilder({
+                    data: bin,
+                    message: "success",
+                    status_code: 200,
+                    errors: "none",
+                    operationComplete: true
+                });
+            } catch (error) {
+                payload = payloadBuilder({
+                    data: [],
+                    message: "failure",
+                    status_code: 500,
+                    errors: error,
+                    operationComplete: false
+                });
+            }
+        }
+        else {
+            payload = payloadBuilder({
+                data: [],
+                message: "failure",
+                status_code: 400,
+                errors: result.array(),
+                operationComplete: false
+            });
+        }
+
+        return res.status(payload.status_code).send(payload);
 });
 
 

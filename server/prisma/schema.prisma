@@ -18,6 +18,6 @@ model Item {
   id     Int     @id @default(autoincrement())
   name   String  @db.VarChar(256)
   sold   Boolean @default(false)
-  bin   Bin @relation(fields: [bin_id], references: [id])
-  bin_id Int
+  bin   Bin? @relation(fields: [bin_id], references: [id])
+  bin_id Int?
 }

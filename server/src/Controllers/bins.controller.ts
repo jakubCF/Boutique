@@ -134,4 +134,5 @@ export const removeItemFromBin = async (id: number, item_id: number) => {
     } catch (error) {
         throw error;
     }
+
 }
