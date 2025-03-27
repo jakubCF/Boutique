@@ -4,7 +4,8 @@ const DEFAULT_SELECT = {
     id: true, 
     name: true, 
     bin_id: true, 
-    bin: true
+    bin: true,
+    sold: true
 }
 
 export const getItems = async () => {   
@@ -29,12 +30,11 @@ export const getItemById = async (id: number) => {
     } 
 }
 
-export const createItem = async (name: string, bin_id: number) => {
+export const createItem = async (name: string) => {
     try {
         let item = await prisma.item.create({
             data: {
-                name: name,
-                bin_id: bin_id
+                name: name
             },
             select: DEFAULT_SELECT
         })
@@ -44,17 +44,18 @@ export const createItem = async (name: string, bin_id: number) => {
     }
 }
 export const deleteItem = async (id: number) => {
+    console.log(id);
     try {
-        await prisma.item.delete({
+        let bin = await prisma.item.delete({
             where: { id: id },
             select: DEFAULT_SELECT
-        }).then(() => { 
-            return true;
         })
+        return true;
     } 
     catch (error) {
         throw error;
     }
+
 }
 
 export const updateItemName = async (id: number, name: string) => {
