@@ -79,7 +79,6 @@ export const updateBinIsFull = async (id: number, isFull: 1 | 0) => {
       break;
     default:
       throw new Error("Invalid value for isFull");
-      break;
   }
   console.log(validation);
   try {

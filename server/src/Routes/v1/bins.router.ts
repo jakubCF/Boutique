@@ -35,7 +35,7 @@ BinsRouter.get(
     __: NextFunction,
   ): Promise<any> => {
     let payload: BinReturnMessage;
-
+    console.log("GET BINS");
     try {
       const bins = await getBins();
       payload = payloadBuilder({
