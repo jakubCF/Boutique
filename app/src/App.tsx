@@ -22,8 +22,8 @@ function App() {
 
   
   return (
-    <div className="h-screen w-screen grid justify-center align-middle text-center">
-      <h1>Hello Sarah!</h1>
+      <div className="h-screen w-screen grid justify-center align-middle text-center">
+      <h1 className="relative">Hello Sarah!</h1>
       {isLoading ? (
           <TableSkeleton />
       ) : isError ? (
@@ -32,8 +32,9 @@ function App() {
         <ItemTable DATA={data} />
       )}
       <Toaster />
-      <footer className="self-end">Made with ❤️ for Sarah 2025</footer>
-    </div>
+      <footer className="self-end relative">Made with ❤️ for Sarah 2025</footer>
+      </div>
+    
   );
 }
 

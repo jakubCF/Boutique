@@ -15,10 +15,6 @@ import { payloadBuilder } from "../../utils/BinPayloadBuilder";
 
 const BinsRouter = express.Router();
 
-// TODO: Handle response sending and errors, this is very rough
-// Every function should have 1 return
-// If request has 1 param, it should be invoked through req.params, more than 1 param should use the request body
-
 interface BinParams {
   id: number;
   name?: string;

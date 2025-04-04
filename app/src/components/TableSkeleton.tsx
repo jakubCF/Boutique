@@ -1,7 +1,7 @@
 import { Skeleton } from "./ui/skeleton";
 
 const TableSkeleton : React.FC = () => {
-    return (
+    return ( // TODO: make a loop for this, it looks like shit
         <div className="border grid w-screen h-[600px]justify-between m-auto">
           <Skeleton className="m-1 p-4 " />
           <Skeleton className=" m-1 p-3 bg-gray-200" />
