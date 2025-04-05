@@ -1,7 +1,8 @@
 import { ColumnDef, getCoreRowModel, useReactTable, flexRender } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
 import { Table, TableRow, TableHeader, TableHead, TableBody, TableCell } from './ui/table';
-import EditableCell from './EditableCell';
+import EditableName from './Cells/EditableCell_NAME';
+import EditableSold from './Cells/EditableCell_SOLD';
 import Item from '@/types/Item';
 import { Button } from './ui/button';
 
@@ -28,7 +29,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
             {
                 accessorKey: "name",
                 header: "Name", 
-                cell: (props) => <EditableCell {...props} />
+                cell: (props) => <EditableName {...props} />
             },
             {
                 accessorKey: "bin.name",
@@ -38,7 +39,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
             {
                 accessorKey: "sold",
                 header: "Sold?", 
-                cell: (props: any) => <p>{props.getValue()?.toString()}</p>,
+                cell: (props: any) => <EditableSold {...props} />,
             }, 
         ]
     } , []);
@@ -63,10 +64,10 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
         }
     })
     return (
-        <Table  className="border-black w-[1280px]">
+        <Table  className="border-black w-[1280px] h-screen ">
             <TableHeader className='bg-black'>
                 {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow  key={headerGroup.id}>
+                    <TableRow className='m-2'  key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
                         return (
                             <TableHead 
