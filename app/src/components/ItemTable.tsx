@@ -4,14 +4,21 @@ import { Table, TableRow, TableHeader, TableHead, TableBody, TableCell } from '.
 import EditableName from './Cells/EditableCell_NAME';
 import EditableSold from './Cells/EditableCell_SOLD';
 import Item from '@/types/Item';
-import { Button } from './ui/button';
+import EditableBin from './Cells/EditableCell_BIN';
 
 interface ItemTableProps {
-    DATA: Item[] // Replace any with actual data type
+    DATA: Item[]
 }
 
+// Extend TableMeta to include updateData
+declare module "@tanstack/react-table" {
+    interface TableMeta<TData> {
+      updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+      deleteData: (rowIndex: number) => void;
+      updateBinName: (rowIndex: number, value: unknown | null) => void;
+    }
+  }
 
- 
 // Create the functional component
 const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
     // Define the columns for the table using useMemo to optimize performance
@@ -32,9 +39,10 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
                 cell: (props) => <EditableName {...props} />
             },
             {
-                accessorKey: "bin.name",
+                accessorFn: (row => row.bin?.name || "None"), // Use a function to access the nested property
                 header: "Bin", 
-                cell: (props: any) => <p>{(props.getValue()) ? props.getValue() : "none"}</p>,
+                id: "bin_name", // Use a custom ID for the column
+                cell: (props: any) => <EditableBin {...props} />,
             },
             {
                 accessorKey: "sold",
@@ -50,17 +58,33 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
         getCoreRowModel: getCoreRowModel(),
         columnResizeMode: "onChange",
         meta: {
-            updateData: (rowIndex: number, columnId: string, value: any) => 
-                setData(prev =>
-                    prev.map((row, index)  => 
-                        index == rowIndex 
-                        ? {
-                            ...prev[rowIndex],
-                            [columnId]: value
+            updateData: (rowIndex: number, columnId: string, value: any) => {
+                setData((prev) =>
+                    prev.map((row, index) =>
+                        index === rowIndex
+                            ? {
+                                  ...row,
+                                  [columnId]: value,
+                              }
+                            : row
+                    )
+                );
+            },
+            deleteData: (rowIndex: number) => setData((prev) => prev.filter((_, index) => index !== rowIndex)),
+            updateBinName: (rowIndex: number, value: any) => {
+                setData((prevData) =>
+                    prevData.map((row, index) => {
+                        if (index === rowIndex) {
+                            // Update the deeply nested key
+                            return {
+                                ...row,
+                                bin: value,
+                            };
                         }
-                        : row
-                    )  
-                ) 
+                        return row; // Return the row unchanged if it's not the target
+                    })
+                )
+            }
         }
     })
     return (
@@ -108,8 +132,6 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
                         </TableCell>)}
                     </TableRow>)}
             </TableBody>
-            <Button className="m-4 p-6"> Create Row</Button>
-
         </Table>
     );
 };

@@ -3,13 +3,6 @@ import React, { FC } from "react";
 import { DialogHeader } from "../ui/dialog";
 import Item from "@/types/Item";
 import { CellContext, Table, TableMeta } from "@tanstack/react-table";
-
-// Extend TableMeta to include updateData
-declare module "@tanstack/react-table" {
-  interface TableMeta<TData> {
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
-  }
-}
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useForm } from "@tanstack/react-form"
@@ -19,9 +12,14 @@ import axios from "axios";
 import { toast } from "sonner";
 
 
+
 const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, table}) => {
+    // TODO: put mutations in a separate file
+    // TODO: provide popup confirmation for delete
     const [open, setOpen] = React.useState(false); // state for dialog state, allows you to programmatically open and close the dialog
-    const updateNameById = useMutation({
+    
+    //Mutations
+    const updateNameById = useMutation({ // mutation to update the name of the item
         mutationFn: (name: string) => {
             let id = row.original.id;
             setOpen(false);
@@ -40,15 +38,33 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
             toast.error("Error updating item name: " + error.message);
         }
     })
+    const deleteById = useMutation({ // mutation to delete the item
+        mutationFn: () => {
+            let id = row.original.id;
+
+            setOpen(false);
+            return axios.delete(`http://localhost:3000/v1/items/delete/${id}`) // Query the database
+        },
+        onSuccess: () => {
+            table.options.meta?.deleteData(
+                row.index
+            )
+            toast.success("Item deleted successfully");
+        },
+        onError: (error) => {
+            toast.error("Error deleting item: " + error.message);
+        }
+    });
 
     const form = useForm({
         defaultValues: {
-            name: getValue<string>()
+            name: getValue<string>() // get value from the cell
         },
         onSubmit: ({value}) => {
             let newName = value.name.toString();
             updateNameById.mutate(newName)
-        }
+        },
+
     })
 
     return(
@@ -67,7 +83,10 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
                             <Input id="name" type="text" value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
                         </div>
                     )} />
-                    <Button onClick={form.handleSubmit} >Submit</Button>
+                    <Button onClick={form.handleSubmit}>Submit</Button>
+                    <Button className="m-2" style={{backgroundColor: "#9c2828"}} onClick={() => {
+                        deleteById.mutate()
+                    }}>Delete</Button>
                 </form>
                 </DialogHeader>
             </DialogContent>

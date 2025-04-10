@@ -1,7 +1,7 @@
 
 import React, { FC } from "react";
 import Item from "@/types/Item";
-import { CellContext, Table, TableMeta } from "@tanstack/react-table";
+import { CellContext } from "@tanstack/react-table";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useForm } from "@tanstack/react-form"
@@ -21,7 +21,7 @@ declare module "@tanstack/react-table" {
 
 
 const EditableSold:FC<CellContext<Item, unknown>> = ({getValue, row, column, table}) => {
-    const [open, setOpen] = React.useState(false); // state for dialog state, allows you to programmatically open and close the dialog
+    const [open, setOpen] = React.useState(false); // state for dialog open state, allows you to programmatically open and close the dialog
     const updateSoldById = useMutation({
         mutationFn: (sold: boolean) => {
             let id = row.original.id;
@@ -37,7 +37,7 @@ const EditableSold:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
                 row.index,
                 column.id,
                 form.getFieldValue("sold") 
-            ) // update local state to prevent refresh
+            ) // update local state to prevent refresh keeps the table in sync with the database without querying the database
             toast.success("Item sold updated successfully");
         },
         onError: (error) => {
