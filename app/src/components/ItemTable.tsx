@@ -1,10 +1,17 @@
+// table management
 import { ColumnDef, getCoreRowModel, useReactTable, flexRender } from '@tanstack/react-table';
+// state management
 import { useMemo, useState } from 'react';
+// Table Components from shadcn/ui
 import { Table, TableRow, TableHeader, TableHead, TableBody, TableCell } from './ui/table';
+// Cells
 import EditableName from './Cells/EditableCell_NAME';
 import EditableSold from './Cells/EditableCell_SOLD';
-import Item from '@/types/Item';
 import EditableBin from './Cells/EditableCell_BIN';
+
+// types
+import Item from '@/types/Item';
+
 
 interface ItemTableProps {
     DATA: Item[]
@@ -19,6 +26,13 @@ declare module "@tanstack/react-table" {
     }
   }
 
+const minColumnWidths = {
+    id: 20,
+    name: 100,
+    bin_name: 50,
+    sold: 30,
+};
+
 // Create the functional component
 const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
     // Define the columns for the table using useMemo to optimize performance
@@ -26,28 +40,32 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
         return [
             {
                 accessorKey: "id",
-                header: "Table ID",
+                header: "ID",
                 cell: (props) => <p>{props.getValue<number>()}</p>,
                 sortable: true,
                 enableSorting: true,
-                
+                size: minColumnWidths.id,
                 
             },
             {
                 accessorKey: "name",
                 header: "Name", 
-                cell: (props) => <EditableName {...props} />
+                cell: (props) => <EditableName {...props} />,
+                size: minColumnWidths.name,
             },
             {
                 accessorFn: (row => row.bin?.name || "None"), // Use a function to access the nested property
                 header: "Bin", 
                 id: "bin_name", // Use a custom ID for the column
                 cell: (props: any) => <EditableBin {...props} />,
+                size: minColumnWidths.bin_name,
             },
             {
                 accessorKey: "sold",
                 header: "Sold?", 
                 cell: (props: any) => <EditableSold {...props} />,
+                size: minColumnWidths.sold,
+                
             }, 
         ]
     } , []);
@@ -136,8 +154,5 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
     );
 };
    
-
-   
-  
 export default ItemTable;
   

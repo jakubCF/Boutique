@@ -15,7 +15,7 @@ import {
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
 
-const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, column, table }) => {
+const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) => {
     const bins = useContext(BinContext); // Get the bins from the context
     const [open, setOpen] = React.useState(false); // State for dialog open state
 
@@ -37,7 +37,7 @@ const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, column, ta
             }
             setOpen(false); // Close the dialog
         },
-        
+         
     });
 
     return (
@@ -55,14 +55,14 @@ const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, column, ta
                 }>
                     <DialogDescription className="text-center">Are you sure you want to edit this field?</DialogDescription>
                     <form.Field name="bin" children={( field ) => (
-                        <div>
+                        <div className='flex flex-col items-center text-white'>
                             <Label htmlFor="bin">Bin:</Label>
                             <Select value={field.state.value} onValueChange={(value) => {
                                 field.setValue(value); // Update the form value
                                 }
                             
                             } defaultValue={getValue<string>()}>
-                                <SelectTrigger className="w-[180px]">
+                                <SelectTrigger className="w-[240px]">
                                     <SelectValue placeholder="Select a bin" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -74,10 +74,10 @@ const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, column, ta
                             </Select>
                         </div>
                     )} />
-                    <Button type="submit">Submit</Button>
-                    <Button className="m-2" style={{backgroundColor: "#9c2828"}} onClick={() => {
-                        setOpen(false); // Close dialog popup
-                    }}>Close</Button>
+                    <div className='flex justify-center'>
+                        <Button type="submit" className='ml-1 mr-1'>Submit</Button>
+                    </div>
+
                 </form>
                 </DialogHeader>
             </DialogContent>
