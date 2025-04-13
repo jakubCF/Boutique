@@ -1,4 +1,4 @@
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "../@shadcn/ui/skeleton";
 
 const TableSkeleton : React.FC = () => {
     return ( // TODO: make a loop for this, it looks like shit

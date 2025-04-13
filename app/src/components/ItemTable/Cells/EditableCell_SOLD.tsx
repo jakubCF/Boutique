@@ -2,15 +2,15 @@
 import React, { FC } from "react";
 import Item from "@/types/Item";
 import { CellContext } from "@tanstack/react-table";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "../../@shadcn/ui/input";
+import { Button } from "../../@shadcn/ui/button";
 import { useForm } from "@tanstack/react-form"
-import { Label } from "../ui/label";
+import { Label } from "../../@shadcn/ui/label";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { DialogHeader } from "../ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "../../@shadcn/ui/dialog";
+import { DialogHeader } from "../../@shadcn/ui/dialog";
 
 // Extend TableMeta to include updateData
 declare module "@tanstack/react-table" {

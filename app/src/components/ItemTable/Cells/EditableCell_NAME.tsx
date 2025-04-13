@@ -1,15 +1,14 @@
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "../../@shadcn/ui/dialog";
 import React, { FC } from "react";
-import { DialogHeader } from "../ui/dialog";
+import { DialogHeader } from "../../@shadcn/ui/dialog";
 import Item from "@/types/Item";
-import { CellContext, Table, TableMeta } from "@tanstack/react-table";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { CellContext } from "@tanstack/react-table";
+import { Input } from "../../@shadcn/ui/input";
+import { Button } from "../../@shadcn/ui/button";
 import { useForm } from "@tanstack/react-form"
-import { Label } from "../ui/label";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { toast } from "sonner";
+import { Label } from "../../@shadcn/ui/label";
+import { useUpdateItemName } from "@/lib/Mutations/UpdateItemName";
+import { useDeleteItem } from "@/lib/Mutations/DeleteItem";
 
 
 
@@ -17,44 +16,6 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
     // TODO: put mutations in a separate file
     // TODO: provide popup confirmation for delete
     const [open, setOpen] = React.useState(false); // state for dialog state, allows you to programmatically open and close the dialog
-    
-    //Mutations
-    const updateNameById = useMutation({ // mutation to update the name of the item
-        mutationFn: (name: string) => {
-            let id = row.original.id;
-            setOpen(false);
-            
-            return axios.patch(`http://localhost:3000/v1/items/update/name/${id}/${name}`) // Query the database
-        },
-        onSuccess: () => {
-            table.options.meta?.updateData(
-                row.index,
-                column.id,
-                form.getFieldValue("name") 
-            ) // update local state to prevent refresh
-            toast.success("Item name updated successfully");
-        },
-        onError: (error) => {
-            toast.error("Error updating item name: " + error.message);
-        }
-    })
-    const deleteById = useMutation({ // mutation to delete the item
-        mutationFn: () => {
-            let id = row.original.id;
-
-            setOpen(false);
-            return axios.delete(`http://localhost:3000/v1/items/delete/${id}`) // Query the database
-        },
-        onSuccess: () => {
-            table.options.meta?.deleteData(
-                row.index
-            )
-            toast.success("Item deleted successfully");
-        },
-        onError: (error) => {
-            toast.error("Error deleting item: " + error.message);
-        }
-    });
 
     const form = useForm({
         defaultValues: {
@@ -62,10 +23,14 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
         },
         onSubmit: ({value}) => {
             let newName = value.name.toString();
-            updateNameById.mutate(newName)
+            updateName.mutate(newName)
         },
 
     })
+
+    // Mutation Hooks
+    const updateName = useUpdateItemName(row, table, column, form, setOpen);
+    const deleteName = useDeleteItem(row, table, column, form, setOpen);
 
     return(
         <div className="flex justify-between">
@@ -85,7 +50,7 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
                     )} />
                     <Button onClick={form.handleSubmit}>Submit</Button>
                     <Button className="m-2" style={{backgroundColor: "#9c2828"}} onClick={() => {
-                        deleteById.mutate()
+                        deleteName.mutate();
                     }}>Delete</Button>
                 </form>
                 </DialogHeader>

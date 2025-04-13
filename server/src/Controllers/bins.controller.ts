@@ -114,7 +114,9 @@ export const addItemToBin = async (id: number, item_id: number) => {
   }
 };
 
-export const removeItemFromBin = async (id: number, item_id: number) => {
+
+// addItemToBin will automatically connect the new bin and disconnect the old one, this is called to remove the bin only if we are not putting the item in another bin
+export const removeItemFromBin = async (id: number, item_id: number) => { 
   try {
     let bin = await prisma.bin.update({
       where: { id: id },

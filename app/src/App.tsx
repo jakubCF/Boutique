@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import ItemTable from "./components/ItemTable";
-import TableSkeleton from "./components/TableSkeleton";
+import ItemTable from "./components/ItemTable/ItemTable";
+import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
 import { useEffect, useState } from "react";
-import { Button } from "./components/ui/button";
-import { BinContext } from "./lib/Context/BinContext";
+import { Button } from "./components/@shadcn/ui/button";
+import { BinContext } from "./lib/BinContext";
 
 function App() {
   // Query + Error handling for fetching items
@@ -53,7 +53,7 @@ function App() {
         <div className="text-red-500">Failed to load data. Please try again later.</div>
       ) : (
         <div className="h-screen w-screen grid justify-center align-middle text-center">
-          <BinContext.Provider value={bins}> {/* Provides the bins to the whole table tree */}
+          <BinContext.Provider value={bins}> {/* Provides the bins to the whole tables tree */}
             <ItemTable DATA={data}/>
           </BinContext.Provider>
         </div>
