@@ -91,3 +91,43 @@ export const updateItemSold = async (id: number, sold: 1 | 0) => {
     throw error;
   }
 };
+
+export const bulkCreateItems = async (items: { name: string; binId?: number, sold: boolean }[]) => {
+  try {
+    // Use Prisma's createMany for bulk creation
+    const createdItems = await prisma.item.createMany({
+      data: items.map((item) => ({
+        name: item.name,
+        bin_id: item.binId || null, // Associate binId if provided, otherwise set to null
+        sold: item.sold || false, // Default value for sold
+        
+      })),
+      skipDuplicates: true, // Avoid duplicate entries
+    });
+
+    // Fetch the created items to return them
+    const fetchedItems = await prisma.item.findMany({
+      where: {
+        name: {
+          in: items.map((item) => item.name),
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        bin: {
+          select: {
+            id: true,
+            name: true,
+            is_full: true,
+          },
+        },
+        sold: true,
+      },
+    });
+
+    return fetchedItems;
+  } catch (error) {
+    throw error;
+  }
+};

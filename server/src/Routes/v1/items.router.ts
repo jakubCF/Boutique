@@ -6,10 +6,11 @@ import {
   deleteItem,
   updateItemName,
   updateItemSold,
+  bulkCreateItems,
 } from "../../Controllers/items.controller";
 import { ItemReturnMessage } from "../../utils/Interfaces/ItemReturnMessage";
 import { ItemPayloadBuilder } from "../../utils/ItemPayloadBuilder";
-import { param } from "express-validator";
+import { param, body } from "express-validator";
 
 interface ItemParams {
   id: number;
@@ -206,6 +207,52 @@ ItemsRouter.patch(
     }
     return res.status(payload.status_code).json(payload);
   },
+);
+
+ItemsRouter.post(
+  "/bulk/create",
+  body("items")
+    .isArray({ min: 1 })
+    .withMessage("Items must be an array with at least one item"),
+  body("items.*.name")
+    .isString()
+    .trim()
+    .escape()
+    .withMessage("Each item must have a valid name"),
+  body("items.*.binId")
+    .optional()
+    .isInt()
+    .withMessage("binId must be a valid integer"),
+  body("items.*.sold")
+    .optional()
+    .isBoolean()
+    .withMessage("sold must be a boolean value"),
+  async (req: Request, res: Response): Promise<any> => {
+    const { items } = req.body;
+    console.log(items)
+    let payload: ItemReturnMessage;
+
+    try {
+      const createdItems = await bulkCreateItems(items);
+      payload = ItemPayloadBuilder({
+        data: createdItems,
+        message: "success",
+        status_code: 201,
+        errors: "none",
+        operationComplete: true,
+      });
+    } catch (error) {
+      payload = ItemPayloadBuilder({
+        data: [],
+        message: "fail",
+        status_code: 500,
+        errors: error.message,
+        operationComplete: false,
+      });
+    }
+
+    return res.status(payload.status_code).json(payload);
+  }
 );
 
 export default ItemsRouter;

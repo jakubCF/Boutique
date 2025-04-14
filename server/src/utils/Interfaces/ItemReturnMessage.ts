@@ -23,7 +23,18 @@ export interface ItemReturnMessage {
         };
         bin_id: number;
       }
-    | [];
+    |
+    {
+      id: number;
+      name: string;
+      bin: {
+        id: number;
+        name: string;
+        is_full: boolean;
+      } | null;
+      sold: boolean;
+    }[]
+  | [];
   operationComplete: boolean;
   errors: Error[] | "none" | Error | ValidationError[];
   status_code: number;
