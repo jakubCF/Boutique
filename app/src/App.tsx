@@ -4,8 +4,8 @@ import ItemTable from "./components/ItemTable/ItemTable";
 import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
 import { useEffect, useState } from "react";
-import { Button } from "./components/@shadcn/ui/button";
 import { BinContext } from "./lib/BinContext";
+
 
 function App() {
   // Query + Error handling for fetching items
@@ -61,7 +61,6 @@ function App() {
       )}
       
         <div className="flex flex-col align-middle items-center justify-center">
-          <Button className=" relative m-5">Create Row</Button>
           <Toaster />
           <footer className="relative">Made with ❤️ for Sarah 2025</footer>
         </div>
