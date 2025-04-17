@@ -64,18 +64,6 @@ function App() {
       )}
       
         <div className="flex flex-col align-middle items-center justify-center">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="relative m-5">Create Row</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New Rows</DialogTitle>
-            </DialogHeader>
-
-            <BulkCreate />
-          </DialogContent>
-        </Dialog>
           <Toaster />
           <footer className="relative">Made with ❤️ for Sarah 2025</footer>
         </div>

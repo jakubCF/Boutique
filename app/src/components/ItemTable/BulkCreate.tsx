@@ -12,37 +12,37 @@ import {
 } from "@/components/@shadcn/ui/dropdown-menu"; // Import shadcn dropdown components
 import { Table } from "@tanstack/react-table";
 import Item from "@/types/Item";
+import { Button } from "../@shadcn/ui/button";
 
 interface IBulkProps {
   table: Table<Item>
+  setState : React.Dispatch<React.SetStateAction<boolean>>
 }
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData> {
-    addRows: (values: unknown) => void;
+    createRows: (values: unknown) => void;
   }
 }
 
-const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table }) => {
+const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) => {
   const create_bulk = useMutation({
     mutationKey: ["createBulkItems"],
     mutationFn: async (data: unknown) => {
-       
       const response = await axios({
         url : "http://localhost:3000/v1/items/bulk/create",
-        data: {
-          data
-        },
+        data: data,
         method: "post"
       })
       return response
     },
     onError: (error) => {
-      return toast.error("Failed to create items: " + error.message)
+      
+      return toast.error("Failed to create items: " + error)
     },
     onSuccess: ({data}) => {
       if (Array.isArray(data.data)) {
-        table.options.meta?.addRows(data.data);
+        table.options.meta?.createRows(data.data);
         toast.success("Items added successfully!");
       } else {
         console.error("Expected an array but received:", data.data);
@@ -61,6 +61,7 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table }) => {
   });
 
   const bins = React.useContext(BinContext); // Get bins from context
+
   const [items, setItems] = React.useState([{ name: "", binId: null, sold: false }]);
 
   // Handle adding a new item
@@ -82,7 +83,6 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table }) => {
 
   return (
     <div className="p-4 flex flex-col align-middle">
-      <h2 className="text-lg font-bold mb-4">Bulk Create Items</h2>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -105,12 +105,14 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table }) => {
                 required
               />
             </div>
-
+  
             {/* Bin Dropdown */}
             <div>
               <label className="block text-sm font-medium">Bin</label>
               <DropdownMenu>
-                <DropdownMenuTrigger className="border rounded p-2 w-full text-left">
+                <DropdownMenuTrigger 
+                style={{background: "white", border: "1px solid rgb(226, 229, 232)"}}
+                className="border rounded p-2 w-full text-left">
                   {item.binId
                     ? bins.find((bin) => bin.id === item.binId)?.name || "Select a Bin"
                     : "Select a Bin"}
@@ -130,45 +132,74 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table }) => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-
-            {/* Sold Checkbox */}
-            <div className="flex items-center space-x-2">
+  
+            {/* Sold Dropdown */}
+            <div>
               <label className="block text-sm font-medium">Sold</label>
-              <input
-                type="checkbox"
-                checked={item.sold}
-                onChange={(e) => updateItem(index, "sold", e.target.checked)}
-                className="h-5 w-5"
-              />
+              <select
+                value={item.sold ? "yes" : "no"}
+                onChange={(e) => updateItem(index, "sold", e.target.value === "yes")}
+                style={{
+                  width: "100px", // Make the dropdown larger
+                  height: "40px", // Increase height
+                  padding: "8px", // Add padding
+                  borderRadius: "0.375rem", // Rounded corners
+                  border: "1px solid #d1d5db", // Tailwind's border-gray-300
+                  backgroundColor: "white", // White background
+                }}
+              >
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            
+              {/* Remove Button */}
+              <Button
+                type="button"
+                onClick={() => removeItem(index) }
+                style={{
+                  border: "1px solid #d1d5db", // Tailwind's border-gray-300
+                  backgroundColor: "rgb(248, 113, 113)",
+                  color: "white",
+                  textDecoration: "none", // Tailwind's hover:underline
+                  scale: 1.2,
+                  marginLeft: "12px"
+                }}
+              >
+                X
+              </Button>
             </div>
-
-            {/* Remove Button */}
-            <button
-              type="button"
-              onClick={() => removeItem(index)}
-              className="text-red-500 hover:underline"
-            >
-              Remove
-            </button>
           </div>
-        ))}
+  
 
+        ))}
+  
         {/* Add Item Button */}
-        <button
+        <Button
           type="button"
           onClick={addItem}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          style={{
+            color: "white", // Tailwind's text-white
+            padding: "8px 16px", // Tailwind's px-4 py-2
+            borderRadius: "0.375rem", // Tailwind's rounded
+            marginRight: "5px",
+          }}
         >
           Add Item
-        </button>
-
+        </Button>
+  
         {/* Submit Button */}
-        <button
+        <Button
           type="submit"
-          className="bg-green-500 text-white px-4 py-2 rounded"
+          style={{
+            backgroundColor: "rgb(34, 197, 94)", // Tailwind's bg-green-500
+            color: "white", // Tailwind's text-white
+            padding: "8px 16px", // Tailwind's px-4 py-2
+            borderRadius: "0.375rem", // Tailwind's rounded
+          }}
+          onClick={() => setState(false)}
         >
           Submit
-        </button>
+        </Button>
       </form>
     </div>
   );

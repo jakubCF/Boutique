@@ -228,12 +228,12 @@ ItemsRouter.post(
     .isBoolean()
     .withMessage("sold must be a boolean value"),
   async (req: Request, res: Response): Promise<any> => {
-    const { items } = req.body;
-    console.log(items)
+    const data = req.body;
+    console.log(data)
     let payload: ItemReturnMessage;
 
     try {
-      const createdItems = await bulkCreateItems(items);
+      const createdItems = await bulkCreateItems(data.value.items);
       payload = ItemPayloadBuilder({
         data: createdItems,
         message: "success",
