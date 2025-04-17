@@ -3,9 +3,12 @@ import axios from "axios";
 import ItemTable from "./components/ItemTable/ItemTable";
 import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "./components/@shadcn/ui/button";
 import { BinContext } from "./lib/BinContext";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogHeader } from "@/components/@shadcn/ui/dialog";
+import BulkCreate from "./components/ItemTable/BulkCreate";
+import { ItemTableContext } from "./lib/ItemTableContext";
 
 function App() {
   // Query + Error handling for fetching items
@@ -35,7 +38,7 @@ function App() {
       toast.error(`Error fetching bins: ${(getBins.error as Error).message || "Something went wrong"}`);
     }
   }, [getBins.isError, getBins.error]);
-
+  const itemTable = useContext(ItemTableContext)
   const [bins, setBins] = useState<any[]>([]);
   useEffect(() => {
     if (getBins.data) {
@@ -61,7 +64,18 @@ function App() {
       )}
       
         <div className="flex flex-col align-middle items-center justify-center">
-          <Button className=" relative m-5">Create Row</Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="relative m-5">Create Row</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create New Rows</DialogTitle>
+            </DialogHeader>
+
+            <BulkCreate />
+          </DialogContent>
+        </Dialog>
           <Toaster />
           <footer className="relative">Made with ❤️ for Sarah 2025</footer>
         </div>

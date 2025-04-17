@@ -1,5 +1,12 @@
 export function createItemTableMeta(setData: React.Dispatch<React.SetStateAction<any[]>>) {
     return {
+      createRows: (newRows: any[]) => {
+        if (!Array.isArray(newRows)) {
+          console.error("createRows expects an array, but received:", newRows);
+          return;
+        }
+        setData((prevData) => [...prevData, ...newRows]); // Append new rows to the existing data
+      },
       updateData: (rowIndex: number, columnId: string, value: any) => {
         console.log("updateData called", value);
         setData((prev) =>

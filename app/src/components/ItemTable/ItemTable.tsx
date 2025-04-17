@@ -1,11 +1,11 @@
 // table management
-import { ColumnDef, getCoreRowModel, useReactTable, flexRender } from '@tanstack/react-table';
+import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 
 // state management
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 // Table Components from shadcn/ui
-import { Table, TableRow, TableBody, TableCell } from '../@shadcn/ui/table';
+import { Table} from '../@shadcn/ui/table';
 
 // Cells
 import EditableName from './Cells/EditableCell_NAME';
@@ -18,6 +18,10 @@ import Item from '@/types/Item';
 import { ItemTableHeader } from './ItemTableHeader';
 import { ItemTableBody } from './ItemTableBody';
 import { createItemTableMeta } from '@/lib/createItemTableMeta';
+import { ItemTableContext } from '@/lib/ItemTableContext';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../@shadcn/ui/dialog';
+import { Button } from '../@shadcn/ui/button';
+import BulkCreate from './BulkCreate';
 
 
 interface ItemTableProps {
@@ -80,10 +84,24 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
         meta: tableMeta,
     })
     return (
+        <>
         <Table  className="border-black w-[1280px] h-screen ">
             <ItemTableHeader table={table} />
             <ItemTableBody table={table} />
         </Table>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="relative m-5">Create Row</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create New Rows</DialogTitle>
+            </DialogHeader>
+
+            <BulkCreate table={table} />
+          </DialogContent>
+        </Dialog>
+        </>
     );
 };
    
