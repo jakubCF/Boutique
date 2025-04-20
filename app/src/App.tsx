@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import { Button } from "./components/@shadcn/ui/button";
 import { BinContext } from "./lib/BinContext";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogHeader } from "@/components/@shadcn/ui/dialog";
-import BulkCreate from "./components/ItemTable/BulkCreate";
+import BulkCreate from "./components/ItemTable/Cells/BulkCreate";
 import { ItemTableContext } from "./lib/ItemTableContext";
 
 function App() {
@@ -48,7 +48,7 @@ function App() {
 
   // TODO: change theme
   return (
-      <div >
+      <div className="dark">
       <h1 className="text-center">Hello Sarah!</h1>
       {isLoading ? (
           <TableSkeleton />

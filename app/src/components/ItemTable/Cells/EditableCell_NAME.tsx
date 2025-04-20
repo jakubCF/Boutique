@@ -36,7 +36,7 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
         <div className="flex justify-between">
             {getValue<string>()}
             <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger className="text-white">Edit</DialogTrigger>
+            <DialogTrigger className='underline hover:text-gray-300'>Edit</DialogTrigger>
             <DialogContent className="text-center">
                 <DialogHeader>
                 <DialogTitle className="text-center">Edit {getValue<string>()}?</DialogTitle>

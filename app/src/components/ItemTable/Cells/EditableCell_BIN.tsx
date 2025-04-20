@@ -72,8 +72,8 @@ const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) =
         <div className="flex justify-between">
             {getValue<string>() || "No Bin"}
             <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger className="text-white">Edit</DialogTrigger>
-            <DialogContent className="text-center">
+            <DialogTrigger className='underline hover:text-gray-300'>Edit</DialogTrigger>
+            <DialogContent className="text-center bg-white text-black opacity-90">
                 <DialogHeader>
                 <DialogTitle className="text-center">Edit {getValue<string>()}?</DialogTitle>
                 <form  className="space-y-8" onSubmit={(e) => {
@@ -83,7 +83,7 @@ const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) =
                 }>
                     <DialogDescription className="text-center">Are you sure you want to edit this field?</DialogDescription>
                     <form.Field name="bin" children={( field ) => (
-                        <div className='flex flex-col items-center text-white'>
+                        <div className='flex flex-col items-center text-black bg-white'>
                             <Label htmlFor="bin">Bin:</Label>
                             <Select value={field.state.value} onValueChange={(value) => {
                                 field.setValue(value); // Update the form value
@@ -93,7 +93,7 @@ const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) =
                                 <SelectTrigger className="w-[240px]">
                                     <SelectValue placeholder="Select a bin" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className='bg-white opacity-90'>
                                     {bins.map((bin) => (
                                         <SelectItem key={bin.id} value={bin.name}>{bin.name}</SelectItem>
                                     ))}
@@ -103,7 +103,7 @@ const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) =
                         </div>
                     )} />
                     <div className='flex justify-center'>
-                        <Button type="submit" className='ml-1 mr-1'>Submit</Button>
+                        <Button type="submit" className='ml-1 mr-1 shadow-2xl bg-green-500' style={{border: "1px solid black"}}>Submit</Button>
                     </div>
 
                 </form>

@@ -8,9 +8,9 @@ interface ITableBodyProps {
 
 export const ItemTableBody: React.FunctionComponent<ITableBodyProps> = ({ table }) => {
   return (
-    <TableBody className=''>
+    <TableBody >
       {table.getRowModel().rows.map(row => 
-        <TableRow  key={row.id}>
+        <TableRow key={row.id}>
           {row.getVisibleCells().map(cell =>
             <TableCell className='hover:bg-gray-200 border text-left' key={cell.id} >
               {

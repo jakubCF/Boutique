@@ -1,8 +1,8 @@
 // table management
-import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { ColumnDef, getCoreRowModel, getFilteredRowModel, useReactTable } from '@tanstack/react-table';
 
 // state management
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
 // Table Components from shadcn/ui
 import { Table} from '../@shadcn/ui/table';
@@ -20,7 +20,9 @@ import { ItemTableBody } from './ItemTableBody';
 import { createItemTableMeta } from '@/lib/createItemTableMeta';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../@shadcn/ui/dialog';
 import { Button } from '../@shadcn/ui/button';
-import BulkCreate from './BulkCreate';
+import BulkCreate from './Cells/BulkCreate';
+import { Filters } from './Filters';
+import { BinContext } from '@/lib/BinContext';
 
 
 interface ItemTableProps {
@@ -61,6 +63,19 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
               id: "bin_name", // Use a custom ID for the column
               cell: (props: any) => <EditableBin {...props} />,
               size: minColumnWidths.bin_name,
+              enableSorting: false,
+              filterFn: (row, _, filterValue) => {
+                  if (!filterValue || filterValue.length === 0) {
+                      return true; // Show all rows if no filter is applied
+                  }
+
+                  const binName = row.original.bin?.name;
+                  if (!binName) {
+                      return false; // Don't show rows with no bin assigned
+                  }
+
+                  return filterValue.includes(binName);
+              },
           },
           {
               accessorKey: "sold",
@@ -70,33 +85,58 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
           },
       ];
   }, []);
+  const bins = useContext(BinContext)
 
   const [data, setData] = useState(DATA);
+  const [columnFilters, setColumnFilters] = useState([
+    {
+      id: "name",
+      value: ""
+    },
+    {
+      id: "bin_name",
+      value: []
+    }
+  ])
   const [createOpen, setCreateOpen] = useState(false); // State for dialog visibility
-  const tableMeta = createItemTableMeta(setData);
+  const tableMeta = useMemo(() => createItemTableMeta(setData), [setData]);
   const table = useReactTable({
       data,
+      state: { columnFilters },
       columns,
       getCoreRowModel: getCoreRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
       columnResizeMode: "onChange",
       meta: tableMeta,
   });
 
   return (
     <div className="flex flex-col h-screen"> {/* Flex container for the table and button */}
-      <div className="flex-grow overflow-auto"> {/* Table container with flex-grow */}
-        <Table className="border-black min-w-[1280px] min-h-[200px] max-h-[600px]">
-          <ItemTableHeader table={table} />
-          <ItemTableBody table={table} />
-        </Table>
-      </div>
-      <div className="flex justify-center p-4"> {/* Center the button */}
-        <Button
-          className="w-full max-w-[1280px]" // Stretch the button to match the table width
-          onClick={() => setCreateOpen(true)} // Open the dialog
-        >
-          Create Row
-        </Button>
+      <div className="flex flex-col flex-grow overflow-hidden"> {/* Ensure the table and button are in the same column */}
+        <div className="flex-grow overflow-auto"> {/* Table container with flex-grow */}
+          <Filters columnFilters={columnFilters} setColumnFilters={setColumnFilters} bins={bins} />
+          <Table className="border-black min-w-[1280px] min-h-[200px] max-h-[200px]">
+            <ItemTableHeader table={table} />
+            <ItemTableBody table={table} />
+          </Table>
+          <Button
+            style={{
+              margin: "0.5em",
+              width: "100%", // Stretch the button to match the table width
+              maxWidth: "1280px", // Set the maximum width of the button
+              padding: "12px", // Add padding for better spacing
+              color: "white", // Tailwind's text-white
+              borderRadius: "0.375rem", // Tailwind's rounded
+              fontSize: "16px", // Tailwind's text-base
+              fontWeight: "500", // Tailwind's font-medium
+              cursor: "pointer", // Pointer cursor for better UX
+              border: "none", // Remove default border
+            }}
+            onClick={() => setCreateOpen(true)} // Open the dialog
+          >
+            Create Row
+          </Button>
+        </div>
       </div>
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent

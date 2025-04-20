@@ -197,7 +197,8 @@ Base URL: `http://localhost:3000/v1`
 
 ### Remove Item from Bin
 **PATCH** `/bins/update/:id/remove/item/:item_id`  
-**Description:** Remove an item from a bin.  
+**Description:** Remove an item from a bin. 
+**Note:** If you are trying to connect an item to another bin you only need to call the add route, it is redundant to call both as prisma disconnects old bin and connects new one on mutation call.
 **Params:**
 - `id`: Bin ID
 - `item_id`: Item ID
