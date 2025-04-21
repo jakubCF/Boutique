@@ -10,7 +10,6 @@ import { BinContext } from "./lib/BinContext";
 // TODO: fix styling in bin select
 // TODO: package mutations as hooks
 // TODO: more refactors for cleaner code and easier readability
-// TODO: Docstrings (JSDoc) for all functions
 
 /**
  * The main application component.

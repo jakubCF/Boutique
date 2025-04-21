@@ -8,7 +8,7 @@ import { Skeleton } from "../@shadcn/ui/skeleton";
  *
  * @returns A JSX element representing the table skeleton.
  */
-const TableSkeleton : React.FC = () => {
+const TableSkeleton: React.FC = () => {
     const skeletonCount = 17; // Number of skeleton rows to display
 
     return (
@@ -17,11 +17,11 @@ const TableSkeleton : React.FC = () => {
             {Array.from({ length: skeletonCount }).map((_, index) => (
                 <Skeleton
                     key={index}
-                    className={`m-1 p-${index % 2 === 0 ? 4 : 3} bg-gray-${index % 2 === 0 ? 600 : 700}`}
+                    className={`m-1 p-4 ${index % 2 === 0 ? "bg-gray-600" : "bg-gray-700"}`}
                 />
             ))}
         </div>
     );
-}
+};
 
 export default TableSkeleton;
