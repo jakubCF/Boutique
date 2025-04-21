@@ -18,6 +18,17 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { Bin } from '@/types/Bin';
 
+/**
+ * EditableBin component for rendering an editable bin selection within a table cell.
+ *
+ * This component displays the current bin name and provides a dialog to change
+ * the bin assignment for a specific item. It uses TanStack React Table for cell
+ * context, TanStack Form for form management, TanStack Query for data mutation,
+ * and Shadcn UI components for styling.
+ *
+ * @param props - The CellContext props from TanStack React Table.
+ * @returns A JSX element representing the editable bin cell.
+ */
 const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) => {
     const bins = useContext(BinContext); // Get the bins from the context
     const [open, setOpen] = React.useState(false); // State for dialog open state
@@ -77,7 +88,7 @@ const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) =
                 <DialogHeader>
                 <DialogTitle className="text-center">Edit {getValue<string>()}?</DialogTitle>
                 <form  className="space-y-8" onSubmit={(e) => {
-                        e.preventDefault();
+                        e.preventDefault(); 
                         form.handleSubmit();
                     }
                 }>

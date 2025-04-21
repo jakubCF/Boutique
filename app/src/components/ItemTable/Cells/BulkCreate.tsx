@@ -14,8 +14,17 @@ import { Table } from "@tanstack/react-table";
 import Item from "@/types/Item";
 import { Button } from "../../@shadcn/ui/button";
 
+/**
+ * Props for the BulkCreate component.
+ */
 interface IBulkProps {
+  /**
+   * The TanStack Table instance.
+   */
   table: Table<Item>
+  /**
+   * State setter function to control the visibility of the component.
+   */
   setState : React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -25,6 +34,17 @@ declare module "@tanstack/react-table" {
   }
 }
 
+/**
+ * BulkCreate component for creating multiple items at once.
+ *
+ * This component provides a form for entering item details (name, bin, sold status)
+ * and allows adding/removing items dynamically. It uses TanStack Form for form
+ * management, TanStack Query for data mutation, and Shadcn UI components for
+ * styling.
+ *
+ * @param props - The component props.
+ * @returns A JSX element representing the bulk create form.
+ */
 const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) => {
   const create_bulk = useMutation({
     mutationKey: ["createBulkItems"],

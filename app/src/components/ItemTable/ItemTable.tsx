@@ -1,5 +1,5 @@
 // table management
-import { ColumnDef, getCoreRowModel, getFilteredRowModel, useReactTable } from '@tanstack/react-table';
+import { ColumnDef, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 
 // state management
 import { useContext, useMemo, useState } from 'react';
@@ -23,22 +23,42 @@ import { Button } from '../@shadcn/ui/button';
 import BulkCreate from './Cells/BulkCreate';
 import { Filters } from './Filters';
 import { BinContext } from '@/lib/BinContext';
+import { TablePaginator } from './TablePaginator';
 
 
+/**
+ * Props for the ItemTable component.
+ */
 interface ItemTableProps {
+    /**
+     * The data to display in the table.
+     */
     DATA: Item[]
 }
 
-const minColumnWidths = { // Default column widths on load
+/**
+ * Default column widths on load.
+ */
+const minColumnWidths = {
     id: 5,
     name: 100,
     bin_name: 50,
     sold: 30,
 };
 
-// Create the functional component
+/**
+ * ItemTable component for displaying and managing items in a table.
+ *
+ * This component uses the TanStack Table library to create a sortable, filterable,
+ * and editable table. It also includes a dialog for creating new items in bulk.
+ *
+ * @param props - The component props.
+ * @returns A JSX element representing the item table.
+ */
 const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
-  // Define the columns for the table using useMemo to optimize performance
+  /**
+   * Defines the columns for the table using useMemo to optimize performance.
+   */
   const columns: ColumnDef<Item>[] = useMemo(() => {
       return [
           {
@@ -63,7 +83,15 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
               id: "bin_name", // Use a custom ID for the column
               cell: (props: any) => <EditableBin {...props} />,
               size: minColumnWidths.bin_name,
-              enableSorting: false,
+              enableSorting: true,
+              /**
+               * Filters the table rows based on the selected bin names.
+               *
+               * @param row - The row to filter.
+               * @param _ - The column ID (not used).
+               * @param filterValue - The array of selected bin names.
+               * @returns True if the row should be included in the filtered results, false otherwise.
+               */
               filterFn: (row, _, filterValue) => {
                   if (!filterValue || filterValue.length === 0) {
                       return true; // Show all rows if no filter is applied
@@ -95,7 +123,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
     },
     {
       id: "bin_name",
-      value: []
+      value: [] as string[]
     }
   ])
   const [createOpen, setCreateOpen] = useState(false); // State for dialog visibility
@@ -106,6 +134,8 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
       columns,
       getCoreRowModel: getCoreRowModel(),
       getFilteredRowModel: getFilteredRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
       columnResizeMode: "onChange",
       meta: tableMeta,
   });
@@ -115,7 +145,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
       <div className="flex flex-col flex-grow overflow-hidden"> {/* Ensure the table and button are in the same column */}
         <div className="flex-grow overflow-auto"> {/* Table container with flex-grow */}
           <Filters columnFilters={columnFilters} setColumnFilters={setColumnFilters} bins={bins} />
-          <Table className="border-black min-w-[1280px] min-h-[200px] max-h-[200px]">
+          <Table className="border-gray-200 min-w-[1280px] min-h-[200px] max-h-[200px]">
             <ItemTableHeader table={table} />
             <ItemTableBody table={table} />
           </Table>
@@ -123,9 +153,10 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
             style={{
               margin: "0.5em",
               width: "100%", // Stretch the button to match the table width
-              maxWidth: "1280px", // Set the maximum width of the button
+              maxWidth: "1450px", // Set the maximum width of the button
               padding: "12px", // Add padding for better spacing
-              color: "white", // Tailwind's text-white
+              backgroundColor: "#1f2937",
+              color: "#e5e7eb", // Text color
               borderRadius: "0.375rem", // Tailwind's rounded
               fontSize: "16px", // Tailwind's text-base
               fontWeight: "500", // Tailwind's font-medium
@@ -136,6 +167,8 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
           >
             Create Row
           </Button>
+          <TablePaginator table={table} />
+          
         </div>
       </div>
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
@@ -152,7 +185,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
           <DialogHeader>
             <DialogTitle>Create New Items</DialogTitle>
           </DialogHeader>
-          <div className="overflow-y-auto h-full flex: 1">
+          <div className="overflow-y-auto h-full flex-1/2">
             <BulkCreate table={table} setState={setCreateOpen} />
           </div>
         </DialogContent>

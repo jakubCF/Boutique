@@ -2,29 +2,57 @@ import * as React from 'react';
 import { TableHead, TableHeader, TableRow } from '../@shadcn/ui/table';
 import { flexRender, Table } from '@tanstack/react-table';
 import Item from '@/types/Item';
+import { ArrowDown, ArrowDownUp, ArrowUp } from 'lucide-react';
 
+/**
+ * Props for the ItemTableHeader component.
+ */
 export interface TableHeaderProps {
+    /**
+     * The TanStack Table instance.
+     */
     table: Table<Item>
 }
 
+/**
+ * ItemTableHeader component for rendering the header of the item table.
+ *
+ * This component renders the table headers, including sorting indicators and
+ * resize handles.
+ *
+ * @param props - The component props.
+ * @returns A JSX element representing the table header.
+ */
 export const ItemTableHeader =  ({ table }: TableHeaderProps) => {
   return (
-        <TableHeader className='bg-black'>
+        <TableHeader className='bg-gray-900 text-gray-200 rounded-t-sm'>
         {table.getHeaderGroups().map((headerGroup) => (
             <TableRow className='m-2'  key={headerGroup.id}>
             {headerGroup.headers.map((header) => {
                 return (
                     <TableHead 
-                        className="text-white px-4 py-2 text-left relative rounded-t-sm"
+                        className="text-white rounded-t-sm"
                         key={header.id}
                         style={{ width: `${header.getSize()}em` }}
                     >
-                        {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                            )}
+                         <span className='text-left flex justify-between items-center'
+                         onClick={header.column.getToggleSortingHandler()}
+                            >
+                                {header.isPlaceholder ? null : (
+                                    <>
+                                        {flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext()
+                                        )}
+                                        {{
+                                            asc: <ArrowUp className='ml-2' size={20} />,
+                                            desc: <ArrowDown className='ml-2' size={20} />
+                                        }[header.column.getIsSorted() as string] ?? null}
+                                    </>
+                                )}                         
+                         </span>
+                         
+                            
                         <div
                             onMouseDown={header.getResizeHandler()} // for desktop
                             onTouchStart={header.getResizeHandler()} // for mobile

@@ -1,28 +1,26 @@
 import { Skeleton } from "../@shadcn/ui/skeleton";
 
+/**
+ * TableSkeleton component for displaying a skeleton loading state for a table.
+ *
+ * This component renders a series of skeleton elements to mimic the appearance
+ * of a table while data is being loaded.
+ *
+ * @returns A JSX element representing the table skeleton.
+ */
 const TableSkeleton : React.FC = () => {
-    return ( // TODO: make a loop for this, it looks like shit
-        <div className="border grid w-screen h-[600px]justify-between m-auto">
-          <Skeleton className="m-1 p-4 " />
-          <Skeleton className=" m-1 p-3 bg-gray-200" />
-          <Skeleton className="m-1 p-4 " />
-          <Skeleton className=" m-1 p-4 bg-gray-200" />
-          <Skeleton className="p-2 m-1 " />
-          <Skeleton className="p-2 m-1 bg-gray-200" />
-          <Skeleton className="m-1 p-4 " />
-          <Skeleton className=" m-1 p-3 bg-gray-200" />
-          <Skeleton className="m-1 p-4 " />
-          <Skeleton className=" m-1 p-4 bg-gray-200" />
-          <Skeleton className="p-2 m-1 " />
-          <Skeleton className=" m-1 p-5 bg-gray-200" />
-          <Skeleton className="m-1 p-4 " />
-          <Skeleton className=" m-1 p-3 bg-gray-200" />
-          <Skeleton className="m-1 p-2 " />
-          <Skeleton className=" m-1 p-4 bg-gray-200" />
-          <Skeleton className="p-2 m-1 " />
-          <Skeleton className="p-3 m-1 bg-gray-200" />
-        </div>
+    const skeletonCount = 17; // Number of skeleton rows to display
 
+    return (
+        <div className="w-full max-w-[1400px] max-h-[850px] p-4 rounded-lg shadow-lg">
+            {/* Loop to generate skeleton rows */}
+            {Array.from({ length: skeletonCount }).map((_, index) => (
+                <Skeleton
+                    key={index}
+                    className={`m-1 p-${index % 2 === 0 ? 4 : 3} bg-gray-${index % 2 === 0 ? 600 : 700}`}
+                />
+            ))}
+        </div>
     );
 }
 

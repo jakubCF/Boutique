@@ -10,8 +10,17 @@ import { Label } from "../../@shadcn/ui/label";
 import { useUpdateItemName } from "@/lib/Mutations/UpdateItemName";
 import { useDeleteItem } from "@/lib/Mutations/DeleteItem";
 
-
-
+/**
+ * EditableName component for rendering an editable name within a table cell.
+ *
+ * This component displays the current name and provides a dialog to change
+ * the name for a specific item. It also includes a delete button to remove the item.
+ * It uses TanStack React Table for cell context, TanStack Form for form management,
+ * TanStack Query for data mutation, and Shadcn UI components for styling.
+ *
+ * @param props - The CellContext props from TanStack React Table.
+ * @returns A JSX element representing the editable name cell.
+ */
 const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, table}) => {
     // TODO: put mutations in a separate file
     // TODO: provide popup confirmation for delete
@@ -36,20 +45,20 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
         <div className="flex justify-between">
             {getValue<string>()}
             <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger className='underline hover:text-gray-300'>Edit</DialogTrigger>
-            <DialogContent className="text-center">
+            <DialogTrigger className='underline hover:text-gray-300'>Edit</DialogTrigger> 
+            <DialogContent className="text-center bg-gray-800 opacity-90">
                 <DialogHeader>
-                <DialogTitle className="text-center">Edit {getValue<string>()}?</DialogTitle>
+                <DialogTitle className="text-center text-gray-200">Edit {getValue<string>()}?</DialogTitle>
                 <form  className="space-y-8" onSubmit={(e) => e.preventDefault()}>
-                    <DialogDescription className="text-center">Are you sure you want to edit {getValue<string>()}?</DialogDescription>
+                    <DialogDescription className="text-center text-gray-200">Are you sure you want to edit {getValue<string>()}?</DialogDescription>
                     <form.Field name="name" children={( field ) => (
                         <div>
-                            <Label htmlFor="name">Name</Label>
-                            <Input id="name" type="text" value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
+                            <Label htmlFor="name" className="text-gray-200 m-0.5">Name</Label>
+                            <Input className="text-gray-200" id="name" type="text" value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
                         </div>
                     )} />
-                    <Button onClick={form.handleSubmit}>Submit</Button>
-                    <Button className="m-2" style={{backgroundColor: "#9c2828"}} onClick={() => {
+                    <Button className="text-gray-200 bg-green-600" onClick={form.handleSubmit}>Submit</Button>
+                    <Button className="m-2 text-gray-200" style={{backgroundColor: "#9c2828"}} onClick={() => {
                         deleteName.mutate();
                     }}>Delete</Button>
                 </form>

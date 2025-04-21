@@ -11,7 +11,12 @@ const RouteHandler = express.Router();
         - Return Response in a JSON object 
             - Message, Response Code || Data
 */
-
+// Middleware to add a 2-second delay
+RouteHandler.use((req, res, next) => {
+    setTimeout(() => {
+      next();
+    }, 1000); // 1-second delay
+  });
 RouteHandler.use("/bins", BinsRouter);
 RouteHandler.use("/items", ItemsRouter);
 
