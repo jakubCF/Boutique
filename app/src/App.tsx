@@ -5,11 +5,8 @@ import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
 import { useEffect, useState } from "react";
 import { BinContext } from "./lib/BinContext";
+import { Button } from "./components/@shadcn/ui/button";
 
-// TODO: fix styling in create bulk
-// TODO: fix styling in bin select
-// TODO: package mutations as hooks
-// TODO: more refactors for cleaner code and easier readability
 
 /**
  * The main application component.
@@ -79,7 +76,6 @@ function App() {
 
   return (
     <div className="bg-gray-800 text-gray-200 min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-center text-gray-200 p-4">Hello Sarah!</h1>
       {isLoading ? (
         <TableSkeleton />
       ) : isError ? (

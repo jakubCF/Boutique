@@ -32,7 +32,7 @@ export interface TablePaginatorProps {
  */
 export const TablePaginator: React.FC<TablePaginatorProps> = ({ table }) => {
   return (
-    <Pagination>
+    <Pagination className='mt-4 mb-4'>
       <PaginationContent>
         {/* Previous Button */}
         <PaginationItem>

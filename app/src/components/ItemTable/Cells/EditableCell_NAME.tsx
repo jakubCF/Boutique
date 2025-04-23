@@ -7,8 +7,9 @@ import { Input } from "../../@shadcn/ui/input";
 import { Button } from "../../@shadcn/ui/button";
 import { useForm } from "@tanstack/react-form"
 import { Label } from "../../@shadcn/ui/label";
-import { useUpdateItemName } from "@/lib/Mutations/UpdateItemName";
-import { useDeleteItem } from "@/lib/Mutations/DeleteItem";
+import { useUpdateItemName } from "@/lib/Hooks/Mutations/useUpdateItemName";
+import { useDeleteItem } from "@/lib/Hooks/Mutations/useDeleteItem";
+import { Pencil } from "lucide-react";
 
 /**
  * EditableName component for rendering an editable name within a table cell.
@@ -22,7 +23,6 @@ import { useDeleteItem } from "@/lib/Mutations/DeleteItem";
  * @returns A JSX element representing the editable name cell.
  */
 const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, table}) => {
-    // TODO: put mutations in a separate file
     // TODO: provide popup confirmation for delete
     const [open, setOpen] = React.useState(false); // state for dialog state, allows you to programmatically open and close the dialog
 
@@ -39,13 +39,15 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
 
     // Mutation Hooks
     const updateName = useUpdateItemName(row, table, column, form, setOpen);
-    const deleteName = useDeleteItem(row, table, column, form, setOpen);
+    const deleteName = useDeleteItem(row, table, setOpen);
 
     return(
         <div className="flex justify-between">
             {getValue<string>()}
             <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger className='underline hover:text-gray-300'>Edit</DialogTrigger> 
+            <DialogTrigger className='cursor-pointer hover:text-green-100'>
+                <Pencil size={20}/>    
+            </DialogTrigger> 
             <DialogContent className="text-center bg-gray-800 opacity-90">
                 <DialogHeader>
                 <DialogTitle className="text-center text-gray-200">Edit {getValue<string>()}?</DialogTitle>

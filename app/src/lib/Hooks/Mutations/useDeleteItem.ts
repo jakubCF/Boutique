@@ -19,8 +19,6 @@ import { toast } from "sonner";
 export const useDeleteItem = (
     row: any,
     table: any,
-    column: any,
-    form: any,
     setOpen: (value: boolean) => void
 ) => {
     return useMutation({

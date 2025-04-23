@@ -4,6 +4,7 @@ import { Button } from "../@shadcn/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "../@shadcn/ui/popover";
 import { Checkbox } from "../@shadcn/ui/checkbox";
 import { Label } from "../@shadcn/ui/label";
+import { Funnel } from "lucide-react";
 
 /**
  * Props for the Filters component.
@@ -85,13 +86,14 @@ export function Filters({ columnFilters, setColumnFilters, bins }: IFiltersProps
       />
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="bg-gray-800 text-gray-200">Filter Bins</Button>
+          <Funnel className="cursor-pointer" size={30} strokeWidth={1.5} />
         </PopoverTrigger>
         <PopoverContent className="p-4 w-64 bg-gray-800 opacity-100 text-gray-200">
           <div className="flex flex-col space-y-2 ">
             {bins.map((bin) => (
               <div key={bin.id} className="flex items-center space-x-2">
                 <Checkbox
+                  className="cursor-pointer"
                   checked={selectedBinNames.includes(bin.name)}
                   onCheckedChange={() => toggleBinSelection(bin.name)}
                   id={`bin-${bin.id}`}

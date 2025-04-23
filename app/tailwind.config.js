@@ -5,6 +5,15 @@ module.exports = {
     ],
     theme: {
       extend: {
+        keyframes: {
+          stripes: {
+            '0%': { backgroundPosition: '0 0' },
+            '100%': { backgroundPosition: '40px 0' },
+          },
+        },
+        animation: {
+          stripes: 'stripes 1.5s linear infinite',
+        },
         colors: {
           background: "var(--background)",
           foreground: "var(--foreground)",

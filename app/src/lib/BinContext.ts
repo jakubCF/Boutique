@@ -9,5 +9,6 @@ import { createContext } from 'react';
  * them to access and update bin information.
  *
  * @defaultValue `[]` - An empty array of `Bin` objects.
+ * 
  */
 export const BinContext = createContext<Bin[]>([]);

@@ -7,6 +7,10 @@ import { useContext, useMemo, useState } from 'react';
 // Table Components from shadcn/ui
 import { Table} from '../@shadcn/ui/table';
 
+// Icons
+import { Pencil, CirclePlus } from 'lucide-react';
+
+
 // Cells
 import EditableName from './Cells/EditableCell_NAME';
 import EditableSold from './Cells/EditableCell_SOLD';
@@ -24,6 +28,7 @@ import BulkCreate from './Cells/BulkCreate';
 import { Filters } from './Filters';
 import { BinContext } from '@/lib/BinContext';
 import { TablePaginator } from './TablePaginator';
+import { BinSheet } from './Cells/BinSheet';
 
 
 /**
@@ -127,6 +132,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
     }
   ])
   const [createOpen, setCreateOpen] = useState(false); // State for dialog visibility
+  const [binOpen, setBinOpen] = useState(false); // State for dialog visibility
   const tableMeta = useMemo(() => createItemTableMeta(setData), [setData]);
   const table = useReactTable({
       data,
@@ -149,28 +155,24 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
             <ItemTableHeader table={table} />
             <ItemTableBody table={table} />
           </Table>
-          <Button
-            style={{
-              margin: "0.5em",
-              width: "100%", // Stretch the button to match the table width
-              maxWidth: "1450px", // Set the maximum width of the button
-              padding: "12px", // Add padding for better spacing
-              backgroundColor: "#1f2937",
-              color: "#e5e7eb", // Text color
-              borderRadius: "0.375rem", // Tailwind's rounded
-              fontSize: "16px", // Tailwind's text-base
-              fontWeight: "500", // Tailwind's font-medium
-              cursor: "pointer", // Pointer cursor for better UX
-              border: "none", // Remove default border
-            }}
-            onClick={() => setCreateOpen(true)} // Open the dialog
-          >
-            Create Row
-          </Button>
+          <div className="flex space-x-2 mt-2 w-full">
+            <Button onClick={() => setBinOpen(true)} // Open the dialog
+              className="flex-1 font-medium cursor-pointer border-0 hover:bg-green-600 bg-gray-800"
+            >
+              <Pencil /> Bins
+            </Button>
+            <Button
+              className="flex-4/5 font-medium cursor-pointer border-0 hover:bg-green-600 bg-gray-800"
+              onClick={() => setCreateOpen(true)} // Open the dialog
+            >
+              <CirclePlus /> Items
+            </Button>
+          </div>
           <TablePaginator table={table} />
           
         </div>
       </div>
+      <BinSheet open={binOpen} onOpenChange={setBinOpen} table={table}/>
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent
           style={{
@@ -181,9 +183,10 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
             display: "flex", // Use flexbox for layout
             flexDirection: "column", // Arrange children vertically
           }}
+          className='bg-gray-800 opacity-90'
         >
           <DialogHeader>
-            <DialogTitle>Create New Items</DialogTitle>
+            <DialogTitle className='text-gray-200'>Create New Items</DialogTitle>
           </DialogHeader>
           <div className="overflow-y-auto h-full flex-1/2">
             <BulkCreate table={table} setState={setCreateOpen} />

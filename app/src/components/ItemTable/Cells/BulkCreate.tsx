@@ -1,8 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
 import * as React from "react";
 import { useForm } from "@tanstack/react-form";
-import axios from "axios";
-import { toast } from "sonner";
 import { BinContext } from "@/lib/BinContext";
 import {
   DropdownMenu,
@@ -13,6 +10,8 @@ import {
 import { Table } from "@tanstack/react-table";
 import Item from "@/types/Item";
 import { Button } from "../../@shadcn/ui/button";
+import { useBulkCreate } from "@/lib/Hooks/Mutations/useBulkCreate";
+import { X } from "lucide-react";
 
 /**
  * Props for the BulkCreate component.
@@ -46,29 +45,7 @@ declare module "@tanstack/react-table" {
  * @returns A JSX element representing the bulk create form.
  */
 const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) => {
-  const create_bulk = useMutation({
-    mutationKey: ["createBulkItems"],
-    mutationFn: async (data: unknown) => {
-      const response = await axios({
-        url : "http://localhost:3000/v1/items/bulk/create",
-        data: data,
-        method: "post"
-      })
-      return response
-    },
-    onError: (error) => {
-      
-      return toast.error("Failed to create items: " + error)
-    },
-    onSuccess: ({data}) => {
-      if (Array.isArray(data.data)) {
-        table.options.meta?.createRows(data.data);
-        toast.success("Items added successfully!");
-      } else {
-        console.error("Expected an array but received:", data.data);
-      }
-    },
-  })
+  const createBulk = useBulkCreate(table, setState); // Custom hook for bulk creation
   // Initialize the form
   const form = useForm({
     defaultValues: {
@@ -76,7 +53,7 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
     },
     onSubmit: async (values) => {
       // Send the data to the server
-      await create_bulk.mutate(values)
+      await createBulk.mutate(values)
     }
   });
 
@@ -115,33 +92,33 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
           <div key={index} className="flex space-x-4 items-center">
             {/* Item Name */}
             <div>
-              <label className="block text-sm font-medium">Item Name</label>
+              <label className="block text-sm font-medium text-gray-200">Item Name</label>
               <input
                 type="text"
                 value={item.name}
                 onChange={(e) => updateItem(index, "name", e.target.value)}
                 placeholder="Enter item name"
-                className="border rounded p-2 w-full"
+                className="border rounded p-2 w-full text-gray-200"
                 required
               />
             </div>
   
             {/* Bin Dropdown */}
             <div>
-              <label className="block text-sm font-medium">Bin</label>
+              <label className="block text-sm font-medium text-gray-200">Bin</label>
               <DropdownMenu>
                 <DropdownMenuTrigger 
-                style={{background: "white", border: "1px solid rgb(226, 229, 232)"}}
-                className="border rounded p-2 w-full text-left">
+                className="border rounded p-2 w-full text-left text-gray-200">
                   {item.binId
                     ? bins.find((bin) => bin.id === item.binId)?.name || "Select a Bin"
                     : "Select a Bin"}
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="bg-gray-800 text-gray-200">
                   {bins.map((bin) => (
                     <DropdownMenuItem
                       key={bin.id}
                       onClick={() => updateItem(index, "binId", bin.id)}
+                      className="hover:bg-gray-600"
                     >
                       {bin.name}
                     </DropdownMenuItem>
@@ -155,17 +132,17 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
   
             {/* Sold Dropdown */}
             <div>
-              <label className="block text-sm font-medium">Sold</label>
+              <label className="block text-sm font-medium  text-gray-200">Sold</label>
               <select
                 value={item.sold ? "yes" : "no"}
                 onChange={(e) => updateItem(index, "sold", e.target.value === "yes")}
+                className="text-gray-200 rounded p-2 w-full"
                 style={{
                   width: "100px", // Make the dropdown larger
                   height: "40px", // Increase height
                   padding: "8px", // Add padding
                   borderRadius: "0.375rem", // Rounded corners
                   border: "1px solid #d1d5db", // Tailwind's border-gray-300
-                  backgroundColor: "white", // White background
                 }}
               >
                 <option value="yes">Yes</option>
@@ -173,21 +150,14 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
               </select>
             
               {/* Remove Button */}
-              <Button
-                type="button"
-                onClick={() => removeItem(index) }
-                style={{
-                  border: "1px solid #d1d5db", // Tailwind's border-gray-300
-                  backgroundColor: "rgb(248, 113, 113)",
-                  color: "white",
-                  textDecoration: "none", // Tailwind's hover:underline
-                  scale: 1.2,
-                  marginLeft: "12px"
-                }}
-              >
-                X
-              </Button>
+
             </div>
+            <X
+                onClick={() => removeItem(index) }
+                className="text-red-500 cursor-pointer hover:text-red-400 border-gray-200 mt-4 "
+                style={{border: "1px solid red"}}
+                scale={10}
+               />
           </div>
   
 
@@ -198,11 +168,11 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
           type="button"
           onClick={addItem}
           style={{
-            color: "white", // Tailwind's text-white
             padding: "8px 16px", // Tailwind's px-4 py-2
             borderRadius: "0.375rem", // Tailwind's rounded
             marginRight: "5px",
           }}
+          className="hover:bg-gray-600 text-gray-200 bg-gray-800 shadow-gray-600 hover:shadow-gray-800 hover:shadow-lg shadow-md"
         >
           Add Item
         </Button>
@@ -210,8 +180,8 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
         {/* Submit Button */}
         <Button
           type="submit"
+          className="bg-green-500 hover:bg-green-400 "
           style={{
-            backgroundColor: "rgb(34, 197, 94)", // Tailwind's bg-green-500
             color: "white", // Tailwind's text-white
             padding: "8px 16px", // Tailwind's px-4 py-2
             borderRadius: "0.375rem", // Tailwind's rounded
