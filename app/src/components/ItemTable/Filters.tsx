@@ -1,11 +1,9 @@
 import * as React from "react";
 import { Input } from "../@shadcn/ui/input";
-import { Button } from "../@shadcn/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "../@shadcn/ui/popover";
 import { Checkbox } from "../@shadcn/ui/checkbox";
 import { Label } from "../@shadcn/ui/label";
 import { Funnel } from "lucide-react";
-
 /**
  * Props for the Filters component.
  */

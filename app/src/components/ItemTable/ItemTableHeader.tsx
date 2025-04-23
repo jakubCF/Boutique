@@ -2,7 +2,6 @@ import { TableHead, TableHeader, TableRow } from '../@shadcn/ui/table';
 import { flexRender, Table } from '@tanstack/react-table';
 import Item from '@/types/Item';
 import { ArrowDown, ArrowUp } from 'lucide-react';
-import { Button } from '../@shadcn/ui/button';
 
 /**
  * Props for the ItemTableHeader component.

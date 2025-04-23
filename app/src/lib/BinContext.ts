@@ -7,8 +7,8 @@ import { createContext } from 'react';
  * This context is initialized with an empty array as the default value. Components
  * that consume this context will receive the current array of `Bin` objects, allowing
  * them to access and update bin information.
- *
+ * @deprecated
  * @defaultValue `[]` - An empty array of `Bin` objects.
  * 
  */
-export const BinContext = createContext<Bin[]>([]);
+export const BinContext = createContext<Bin[]>([]); 

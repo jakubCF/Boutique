@@ -7,8 +7,8 @@ import { Input } from "../../@shadcn/ui/input";
 import { Button } from "../../@shadcn/ui/button";
 import { useForm } from "@tanstack/react-form"
 import { Label } from "../../@shadcn/ui/label";
-import { useUpdateItemName } from "@/lib/Hooks/Mutations/useUpdateItemName";
-import { useDeleteItem } from "@/lib/Hooks/Mutations/useDeleteItem";
+import { useUpdateItemName } from "@/Hooks/Mutations/useUpdateItemName";
+import { useDeleteItem } from "@/Hooks/Mutations/useDeleteItem";
 import { Pencil } from "lucide-react";
 
 /**

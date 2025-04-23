@@ -1,8 +1,6 @@
-import { Sheet, SheetContent } from "@/components/@shadcn/ui/sheet";
-import { BinContext } from "@/lib/BinContext";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/@shadcn/ui/sheet";
 import Item from "@/types/Item";
 import { Table } from "@tanstack/react-table";
-import { useContext } from "react";
 import { Badge } from "@/components/@shadcn/ui/badge";
 import { Button } from "@/components/@shadcn/ui/button";
 import {
@@ -12,14 +10,18 @@ import {
     AccordionTrigger,
   } from "@/components/@shadcn/ui/accordion"
 import { AccordionHeader } from "@radix-ui/react-accordion";
+import { useDeleteBin } from "@/Hooks/Mutations/useDeleteBin";
+import { Bin } from "@/types/Bin";
 
 export interface IBinSheetProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     table: Table<Item>; // The TanStack Table instance
+    bins: Bin[]; // The array of bins
+
 }
 
-export function BinSheet ({open, onOpenChange}: IBinSheetProps) {
+export function BinSheet ({open, onOpenChange, bins}: IBinSheetProps) {
     /**
      * BinSheet component for displaying a sheet of items in a bin.
      *
@@ -31,20 +33,24 @@ export function BinSheet ({open, onOpenChange}: IBinSheetProps) {
      * @param props.table - The TanStack Table instance.
      * @returns A JSX element representing the bin sheet.
      */
-    const bins = useContext(BinContext); // Get bins from context
+    // Hooks
+    const deleteBin = useDeleteBin();
+
+
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent side="right" className="w-[600px] bg-gray-800 opacity-100">
+            <SheetTitle>Bin Management</SheetTitle>
+            <SheetContent side="right" className="w-[600px] bg-gray-800 opacity-98 border-none">
+                <SheetHeader className="font-2xl text-gray-200"> Bin Management </SheetHeader>
                 <Accordion collapsible type="single" className="p-4">
-
                 {/* Content goes here */}
                 {bins.map((bin) => (
-                    <div className="w-full bg-gray-600" key={bin.id}>
-                        <AccordionItem key={bin.id} value={bin.id.toString()} className="mb-4">
+                    <div className="w-full focus:outline-none bg-gray-600 rounded-md focus:ring-2 focus:ring-gray-500 " key={bin.id}>
+                        <AccordionItem key={bin.id} value={bin.id.toString()} className="mb-2">
                         {/* Accordion Trigger */}
-                        <AccordionTrigger className="flex items-center flex-row hover:no-underline focus:outline-none focus:ring-2 focus:ring-gray-500 rounded-md p-2 bg-gray-700">
+                        <AccordionTrigger className="text-gray-200 flex items-center justify-evenly flex-row hover:no-underline rounded-md p-2 bg-gray-700">
                             <h2 className="text-lg font-bold text-gray-200">{bin.name}</h2>
-                            <Badge className="text-sm text-gray-200 bg-gray-700 ml-2">
+                            <Badge className="text-sm text-gray-200 bg-gray-600 ml-2">
                                 {bin.items.length} items
                             </Badge>
                         </AccordionTrigger>
@@ -54,9 +60,9 @@ export function BinSheet ({open, onOpenChange}: IBinSheetProps) {
                             </AccordionHeader>
                             
                             <Button
-                            className="relative overflow-hidden text-gray-200 font-bold py-2 px-6 rounded shadow-lg group bg-gray-700"
+                            className="relative overflow-hidden text-gray-200 font-bold py-2 px-6 rounded shadow-lg group bg-gray-700 ml-2"
                             onClick={() => {
-                                    // Handle bin edit or delete
+
                             }}
                             >
                                 <span className="relative z-10">Edit</span> { /* Cool Hover Effect */}
@@ -65,7 +71,8 @@ export function BinSheet ({open, onOpenChange}: IBinSheetProps) {
                             <Button
                             className="relative overflow-hidden text-gray-200 font-bold py-2 px-6 rounded shadow-lg bg-gray-700 hover:bg-red-500 ml-2"
                             onClick={() => {
-                                    // Handle bin edit or delete
+
+                                deleteBin.mutate(bin);
                             }}
                             >
                                 Delete

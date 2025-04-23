@@ -17,7 +17,8 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { Bin } from '@/types/Bin';
-import { Pencil, CirclePlus, Pen } from 'lucide-react';
+import { Pencil } from 'lucide-react';
+import { useBinStore } from '@/Hooks/Store/BinStore';
 
 
 /**
@@ -32,16 +33,19 @@ import { Pencil, CirclePlus, Pen } from 'lucide-react';
  * @returns A JSX element representing the editable bin cell.
  */
 const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) => {
-    const bins = useContext(BinContext); // Get the bins from the context
+
+    const { bins } = useBinStore()
     const [open, setOpen] = React.useState(false); // State for dialog open state
+
     // Database query
     const updateBin = useMutation({
         mutationKey: ["updateBin"],
         // Update the bin name in the database
         mutationFn: async (bin: Bin | null) => {
+
             let queryString;
             const id = row.original.id; // Get the item ID from the row
-            console.log(bin)
+
             if (!bin) {
                 const currentBin = row.original.bin?.id; // Get the current bin ID
                 queryString = `http://localhost:3000/v1/bins/update/${currentBin}/remove/item/${id}`;
@@ -50,13 +54,16 @@ const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) =
             else {
                 queryString = `http://localhost:3000/v1/bins/update/${bin.id}/add/item/${id}`;
             }
+
             setOpen(false); // Close the dialog
+
             return axios.patch(queryString); // Query the database
         },
         onSuccess: (data) => {
             toast.success("Bin updated successfully");
-            console.log(data);
+
             const selectedBin = bins.find((bin) => bin.name === data.data.data.name); // Find the selected bin in the bins array
+            
             // Update the table data with the new bin name
             if(data.request.responseURL.includes("remove")) { // If response url includes remove, it means we are disconnecting a bin i.e bin = No Bin || null
                 table.options.meta?.updateBinName(row.index, null);

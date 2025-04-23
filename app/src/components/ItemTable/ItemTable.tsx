@@ -2,7 +2,7 @@
 import { ColumnDef, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 
 // state management
-import { useContext, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 // Table Components from shadcn/ui
 import { Table} from '../@shadcn/ui/table';
@@ -26,9 +26,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../@shadcn/ui/
 import { Button } from '../@shadcn/ui/button';
 import BulkCreate from './Cells/BulkCreate';
 import { Filters } from './Filters';
-import { BinContext } from '@/lib/BinContext';
 import { TablePaginator } from './TablePaginator';
 import { BinSheet } from './Cells/BinSheet';
+import { useBinStore } from '@/Hooks/Store/BinStore';
 
 
 /**
@@ -118,8 +118,8 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
           },
       ];
   }, []);
-  const bins = useContext(BinContext)
-
+  const { bins } = useBinStore();
+  
   const [data, setData] = useState(DATA);
   const [columnFilters, setColumnFilters] = useState([
     {
@@ -172,7 +172,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
           
         </div>
       </div>
-      <BinSheet open={binOpen} onOpenChange={setBinOpen} table={table}/>
+      <BinSheet open={binOpen} onOpenChange={setBinOpen} table={table} bins={bins} />
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent
           style={{

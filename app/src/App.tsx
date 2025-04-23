@@ -4,8 +4,7 @@ import ItemTable from "./components/ItemTable/ItemTable";
 import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
 import { useEffect, useState } from "react";
-import { BinContext } from "./lib/BinContext";
-import { Button } from "./components/@shadcn/ui/button";
+import { useBinStore } from "./Hooks/Store/BinStore";
 
 
 /**
@@ -32,6 +31,8 @@ function App() {
       return data.data;
     },
   });
+
+  const {initBins} = useBinStore();
 
   useEffect(() => {
     if (isError && error) {
@@ -66,11 +67,10 @@ function App() {
     }
   }, [getBins.isError, getBins.error]);
 
-  const [bins, setBins] = useState<any[]>([]);
 
   useEffect(() => {
     if (getBins.data) {
-      setBins(getBins.data);
+      initBins(getBins.data);
     }
   }, [getBins.data]);
 
@@ -84,10 +84,8 @@ function App() {
         </div>
       ) : (
         <div className="w-full max-w-[1400px] max-h-[600px] p-4 bg-gray-700 rounded-lg shadow-lg">
-          <BinContext.Provider value={bins}>
             {/* Provides the bins to the whole tables tree */}
             <ItemTable DATA={data} />
-          </BinContext.Provider>
         </div>
       )}
 

@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useForm } from "@tanstack/react-form";
-import { BinContext } from "@/lib/BinContext";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -10,8 +9,9 @@ import {
 import { Table } from "@tanstack/react-table";
 import Item from "@/types/Item";
 import { Button } from "../../@shadcn/ui/button";
-import { useBulkCreate } from "@/lib/Hooks/Mutations/useBulkCreate";
+import { useBulkCreate } from "@/Hooks/Mutations/useBulkCreate";
 import { X } from "lucide-react";
+import { useBinStore } from "@/Hooks/Store/BinStore";
 
 /**
  * Props for the BulkCreate component.
@@ -57,7 +57,7 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
     }
   });
 
-  const bins = React.useContext(BinContext); // Get bins from context
+  const { bins } = useBinStore();
 
   const [items, setItems] = React.useState([{ name: "", binId: null, sold: false }]);
 
