@@ -228,3 +228,11 @@ Base URL: `http://localhost:3000/v1`
 - `item_id`: Item ID
 
 ---
+
+# Appendix
+
+This project is meant to run locally on home software with no issues, provide your own postgres database and ports to make this run.
+I created this project for my mother, and with all the other thrifters/resellers in mind. This software is for you to do as you please, and if you find any potential issues or improvements please feel free to open an issue on your refactors.
+
+Peace!
+Scott Duby
