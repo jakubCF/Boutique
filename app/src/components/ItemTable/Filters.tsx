@@ -28,7 +28,7 @@ export interface IFiltersProps {
   /**
    * The list of available bins.
    */
-  bins: { id: number; name: string }[]; // List of bins
+  bins: { id: number; name: string }[] | {id: number; name: string}; // List of bins
 }
 
 /**
@@ -42,7 +42,7 @@ export interface IFiltersProps {
  */
 export function Filters({ columnFilters, setColumnFilters, bins }: IFiltersProps) {
   const name = (columnFilters.find((f) => f.id === "name")?.value as string) || "";
-  const selectedBinNames = (columnFilters.find((f) => f.id === "bin_name")?.value as string[]) || [];
+  const selectedBins = (columnFilters.find((f) => f.id === "bin_name")?.value as unknown as { id: number; name: string }[]) || [];
 
   /**
    * Updates the column filters with the given ID and value.
@@ -50,27 +50,28 @@ export function Filters({ columnFilters, setColumnFilters, bins }: IFiltersProps
    * @param id - The ID of the filter to update.
    * @param value - The new value for the filter.
    */
-  const onFilterChange = (id: string, value: string | string[]) =>
+  const onFilterChange = (id: string, value: string | string[] | { id: number; name: string }[]) =>
     setColumnFilters((prev) => [
       ...prev.filter((f) => f.id !== id),
       ...(id === "bin_name"
-        ? [{ id, value: value as string[] }]
+        ? [{ id, value: value as { id: number; name: string }[] }]
         : [{ id, value: value as string }]),
     ]);
 
   /**
-   * Toggles the selection of a bin.
+   * Toggles the selection of a bin by its object.
    *
    * If the bin is currently selected, it will be deselected.
    * If the bin is currently deselected, it will be selected.
    *
-   * @param binName - The name of the bin to toggle.
+   * @param bin - The bin object to toggle.
    */
-  const toggleBinSelection = (binName: string) => {
-    const updatedBins = selectedBinNames.includes(binName)
-      ? selectedBinNames.filter((name) => name !== binName)
-      : [...selectedBinNames, binName];
+  const toggleBinSelection = (bin: { id: number; name: string }) => {
+    const updatedBins = selectedBins.some((selectedBin) => selectedBin.id === bin.id)
+      ? selectedBins.filter((selectedBin) => selectedBin.id !== bin.id)
+      : [...selectedBins, bin];
     onFilterChange("bin_name", updatedBins);
+    console.log(columnFilters)
   };
 
   return (
@@ -92,8 +93,8 @@ export function Filters({ columnFilters, setColumnFilters, bins }: IFiltersProps
               <div key={bin.id} className="flex items-center space-x-2">
                 <Checkbox
                   className="cursor-pointer"
-                  checked={selectedBinNames.includes(bin.name)}
-                  onCheckedChange={() => toggleBinSelection(bin.name)}
+                  checked={selectedBins.some((selectedBin) => selectedBin.id === bin.id)}
+                  onCheckedChange={() => toggleBinSelection(bin)}
                   id={`bin-${bin.id}`}
                 />
                 <Label htmlFor={`bin-${bin.id}`}>{bin.name}</Label>

@@ -27,7 +27,7 @@ import { Button } from '../@shadcn/ui/button';
 import BulkCreate from './Cells/BulkCreate';
 import { Filters } from './Filters';
 import { TablePaginator } from './TablePaginator';
-import { BinSheet } from './Cells/BinSheet';
+import { BinManager } from '@/components/BinManager';
 import { useBinStore } from '@/Hooks/Store/BinStore';
 
 
@@ -102,12 +102,12 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
                       return true; // Show all rows if no filter is applied
                   }
 
-                  const binName = row.original.bin?.name;
-                  if (!binName) {
+                  const bin = row.original.bin;
+                  if (!bin) {
                       return false; // Don't show rows with no bin assigned
                   }
 
-                  return filterValue.includes(binName);
+                  return filterValue.some((selectedBin: { id: number; name: string }) => selectedBin.id === bin.id);
               },
           },
           {
@@ -131,6 +131,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
       value: [] as string[]
     }
   ])
+  
   const [createOpen, setCreateOpen] = useState(false); // State for dialog visibility
   const [binOpen, setBinOpen] = useState(false); // State for dialog visibility
   const tableMeta = useMemo(() => createItemTableMeta(setData), [setData]);
@@ -155,7 +156,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
             <ItemTableHeader table={table} />
             <ItemTableBody table={table} />
           </Table>
-          <div className="flex space-x-2 mt-2 w-full">
+          <div className="flex space-x-2 mt-2 ">
             <Button onClick={() => setBinOpen(true)} // Open the dialog
               className="flex-1 font-medium cursor-pointer border-0 hover:bg-green-600 bg-gray-800"
             >
@@ -172,7 +173,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
           
         </div>
       </div>
-      <BinSheet open={binOpen} onOpenChange={setBinOpen} table={table} bins={bins} />
+      <BinManager open={binOpen} onOpenChange={setBinOpen} bins={bins} />
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent
           style={{

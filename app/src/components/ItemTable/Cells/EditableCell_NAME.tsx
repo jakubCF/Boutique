@@ -7,8 +7,8 @@ import { Input } from "../../@shadcn/ui/input";
 import { Button } from "../../@shadcn/ui/button";
 import { useForm } from "@tanstack/react-form"
 import { Label } from "../../@shadcn/ui/label";
-import { useUpdateItemName } from "@/Hooks/Mutations/useUpdateItemName";
-import { useDeleteItem } from "@/Hooks/Mutations/useDeleteItem";
+import { useUpdateItemName } from "@/Hooks/Mutations/Items/useUpdateItemName";
+import { useDeleteItem } from "@/Hooks/Mutations/Items/useDeleteItem";
 import { Pencil } from "lucide-react";
 
 /**
@@ -23,7 +23,6 @@ import { Pencil } from "lucide-react";
  * @returns A JSX element representing the editable name cell.
  */
 const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, table}) => {
-    // TODO: provide popup confirmation for delete
     const [open, setOpen] = React.useState(false); // state for dialog state, allows you to programmatically open and close the dialog
 
     const form = useForm({

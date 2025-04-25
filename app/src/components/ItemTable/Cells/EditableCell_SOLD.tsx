@@ -7,7 +7,7 @@ import { Label } from "../../@shadcn/ui/label";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "../../@shadcn/ui/dialog";
 import { DialogHeader } from "../../@shadcn/ui/dialog";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../@shadcn/ui/select";
-import { useUpdateSold } from "@/Hooks/Mutations/useUpdateSold";
+import { useUpdateSold } from "@/Hooks/Mutations/Items/useUpdateSold";
 import { Pencil } from "lucide-react";
 
 // Extend TableMeta to include updateData

@@ -59,7 +59,6 @@ export function createItemTableMeta(setData: React.Dispatch<React.SetStateAction
        * @param value - The new bin object.  If `null` is provided, the bin assignment is removed.
        */
       updateBinName: (rowIndex: number, value: any) => {
-        // TODO: fix bin IDs not matching up after update
         setData((prevData) =>
           prevData.map((row, index) => {
             if (index === rowIndex) {

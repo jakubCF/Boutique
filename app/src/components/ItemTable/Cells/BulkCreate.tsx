@@ -9,7 +9,7 @@ import {
 import { Table } from "@tanstack/react-table";
 import Item from "@/types/Item";
 import { Button } from "../../@shadcn/ui/button";
-import { useBulkCreate } from "@/Hooks/Mutations/useBulkCreate";
+import { useBulkCreate } from "@/Hooks/Mutations/Items/useBulkCreate";
 import { X } from "lucide-react";
 import { useBinStore } from "@/Hooks/Store/BinStore";
 
@@ -89,16 +89,16 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
         className="space-y-4"
       >
         {items.map((item, index) => (
-          <div key={index} className="flex space-x-4 items-center">
+          <div key={index} className="flex space-x-4 items-center bg-gray-700 p-4 shadow-md rounded-lg">
             {/* Item Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-200">Item Name</label>
+              <label className="text-sm font-medium text-gray-200">Item Name</label>
               <input
                 type="text"
                 value={item.name}
                 onChange={(e) => updateItem(index, "name", e.target.value)}
                 placeholder="Enter item name"
-                className="border rounded p-2 w-full text-gray-200"
+                className="rounded p-2 w-full text-gray-200 border-gray-600 border-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
                 required
               />
             </div>
@@ -108,12 +108,12 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
               <label className="block text-sm font-medium text-gray-200">Bin</label>
               <DropdownMenu>
                 <DropdownMenuTrigger 
-                className="border rounded p-2 w-full text-left text-gray-200">
+                className="border-gray-600 border-2 focus:outline-none focus:ring-2 focus:ring-gray-400 rounded p-2 w-full text-left text-gray-200">
                   {item.binId
                     ? bins.find((bin) => bin.id === item.binId)?.name || "Select a Bin"
                     : "Select a Bin"}
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-gray-800 text-gray-200">
+                <DropdownMenuContent className="bg-gray-800 opacity-[95%] text-gray-200">
                   {bins.map((bin) => (
                     <DropdownMenuItem
                       key={bin.id}
