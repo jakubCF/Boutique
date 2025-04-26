@@ -13,7 +13,7 @@ export interface IFiltersProps {
    */
   columnFilters: {
     id: string;
-    value: string | string[];
+    value: string | string[] | { id: number; name: string }[];
   }[];
   /**
    * A function to update the column filters.
@@ -23,7 +23,7 @@ export interface IFiltersProps {
     value: string;
   } | {
     id: string;
-    value: never[] | string[];
+    value: never[] | string[] | { id: number; name: string }[];
   })[]>>
   /**
    * The list of available bins.
@@ -42,7 +42,12 @@ export interface IFiltersProps {
  */
 export function Filters({ columnFilters, setColumnFilters, bins }: IFiltersProps) {
   const name = (columnFilters.find((f) => f.id === "name")?.value as string) || "";
-  const selectedBins = (columnFilters.find((f) => f.id === "bin_name")?.value as unknown as { id: number; name: string }[]) || [];
+  const selectedBins = (
+    columnFilters.find((f) => 
+      f.id === "bin_name")?.value as unknown as { 
+        id: number; 
+        name: string 
+    } []) || [];
 
   /**
    * Updates the column filters with the given ID and value.
@@ -50,14 +55,25 @@ export function Filters({ columnFilters, setColumnFilters, bins }: IFiltersProps
    * @param id - The ID of the filter to update.
    * @param value - The new value for the filter.
    */
-  const onFilterChange = (id: string, value: string | string[] | { id: number; name: string }[]) =>
-    setColumnFilters((prev) => [
-      ...prev.filter((f) => f.id !== id),
-      ...(id === "bin_name"
-        ? [{ id, value: value as { id: number; name: string }[] }]
-        : [{ id, value: value as string }]),
-    ]);
-
+  const onFilterChange = (id: string, value: string | { id: number; name: string }[]) => {
+    setColumnFilters((prev) => {
+      const updatedFilters = prev.filter((f) => f.id !== id);
+  
+      if (id === "bin_name") {
+        updatedFilters.push({
+          id,
+          value: value as { id: number; name: string }[],
+        });
+      } else {
+        updatedFilters.push({
+          id,
+          value: value as string,
+        });
+      }
+  
+      return updatedFilters;
+    });
+  };
   /**
    * Toggles the selection of a bin by its object.
    *
@@ -71,7 +87,6 @@ export function Filters({ columnFilters, setColumnFilters, bins }: IFiltersProps
       ? selectedBins.filter((selectedBin) => selectedBin.id !== bin.id)
       : [...selectedBins, bin];
     onFilterChange("bin_name", updatedBins);
-    console.log(columnFilters)
   };
 
   return (
@@ -89,7 +104,7 @@ export function Filters({ columnFilters, setColumnFilters, bins }: IFiltersProps
         </PopoverTrigger>
         <PopoverContent className="p-4 w-64 bg-gray-800 opacity-100 text-gray-200">
           <div className="flex flex-col space-y-2 ">
-            {bins.map((bin) => (
+            {Array.isArray(bins) && bins.map((bin) => (
               <div key={bin.id} className="flex items-center space-x-2">
                 <Checkbox
                   className="cursor-pointer"

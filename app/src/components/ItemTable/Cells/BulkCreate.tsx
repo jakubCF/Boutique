@@ -186,7 +186,6 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
             padding: "8px 16px", // Tailwind's px-4 py-2
             borderRadius: "0.375rem", // Tailwind's rounded
           }}
-          onClick={() => setState(false)}
         >
           Submit
         </Button>
