@@ -1,6 +1,6 @@
 import express from "express";
-import BinsRouter from "./v1/bins.router";
-import ItemsRouter from "./v1/items.router";
+import BinsRouter from "./bins.router";
+import ItemsRouter from "./items.router";
 
 const RouteHandler = express.Router();
 

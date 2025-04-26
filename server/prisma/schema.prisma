@@ -18,6 +18,8 @@ model Item {
   id     Int     @id @default(autoincrement())
   name   String  @db.VarChar(256)
   sold   Boolean @default(false)
+  color  String @default("NONE")  @db.VarChar(256) // default color is NONE this is a feature being implemented in v2
+  web_url String @default("https://poshmark.com") @db.VarChar(256) // this is a feature being implemented in v2
   bin   Bin? @relation(fields: [bin_id], references: [id], onDelete: SetNull)
   bin_id Int?
 }

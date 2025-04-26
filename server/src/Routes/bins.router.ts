@@ -8,10 +8,10 @@ import {
   updateBinName,
   addItemToBin,
   removeItemFromBin,
-} from "../../Controllers/bins.controller";
+} from "../Controllers/bins.controller";
 import { param, validationResult } from "express-validator";
-import { BinReturnMessage } from "../../utils/Interfaces/BinReturnMessage";
-import { payloadBuilder } from "../../utils/BinPayloadBuilder";
+import { BinReturnMessage } from "../utils/Interfaces/BinReturnMessage";
+import { payloadBuilder } from "../utils/BinPayloadBuilder";
 
 const BinsRouter = express.Router();
 

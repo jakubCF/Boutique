@@ -7,9 +7,9 @@ import {
   updateItemName,
   updateItemSold,
   bulkCreateItems,
-} from "../../Controllers/items.controller";
-import { ItemReturnMessage } from "../../utils/Interfaces/ItemReturnMessage";
-import { ItemPayloadBuilder } from "../../utils/ItemPayloadBuilder";
+} from "../Controllers/items.controller";
+import { ItemReturnMessage } from "../utils/Interfaces/ItemReturnMessage";
+import { ItemPayloadBuilder } from "../utils/ItemPayloadBuilder";
 import { param, body } from "express-validator";
 
 interface ItemParams {
