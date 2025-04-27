@@ -9,7 +9,7 @@ import {
   PaginationNext,
 } from '../@shadcn/ui/pagination';
 import { Table } from '@tanstack/react-table';
-import Item from '@/types/Item';
+import { Item } from '@/types/Item';
 
 /**
  * Props for the TablePaginator component.

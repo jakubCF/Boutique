@@ -1,4 +1,4 @@
-interface Item {
+export type Item = {
     id: number;
     name: string;
     binId: number;
@@ -9,5 +9,3 @@ interface Item {
     };
     sold: boolean;
 }
-
-export default Item;

@@ -1,6 +1,6 @@
-import Item from "./Item";
+import { Item } from "./Item";
 
-export interface Bin {
+export type Bin = {
     id: number;
     name: string;
     is_full: boolean;

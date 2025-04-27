@@ -7,6 +7,7 @@ import {
   updateItemName,
   updateItemSold,
   bulkCreateItems,
+  updateItemUrl,
 } from "../Controllers/items.controller";
 import { ItemReturnMessage } from "../utils/Interfaces/ItemReturnMessage";
 import { ItemPayloadBuilder } from "../utils/ItemPayloadBuilder";
@@ -17,6 +18,7 @@ interface ItemParams {
   name: string;
   bin_id: number;
   sold: 1 | 0; // 1 = sold, 0 = not sold
+  web_url: string;
 }
 
 const ItemsRouter = express.Router();
@@ -175,6 +177,41 @@ ItemsRouter.patch(
 );
 
 ItemsRouter.patch(
+  "/update/:id/url",
+  param("id").exists().isInt().toInt(),
+  body("web_url")
+    .exists()
+    .isURL()
+    .withMessage("url must be a valid URL")
+    .trim(),
+  async (req: Request<ItemParams>, res: Response): Promise<any> => {
+    const { id } = req.params;
+    const { web_url } = req.body;
+    console.log(web_url);
+    let payload: ItemReturnMessage;
+    try {
+      let item = await updateItemUrl(id, web_url);
+      payload = ItemPayloadBuilder({
+        data: item,
+        message: "success",
+        status_code: 200,
+        errors: "none",
+        operationComplete: true,
+      });
+    } catch (error) {
+      payload = ItemPayloadBuilder({
+        data: [],
+        message: "fail",
+        status_code: 500,
+        errors: error.message,
+        operationComplete: false,
+      });
+    }
+    return res.status(payload.status_code).json(payload);
+  },
+);
+
+ItemsRouter.patch(
   "/update/sold/:id/:sold",
   param("id").exists().isInt().toInt(),
   param("sold")
@@ -208,7 +245,6 @@ ItemsRouter.patch(
     return res.status(payload.status_code).json(payload);
   },
 );
-
 ItemsRouter.post(
   "/bulk/create",
   body("items")
@@ -227,13 +263,17 @@ ItemsRouter.post(
     .optional()
     .isBoolean()
     .withMessage("sold must be a boolean value"),
+    body("items.*.web_url")
+    .optional()
+    .isURL()
+    .withMessage("url must be a valid URL"),
   async (req: Request, res: Response): Promise<any> => {
     const data = req.body;
     console.log(data)
     let payload: ItemReturnMessage;
 
     try {
-      const createdItems = await bulkCreateItems(data.value.items);
+      const createdItems = await bulkCreateItems(data.items);
       payload = ItemPayloadBuilder({
         data: createdItems,
         message: "success",

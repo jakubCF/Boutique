@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import Item from "@/types/Item";
+import { Item } from "@/types/Item";
 import { CellContext } from "@tanstack/react-table";
 import { Button } from "../../@shadcn/ui/button";
 import { useForm } from "@tanstack/react-form";

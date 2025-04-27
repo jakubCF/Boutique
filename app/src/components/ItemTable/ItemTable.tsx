@@ -17,7 +17,7 @@ import EditableSold from './Cells/EditableCell_SOLD';
 import EditableBin from './Cells/EditableCell_BIN';
 
 // types
-import Item from '@/types/Item';
+import { Item } from '@/types/Item';
 
 import { ItemTableHeader } from './ItemTableHeader';
 import { ItemTableBody } from './ItemTableBody';
@@ -29,6 +29,7 @@ import { Filters } from './Filters';
 import { TablePaginator } from './TablePaginator';
 import { BinManager } from '@/components/BinManager';
 import { useBinStore } from '@/Hooks/Store/BinStore';
+import { Bin } from '@/types/Bin';
 
 
 /**
@@ -128,7 +129,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
     },
     {
       id: "bin_name",
-      value: [] as string[]
+      value: [] as Bin[]
     }
   ])
   
@@ -151,7 +152,8 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
     <div className="flex flex-col h-screen"> {/* Flex container for the table and button */}
       <div className="flex flex-col flex-grow overflow-hidden"> {/* Ensure the table and button are in the same column */}
         <div className="flex-grow overflow-auto"> {/* Table container with flex-grow */}
-          <Filters columnFilters={columnFilters} setColumnFilters={setColumnFilters} bins={bins} />
+          {/* TODO: Fix this god damn piece of shit type error */}
+          <Filters columnFilters={columnFilters} setColumnFilters={setColumnFilters} bins={bins} /> 
           <Table className="border-gray-200 min-w-[1280px] min-h-[200px] max-h-[200px]">
             <ItemTableHeader table={table} />
             <ItemTableBody table={table} />

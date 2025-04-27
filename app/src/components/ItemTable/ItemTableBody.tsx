@@ -1,6 +1,6 @@
 import { flexRender, Table } from '@tanstack/react-table';
 import { TableBody, TableRow, TableCell } from '../@shadcn/ui/table';
-import Item from '@/types/Item';
+import { Item } from '@/types/Item';
 
 /**
  * Props for the ItemTableBody component.

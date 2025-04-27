@@ -1,7 +1,6 @@
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import { CellContext } from "@tanstack/react-table";
-import Item from "@/types/Item";
-import { BinContext } from '@/lib/BinContext';
+import { Item } from "@/types/Item";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader } from '../../@shadcn/ui/dialog';
 import { useForm } from '@tanstack/react-form';
 import {

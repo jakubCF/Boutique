@@ -3,7 +3,7 @@ import axios from "axios";
 import ItemTable from "./components/ItemTable/ItemTable";
 import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useBinStore } from "./Hooks/Store/BinStore";
 
 

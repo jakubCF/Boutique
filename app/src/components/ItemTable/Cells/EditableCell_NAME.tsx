@@ -1,7 +1,7 @@
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "../../@shadcn/ui/dialog";
 import React, { FC } from "react";
 import { DialogHeader } from "../../@shadcn/ui/dialog";
-import Item from "@/types/Item";
+import { Item } from "@/types/Item";
 import { CellContext } from "@tanstack/react-table";
 import { Input } from "../../@shadcn/ui/input";
 import { Button } from "../../@shadcn/ui/button";

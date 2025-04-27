@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
 } from "@/components/@shadcn/ui/dropdown-menu"; // Import shadcn dropdown components
 import { Table } from "@tanstack/react-table";
-import Item from "@/types/Item";
+import { Item } from "@/types/Item";
 import { Button } from "../../@shadcn/ui/button";
 import { useBulkCreate } from "@/Hooks/Mutations/Items/useBulkCreate";
 import { X } from "lucide-react";

@@ -6,6 +6,7 @@ const DEFAULT_SELECT = {
   bin_id: true,
   bin: true,
   sold: true,
+  web_url: true,
 };
 
 export const getItems = async () => {
@@ -92,15 +93,29 @@ export const updateItemSold = async (id: number, sold: 1 | 0) => {
   }
 };
 
-export const bulkCreateItems = async (items: { name: string; binId?: number, sold: boolean }[]) => {
+export const updateItemUrl = async (id: number, web_url: string) => {
+  try {
+    let item = await prisma.item.update({
+      where: { id: id },
+      data: { web_url: web_url },
+      select: DEFAULT_SELECT,
+    });
+    return item;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const bulkCreateItems = async (items: { name: string; binId?: number, sold: boolean, web_url: string }[]) => {
   try {
     // Use Prisma's createMany for bulk creation
+    console.log(items)
     const createdItems = await prisma.item.createMany({
       data: items.map((item) => ({
         name: item.name,
         bin_id: item.binId || null, // Associate binId if provided, otherwise set to null
         sold: item.sold || false, // Default value for sold
-        
+        web_url: item.web_url || "https://poshmark.com", // Associate web_url if provided, otherwise set to null
       })),
       skipDuplicates: true, // Avoid duplicate entries
     });
@@ -123,11 +138,14 @@ export const bulkCreateItems = async (items: { name: string; binId?: number, sol
           },
         },
         sold: true,
+        web_url: true,
       },
     });
 
     return fetchedItems;
   } catch (error) {
+    console.error("Error creating items:", error);
+    console.log(error)
     throw error;
   }
 };
