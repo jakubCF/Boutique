@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 import { Bin } from '@/types/Bin';
 import { Pencil } from 'lucide-react';
 import { useBinStore } from '@/Hooks/Store/BinStore';
+import { useEditBin } from '@/Hooks/Mutations/Items/useEditItemBin';
 
 
 /**
@@ -37,43 +38,7 @@ const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) =
     const [open, setOpen] = React.useState(false); // State for dialog open state
 
     // Database query
-    const updateBin = useMutation({
-        mutationKey: ["updateBin"],
-        // Update the bin name in the database
-        mutationFn: async (bin: Bin | null) => {
-
-            let queryString;
-            const id = row.original.id; // Get the item ID from the row
-
-            if (!bin) {
-                const currentBin = row.original.bin?.id; // Get the current bin ID
-                queryString = `http://localhost:3000/v1/bins/update/${currentBin}/remove/item/${id}`;
-                
-            }
-            else {
-                queryString = `http://localhost:3000/v1/bins/update/${bin.id}/add/item/${id}`;
-            }
-
-            setOpen(false); // Close the dialog
-
-            return axios.patch(queryString); // Query the database
-        },
-        onSuccess: (data) => {
-            toast.success("Bin updated successfully");
-
-            const selectedBin = bins.find((bin) => bin.name === data.data.data.name); // Find the selected bin in the bins array
-            
-            // Update the table data with the new bin name
-            if(data.request.responseURL.includes("remove")) { // If response url includes remove, it means we are disconnecting a bin i.e bin = No Bin || null
-                table.options.meta?.updateBinName(row.index, null);
-                console.log("Called");
-            }
-            else table.options.meta?.updateBinName(row.index, selectedBin); // Update the bin name in the table
-        },
-        onError: (error) => {
-            toast.error(`Error updating bin: ${error.message}`);
-        }
-    });
+    const updateBin = useEditBin(setOpen, row, table); // Custom hook to edit the bin
     // Form handling
     const form = useForm({
         defaultValues: {

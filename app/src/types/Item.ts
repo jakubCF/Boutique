@@ -8,4 +8,5 @@ export type Item = {
         is_full: boolean
     };
     sold: boolean;
+    web_url: string;
 }

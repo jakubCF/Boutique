@@ -1,3 +1,4 @@
+import { FieldTypes } from "../utils/FieldTypes";
 import { prisma } from "../db/prisma";
 
 const DEFAULT_SELECT = {
@@ -14,6 +15,34 @@ export const getItems = async () => {
     let items = await prisma.item.findMany({ select: DEFAULT_SELECT });
     return items;
   } catch (error) {
+    throw error;
+  }
+};
+
+export const updateItemFields = async (id: number, updates: { field: string; value: any }[]) => {
+  try {
+    // Convert the updates array into an object for Prisma
+    const data: Record<string, any> = {};
+    updates.forEach(({ field, value }) => {
+      data[field] = value;
+    });
+
+    // Validate that all fields are valid
+    const invalidFields = Object.keys(data).filter((field) => !FieldTypes[field]);
+    if (invalidFields.length > 0) {
+      throw new Error(`Invalid fields: ${invalidFields.join(", ")}`);
+    }
+
+    // Perform the update
+    const item = await prisma.item.update({
+      where: { id },
+      data,
+      select: DEFAULT_SELECT,
+    });
+
+    return item;
+  } catch (error) {
+    console.error("Error updating item fields:", error);
     throw error;
   }
 };

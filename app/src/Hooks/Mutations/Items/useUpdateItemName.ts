@@ -30,22 +30,34 @@ export const useUpdateItemName = (
          * @param name - The new name for the item.
          * @returns A promise that resolves when the item's name is successfully updated.
          */
-        mutationFn: (name: string) => {
+        mutationFn: ({ name, url } : {name: string, url: string}) => {
             const id = row.original.id; // Get the item ID from the row
             setOpen(false); // Close the dialog
 
-            return axios.patch(`http://localhost:3000/v1/items/update/name/${id}/${name}`); // Perform the update request
+            return axios.patch(`http://localhost:3000/v1/items/update/${id}`, { 
+                updates: 
+                    [ 
+                        { field: "name", value: name }, 
+                        { field: "web_url", value: url } 
+                    ] 
+                } 
+            ); // Perform the update request
         },
         /**
          * Callback executed when the mutation is successful.
          *
          * Updates the table state with the new name and shows a success toast.
          */
-        onSuccess: () => {
+        onSuccess: ({ data }) => {
             table.options.meta?.updateData(
                 row.index,
                 column.id,
-                form.getFieldValue("name") // Update local state to prevent refresh
+                data.items.name // Update local state to prevent refresh
+            );
+            table.options.meta?.updateData(
+                row.index,
+                "web_url",
+                data.items.web_url // Update local state to prevent refresh
             );
             toast.success("Item name updated successfully"); // Show success notification
         },

@@ -69,7 +69,6 @@ export function createItemTableMeta(setData: React.Dispatch<React.SetStateAction
                 bin_id: value?.id || null, // Update bin_id based on the selected bin
               };
             }
-            console.log("row", row);
             return row; // Return the row unchanged if it's not the target
           })
         );

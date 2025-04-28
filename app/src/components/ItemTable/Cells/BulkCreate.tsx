@@ -49,21 +49,21 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
   // Initialize the form
   const form = useForm({
     defaultValues: {
-      items: [{ name: "", binId: null, sold: false }], // Default structure for items
+      items: [{ name: "", binId: null, sold: false, web_url: "https://poshmark.com" }], // Default structure for items
     },
     onSubmit: async (values) => {
       // Send the data to the server
-      await createBulk.mutate(values)
+      await createBulk.mutate({values})
     }
   });
 
   const { bins } = useBinStore();
 
-  const [items, setItems] = React.useState([{ name: "", binId: null, sold: false }]);
+  const [items, setItems] = React.useState([{ name: "", binId: null, sold: false, web_url: "https://poshmark.com" }]); // State to manage items
 
   // Handle adding a new item
   const addItem = () => {
-    setItems([...items, { name: "", binId: null, sold: false }]);
+    setItems([...items, { name: "", binId: null, sold: false, web_url: "https://poshmark.com" }]);
   };
 
   // Handle removing an item
@@ -98,6 +98,17 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
                 value={item.name}
                 onChange={(e) => updateItem(index, "name", e.target.value)}
                 placeholder="Enter item name"
+                className="rounded p-2 w-full text-gray-200 border-gray-600 border-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                required
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-200">Web URL</label>
+              <input
+                type="text"
+                value={item.web_url}
+                onChange={(e) => updateItem(index, "web_url", e.target.value)}
+                placeholder="Enter web URL"
                 className="rounded p-2 w-full text-gray-200 border-gray-600 border-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
                 required
               />

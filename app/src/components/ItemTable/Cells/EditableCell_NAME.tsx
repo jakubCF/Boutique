@@ -9,7 +9,7 @@ import { useForm } from "@tanstack/react-form"
 import { Label } from "../../@shadcn/ui/label";
 import { useUpdateItemName } from "@/Hooks/Mutations/Items/useUpdateItemName";
 import { useDeleteItem } from "@/Hooks/Mutations/Items/useDeleteItem";
-import { Pencil } from "lucide-react";
+import { Link, Pencil } from "lucide-react";
 
 /**
  * EditableName component for rendering an editable name within a table cell.
@@ -27,11 +27,11 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
 
     const form = useForm({
         defaultValues: {
-            name: getValue<string>() // get value from the cell
+            name: getValue<string>(), // get value from the cell
+            web_url: row.original.web_url // get value from the cell
         },
         onSubmit: ({value}) => {
-            let newName = value.name.toString();
-            updateName.mutate(newName)
+            updateName.mutate({name: value.name, url: value.web_url}); // pass the new name to the mutation
         },
 
     })
@@ -42,7 +42,14 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
 
     return(
         <div className="flex justify-between">
-            {getValue<string>()}
+             <div className="flex items-center space-x-2">
+                <span>{getValue<string>()}</span>
+                <Link
+                    className="cursor-pointer hover:text-green-100"
+                    size={16}
+                    onClick={() => window.open(row.original.web_url, "_blank")}
+                /> {/* TODO: editable link*/}
+            </div>
             <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger className='cursor-pointer hover:text-green-100'>
                 <Pencil size={20}/>    
@@ -56,6 +63,12 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
                         <div>
                             <Label htmlFor="name" className="text-gray-200 m-0.5">Name</Label>
                             <Input className="text-gray-200" id="name" type="text" value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
+                        </div>
+                    )} />
+                    <form.Field name="web_url" children={( field ) => (
+                        <div>
+                            <Label htmlFor="web_url" className="text-gray-200 m-0.5">Web URL</Label>
+                            <Input className="text-gray-200" id="web_url" type="text" value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
                         </div>
                     )} />
                     <Button className="text-gray-200 bg-green-600" onClick={form.handleSubmit}>Submit</Button>

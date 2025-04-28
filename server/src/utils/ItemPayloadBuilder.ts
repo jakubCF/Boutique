@@ -1,7 +1,7 @@
 import { ItemReturnMessage } from "../utils/Interfaces/ItemReturnMessage";
 
 export const ItemPayloadBuilder = (props: {
-  data: ItemReturnMessage["data"];
+  items: ItemReturnMessage["items"];
   message: ItemReturnMessage["message"];
   status_code: ItemReturnMessage["status_code"];
   errors: ItemReturnMessage["errors"];

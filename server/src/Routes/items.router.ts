@@ -8,10 +8,12 @@ import {
   updateItemSold,
   bulkCreateItems,
   updateItemUrl,
+  updateItemFields,
 } from "../Controllers/items.controller";
 import { ItemReturnMessage } from "../utils/Interfaces/ItemReturnMessage";
 import { ItemPayloadBuilder } from "../utils/ItemPayloadBuilder";
-import { param, body } from "express-validator";
+import { param, body, validationResult } from "express-validator";
+import { FieldTypes } from "../utils/FieldTypes";
 
 interface ItemParams {
   id: number;
@@ -20,6 +22,8 @@ interface ItemParams {
   sold: 1 | 0; // 1 = sold, 0 = not sold
   web_url: string;
 }
+
+// Define the default select for the item
 
 const ItemsRouter = express.Router();
 
@@ -31,7 +35,7 @@ ItemsRouter.get(
     try {
       let items = await getItems();
       payload = ItemPayloadBuilder({
-        data: items,
+        items: items,
         message: "success",
         status_code: 200,
         errors: "none",
@@ -39,7 +43,7 @@ ItemsRouter.get(
       });
     } catch (error) {
       payload = ItemPayloadBuilder({
-        data: [],
+        items: [],
         message: "fail",
         status_code: 500,
         errors: error.message,
@@ -66,7 +70,7 @@ ItemsRouter.get(
       }
 
       payload = ItemPayloadBuilder({
-        data: item,
+        items: item,
         message: "success",
         status_code: 200,
         errors: "none",
@@ -74,7 +78,7 @@ ItemsRouter.get(
       });
     } catch (error) {
       payload = ItemPayloadBuilder({
-        data: [],
+        items: [],
         message: "fail",
         status_code: error.message == "Item not found" ? 404 : 500, // 404 if item not found, 500 if other error
         errors: error.message,
@@ -95,7 +99,7 @@ ItemsRouter.post(
     try {
       let item = await createItem(name);
       payload = ItemPayloadBuilder({
-        data: item,
+        items: item,
         message: "success",
         status_code: 200,
         errors: "none",
@@ -103,7 +107,7 @@ ItemsRouter.post(
       });
     } catch (error) {
       payload = ItemPayloadBuilder({
-        data: [],
+        items: [],
         message: "fail",
         status_code: 500,
         errors: error.message,
@@ -126,7 +130,7 @@ ItemsRouter.delete(
       let item = await deleteItem(id);
 
       payload = ItemPayloadBuilder({
-        data: [],
+        items: [],
         message: "success",
         status_code: 200,
         errors: "none",
@@ -134,7 +138,7 @@ ItemsRouter.delete(
       });
     } catch (error) {
       payload = ItemPayloadBuilder({
-        data: [],
+        items: [],
         message: "fail",
         status_code: 500,
         errors: error.message,
@@ -157,7 +161,7 @@ ItemsRouter.patch(
     try {
       let item = await updateItemName(id, name);
       payload = ItemPayloadBuilder({
-        data: item,
+        items: item,
         message: "success",
         status_code: 200,
         errors: "none",
@@ -165,7 +169,7 @@ ItemsRouter.patch(
       });
     } catch (error) {
       payload = ItemPayloadBuilder({
-        data: [],
+        items: [],
         message: "fail",
         status_code: 500,
         errors: error.message,
@@ -187,12 +191,11 @@ ItemsRouter.patch(
   async (req: Request<ItemParams>, res: Response): Promise<any> => {
     const { id } = req.params;
     const { web_url } = req.body;
-    console.log(web_url);
     let payload: ItemReturnMessage;
     try {
       let item = await updateItemUrl(id, web_url);
       payload = ItemPayloadBuilder({
-        data: item,
+        items: item,
         message: "success",
         status_code: 200,
         errors: "none",
@@ -200,7 +203,7 @@ ItemsRouter.patch(
       });
     } catch (error) {
       payload = ItemPayloadBuilder({
-        data: [],
+        items: [],
         message: "fail",
         status_code: 500,
         errors: error.message,
@@ -227,7 +230,7 @@ ItemsRouter.patch(
     try {
       let item = await updateItemSold(id, sold);
       payload = ItemPayloadBuilder({
-        data: item,
+        items: item,
         message: "success",
         status_code: 200,
         errors: "none",
@@ -235,7 +238,7 @@ ItemsRouter.patch(
       });
     } catch (error) {
       payload = ItemPayloadBuilder({
-        data: [],
+        items: [],
         message: "fail",
         status_code: 500,
         errors: error.message,
@@ -268,14 +271,13 @@ ItemsRouter.post(
     .isURL()
     .withMessage("url must be a valid URL"),
   async (req: Request, res: Response): Promise<any> => {
-    const data = req.body;
-    console.log(data)
+    const { data } = req.body;
     let payload: ItemReturnMessage;
 
     try {
-      const createdItems = await bulkCreateItems(data.items);
+      const createdItems = await bulkCreateItems(data.values.value.items);
       payload = ItemPayloadBuilder({
-        data: createdItems,
+        items: createdItems,
         message: "success",
         status_code: 201,
         errors: "none",
@@ -283,7 +285,7 @@ ItemsRouter.post(
       });
     } catch (error) {
       payload = ItemPayloadBuilder({
-        data: [],
+        items: [],
         message: "fail",
         status_code: 500,
         errors: error.message,
@@ -295,4 +297,77 @@ ItemsRouter.post(
   }
 );
 
+ItemsRouter.patch(
+  "/update/:id",
+  [
+    param("id").exists().isInt().toInt(), // Validate that id is an integer
+    body("updates")
+      .isArray({ min: 1 })
+      .withMessage("updates must be an array with at least one update"),
+    body("updates.*.field")
+      .isString()
+      .withMessage("Each update must have a valid field name")
+      .custom((field) => {
+        if (!FieldTypes[field]) {
+          throw new Error(`Invalid field: ${field}`);
+        }
+        return true;
+      }),
+    body("updates.*.value").custom((value, { req }) => {
+      const field = req.body.updates.find((update: any) => update.value === value)?.field;
+      const expectedType = FieldTypes[field];
+
+      if (!expectedType) {
+        throw new Error(`Cannot validate value for an invalid field: ${field}`);
+      }
+
+      // Validate the value's type
+      if (expectedType === "number" && typeof value !== "number") {
+        throw new Error(`Value for field "${field}" must be a number`);
+      }
+
+      if (expectedType === "string" && typeof value !== "string") {
+        throw new Error(`Value for field "${field}" must be a string`);
+      }
+
+      if (expectedType === "boolean" && typeof value !== "boolean") {
+        throw new Error(`Value for field "${field}" must be a boolean`);
+      }
+
+      return true;
+    }),
+  ],
+  async (req: Request<ItemParams>, res: Response): Promise<any> => {
+    const { id } = req.params;
+    const { updates } = req.body;
+
+    let payload: ItemReturnMessage;
+
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      return res.status(400).json({ errors: result.array() });
+    }
+
+    try {
+      const updatedItem = await updateItemFields(id, updates);
+      payload = {
+        items: updatedItem,
+        message: "success",
+        status_code: 200,
+        errors: "none",
+        operationComplete: true,
+      };
+    } catch (error) {
+      payload = {
+        items: [],
+        message: "fail",
+        status_code: 500,
+        errors: error.message,
+        operationComplete: false,
+      };
+    }
+
+    return res.status(payload.status_code).json(payload);
+  }
+);
 export default ItemsRouter;

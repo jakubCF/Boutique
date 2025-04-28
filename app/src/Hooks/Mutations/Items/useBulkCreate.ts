@@ -10,7 +10,7 @@ export const useBulkCreate = (
     mutationFn: async (data: unknown) => {
       const response = await axios({
         url : "http://localhost:3000/v1/items/bulk/create",
-        data: data,
+        data: { data },
         method: "post"
       })
       setOpen(false); // Close the modal after the request
@@ -21,11 +21,11 @@ export const useBulkCreate = (
       return toast.error("Failed to create items: " + error)
     },
     onSuccess: ({data}) => {
-      if (Array.isArray(data.data)) {
-        table.options.meta?.createRows(data.data);
+      if (Array.isArray(data.items)) {
+        table.options.meta?.createRows(data.items);
         toast.success("Items added successfully!");
       } else {
-        console.error("Expected an array but received:", data.data);
+        console.error("Expected an array but received:", data.items);
       }
     },
 })

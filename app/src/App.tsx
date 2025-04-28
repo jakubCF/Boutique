@@ -28,7 +28,8 @@ function App() {
      */
     queryFn: async () => {
       const { data } = await axios.get("http://localhost:3000/v1/items");
-      return data.data;
+      console.log(data.items);
+      return data.items;
     },
   });
 

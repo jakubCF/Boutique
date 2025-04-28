@@ -1,40 +1,58 @@
 import { Bin } from "@/types/Bin";
-import Item from "@/types/Item";
+import { Item } from "@/types/Item";
 import { useMutation } from "@tanstack/react-query";
 import { Table } from "@tanstack/react-table";
 import axios from "axios";
-import { set } from "react-hook-form";
+import { Row } from "@tanstack/react-table";
 import { toast } from "sonner";
+import { useBinStore } from "@/Hooks/Store/BinStore";
 
-export const useEditBin = () => {
+export const useEditBin = (
+    setOpen: (value: boolean) => void,
+    row: Row<Item>,
+    table: Table<Item>
   /**
    * Custom hook to edit a bin.
    *
    * @returns {object} - The mutation object containing the edit function and its state.
    */
-  const editBin = (
-    bin: Item,
-    setOpen: (value: boolean) => void,
-    binCtx: { get: Bin[]; set: React.Dispatch<React.SetStateAction<Bin[]>> },
-  ) =>  useMutation({
-    mutationFn: async (name: string) => {
-      const { data } = await axios.put(
-        `http://localhost:3000/v1/bins/${bin.id}/name/${name}`,
-      );
+    
+  ) =>  {
+    const { bins } = useBinStore(); // Get the bins from the store
+    return useMutation({
+      
+    mutationFn: async (bin: Bin | null) => {
+
+      let queryString;
+      const id = row.original.id; // Get the item ID from the row
+
+      if (!bin) {
+          const currentBin = row.original.bin?.id; // Get the current bin ID
+          queryString = `http://localhost:3000/v1/bins/update/${currentBin}/remove/item/${id}`;
+            
+      }
+      else {
+          queryString = `http://localhost:3000/v1/bins/update/${bin.id}/add/item/${id}`;
+      }
+
       setOpen(false); // Close the dialog
-      return data;
+
+      return axios.patch(queryString); // Query the database
     },
     onSuccess: (data) => {
-      toast.success("Bin updated successfully", data.data);
-        
+        toast.success("Bin updated successfully");
 
+        const selectedBin = bins.find((bin) => bin.name === data.data.data.name); // Find the selected bin in the bins array
         
-      // Update the table data with the new bin name
+        // Update the table data with the new bin name
+        if(data.request.responseURL.includes("remove")) { // If response url includes remove, it means we are disconnecting a bin i.e bin = No Bin || null
+            table.options.meta?.updateBinName(row.index, null);
+            console.log("Called");
+        }
+        else table.options.meta?.updateBinName(row.index, selectedBin); // Update the bin name in the table
     },
     onError: (error) => {
-      toast.error(`Error updating bin: ${error.message}`);
-    },
-  });
-
-  return editBin;
+        toast.error(`Error updating bin: ${error.message}`);
+    }
+});
 }

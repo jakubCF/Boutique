@@ -2,7 +2,7 @@ import { ValidationError } from "express-validator";
 
 export interface ItemReturnMessage {
   message: string | "success" | "fail";
-  data:
+  items:
     | {
         id: number;
         name: string;
