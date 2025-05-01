@@ -1,10 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import ItemTable from "./components/ItemTable/ItemTable";
 import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
 import { useEffect } from "react";
 import { useBinStore } from "./Hooks/Store/BinStore";
+import { useItemStore } from "./Hooks/Store/ItemStore";
 
 
 /**
@@ -17,47 +18,50 @@ import { useBinStore } from "./Hooks/Store/BinStore";
  * @returns JSX.Element - The rendered application component.
  */
 function App() {
-  // Query + Error handling for fetching items
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["getItems"],
-    /**
-     * Fetches item data from the API.
-     *
-     * @returns A promise that resolves to the item data.
-     * @throws An error if the API request fails.
-     */
-    queryFn: async () => {
-      const { data } = await axios.get("http://localhost:3000/v1/items");
-      console.log(data.items);
-      return data.items;
-    },
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ["getItems"],
+        queryFn: async () => {
+          const response = await axios.get("http://localhost:3000/v1/items");
+          console.log("Items response:", response);
+        
+          if (!response.data || !response.data.data) {
+            throw new Error("Invalid response structure from /v1/items");
+          }
+        
+          return response.data.data;
+        }
+      },
+      {
+        queryKey: ["getBins"],
+        queryFn: async () => {
+          const { data } = await axios.get("http://localhost:3000/v1/bins");
+          return data.data;
+        }
+      }
+    ]
   });
+  // Query + Error handling for fetching items
 
-  const {initBins} = useBinStore();
+  // Load State
+  const { initBins } = useBinStore();
+  const { initItems } = useItemStore();
+
+  const getItems = results[0];
+  const getBins = results[1];
+
+  console.log(getItems)
 
   useEffect(() => {
-    if (isError && error) {
+    if (getItems.isError && getItems.error) {
       toast.error(
-        `Error fetching items: ${(error as Error).message ||
+        `Error fetching items: ${(getItems.error as Error).message ||
           "Something went wrong"}`
       );
     }
-  }, [isError, error]);
+  }, [getItems.isError, getItems.error]);
 
-  // Query + Error handling for fetching bins
-  const getBins = useQuery({
-    queryKey: ["getBins"],
-    /**
-     * Fetches bin data from the API.
-     *
-     * @returns A promise that resolves to the bin data.
-     * @throws An error if the API request fails.
-     */
-    queryFn: async () => {
-      const { data } = await axios.get("http://localhost:3000/v1/bins");
-      return data.data;
-    },
-  });
 
   useEffect(() => {
     if (getBins.isError && getBins.error) {
@@ -74,19 +78,24 @@ function App() {
       initBins(getBins.data);
     }
   }, [getBins.data]);
+  useEffect(() => {
+    if(getItems.data) {
+      initItems(getItems.data)
+    }
+  }, [getItems.data])
 
   return (
     <div className="bg-gray-800 text-gray-200 min-h-screen flex flex-col items-center justify-center">
-      {isLoading ? (
+      {getItems.isLoading || getBins.isLoading ? (
         <TableSkeleton />
-      ) : isError ? (
+      ) : getItems.isError || getItems.isError ? (
         <div className="text-red-500">
           Failed to load data. Please try again later.
         </div>
       ) : (
         <div className="w-full max-w-[1400px] max-h-[600px] p-4 bg-gray-700 rounded-lg shadow-lg">
             {/* Provides the bins to the whole tables tree */}
-            <ItemTable DATA={data} />
+            <ItemTable />
         </div>
       )}
 

@@ -30,17 +30,13 @@ import { TablePaginator } from './TablePaginator';
 import { BinManager } from '@/components/BinManager';
 import { useBinStore } from '@/Hooks/Store/BinStore';
 import { Bin } from '@/types/Bin';
+import { useItemStore } from '@/Hooks/Store/ItemStore';
 
 
 /**
  * Props for the ItemTable component.
  */
-interface ItemTableProps {
-    /**
-     * The data to display in the table.
-     */
-    DATA: Item[]
-}
+interface ItemTableProps { };
 
 /**
  * Default column widths on load.
@@ -61,10 +57,13 @@ const minColumnWidths = {
  * @param props - The component props.
  * @returns A JSX element representing the item table.
  */
-const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
+const ItemTable: React.FC<ItemTableProps> = () => {
   /**
    * Defines the columns for the table using useMemo to optimize performance.
    */
+  const { bins } = useBinStore();
+  const { items } = useItemStore()
+  
   const columns: ColumnDef<Item>[] = useMemo(() => {
       return [
           {
@@ -118,10 +117,9 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
               size: minColumnWidths.sold,
           },
       ];
-  }, []);
-  const { bins } = useBinStore();
+  }, [bins]);
+
   
-  const [data, setData] = useState(DATA);
   const [columnFilters, setColumnFilters] = useState([
     {
       id: "name",
@@ -135,9 +133,10 @@ const ItemTable: React.FC<ItemTableProps> = ({ DATA }) => {
   
   const [createOpen, setCreateOpen] = useState(false); // State for dialog visibility
   const [binOpen, setBinOpen] = useState(false); // State for dialog visibility
-  const tableMeta = useMemo(() => createItemTableMeta(setData), [setData]);
+
+  const tableMeta = createItemTableMeta();
   const table = useReactTable({
-      data,
+      data: items,
       state: { columnFilters },
       columns,
       getCoreRowModel: getCoreRowModel(),
