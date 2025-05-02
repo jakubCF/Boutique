@@ -34,7 +34,7 @@ import { useEditBin } from '@/Hooks/Mutations/Items/useEditItemBin';
  */
 const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) => {
 
-    const { bins } = useBinStore()
+    const { bins } = useBinStore(); // grab state
     const [open, setOpen] = React.useState(false); // State for dialog open state
 
     // Database query

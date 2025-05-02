@@ -10,7 +10,9 @@ import {
   import { Bin } from "@/types/Bin";
   import { Plus } from "lucide-react"; // Import the Plus icon from Lucide
 import { CreateBin } from "@/components/CreateBin"; // Import the CreateBin component
-import { useState } from "react";
+import { act, useState } from "react";
+import { EditBin } from "./EditBin";
+import { useBinStore } from "@/Hooks/Store/BinStore";
   
   export interface IBinDialogProps {
     open: boolean;
@@ -20,8 +22,10 @@ import { useState } from "react";
   
   export function BinManager({ open, onOpenChange, bins }: IBinDialogProps) {
     const deleteBin = useDeleteBin();
+    const { activeBin, setActiveBin } = useBinStore()
 
     const [createBinOpen, setCreateBinOpen] = useState(false);
+    const [editBinOpen, setEditBinOpen] = useState(false);
   
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -64,7 +68,8 @@ import { useState } from "react";
                     <Button
                       className="relative overflow-hidden text-gray-200 font-bold py-2 px-4 rounded shadow-lg group bg-gray-600"
                       onClick={() => {
-                        // Handle edit logic here
+                        setActiveBin(bin);
+                        setEditBinOpen(true);
                       }}
                     >
                       <span className="relative z-10">Edit</span>
@@ -79,10 +84,15 @@ import { useState } from "react";
                       Delete
                     </Button>
                   </div>
+                  <CreateBin open={createBinOpen} onOpenChange={setCreateBinOpen}/>
+                  
                 </div>
               ))}
             </div>
-            <CreateBin open={createBinOpen} onOpenChange={setCreateBinOpen}/>
+            {activeBin ? (
+              <EditBin open={editBinOpen} onOpenChange={setEditBinOpen} />
+
+            ): null}
           </div>
         </DialogContent>
       </Dialog>

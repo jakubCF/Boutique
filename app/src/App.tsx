@@ -1,4 +1,4 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import axios from "axios";
 import ItemTable from "./components/ItemTable/ItemTable";
 import TableSkeleton from "./components/ItemTable/TableSkeleton";
@@ -23,14 +23,13 @@ function App() {
       {
         queryKey: ["getItems"],
         queryFn: async () => {
-          const response = await axios.get("http://localhost:3000/v1/items");
-          console.log("Items response:", response);
+          const { data } = await axios.get("http://localhost:3000/v1/items");
         
-          if (!response.data || !response.data.data) {
+          if (!data.items) {
             throw new Error("Invalid response structure from /v1/items");
           }
         
-          return response.data.data;
+          return data.items;
         }
       },
       {
