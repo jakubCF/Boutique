@@ -13,8 +13,8 @@ export interface BinsStoreState {
   clearBins: () => void;
   initBins: (bins: Bin[]) => void;
 }
+
 export const useBinStore = create<BinsStoreState>((set) => ({
-  
   bins: [],
   activeBin: null,
   setActiveBin: (bin: Bin) => set({ activeBin: bin }), // Fixed syntax
@@ -24,12 +24,11 @@ export const useBinStore = create<BinsStoreState>((set) => ({
     set((state) => ({
       bins: state.bins.filter((bin) => bin.id !== id),
     })),
-  updateBin: (updatedBin: Bin) => 
+  updateBin: (updatedBin: Bin) =>
     set((state) => ({
       bins: state.bins.map((bin) =>
         bin.id === updatedBin.id ? updatedBin : bin
       ),
-      
     })),
   clearBins: () => set({ bins: [] }),
   initBins: (bins: Bin[]) => set({ bins: [...bins] }),

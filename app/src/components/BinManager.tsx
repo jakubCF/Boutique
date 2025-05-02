@@ -10,7 +10,7 @@ import { useDeleteBin } from "@/Hooks/Mutations/Bins/useDeleteBin";
 import { Bin } from "@/types/Bin";
 import { Plus } from "lucide-react"; // Import the Plus icon from Lucide
 import { CreateBin } from "@/components/CreateBin"; // Import the CreateBin component
-import { useState } from "react";
+import { act, useState } from "react";
 import { EditBin } from "./EditBin";
 import { useBinStore } from "@/Hooks/Store/BinStore";
   

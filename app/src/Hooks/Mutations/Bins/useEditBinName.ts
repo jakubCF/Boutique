@@ -3,7 +3,6 @@ import axios from "axios";
 import { toast } from "sonner"
 import { Bin } from "@/types/Bin";
 import { useBinStore } from "@/Hooks/Store/BinStore";
-import { useItemStore } from "@/Hooks/Store/ItemStore";
 
 export const useEditBinName = (setOpen: (open: boolean) => void) => {
     /**
@@ -28,6 +27,18 @@ export const useEditBinName = (setOpen: (open: boolean) => void) => {
             )
             
             return data.data;
-        },   
+        },
+        onSuccess: (data: Bin) => {
+            toast.success("Bin updated successfully", data);
+
+            updateBin(data) // Add the new bin to the store
+        },
+        onError: (error) => {
+            toast.error(`Error updating bin: ${error.message}`)
+        },
+        onSettled: async () => { await clearActiveBin(); }
+        
+            
+      
     })
 }

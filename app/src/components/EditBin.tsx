@@ -38,7 +38,7 @@ import { useEditBinName } from "@/Hooks/Mutations/Bins/useEditBinName";
           <DialogHeader className="text-gray-200">Edit {activeBin.name}</DialogHeader>
           <form
             className="space-y-8"
-            onSubmit={(e) => {form.handleSubmit; e.stopPropagation()}} // Handle form submission
+            onSubmit={(e) => {form.handleSubmit; e.preventDefault(); e.stopPropagation()}} // Handle form submission
           >
             {/* Field for Bin Name */}
             <form.Field
