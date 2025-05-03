@@ -14,6 +14,7 @@ export const useBulkCreate = (
         method: "post"
       })
       setOpen(false); // Close the modal after the request
+      
       return response
     },
     onError: (error) => {

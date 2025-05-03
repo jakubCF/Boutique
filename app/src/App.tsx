@@ -50,7 +50,6 @@ function App() {
   const getItems = results[0];
   const getBins = results[1];
 
-  console.log(getItems)
 
   useEffect(() => {
     if (getItems.isError && getItems.error) {
@@ -108,7 +107,7 @@ function App() {
           }}
         />
         <footer className="relative text-sm text-gray-400 mt-4">
-          Made with ❤️ for Sarah 2025
+          Made with ❤️ and <img src="./src/assets/react.svg" className="w-4 inline mb-1" /> for Sarah 2025
         </footer>
       </div>
     </div>

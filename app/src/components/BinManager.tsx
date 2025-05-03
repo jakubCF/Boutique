@@ -1,16 +1,16 @@
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-  } from "@/components/@shadcn/ui/dialog";
-  import { Badge } from "@/components/@shadcn/ui/badge";
-  import { Button } from "@/components/@shadcn/ui/button";
-  import { useDeleteBin } from "@/Hooks/Mutations/Bins/useDeleteBin";
-  import { Bin } from "@/types/Bin";
-  import { Plus } from "lucide-react"; // Import the Plus icon from Lucide
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/@shadcn/ui/dialog";
+import { Badge } from "@/components/@shadcn/ui/badge";
+import { Button } from "@/components/@shadcn/ui/button";
+import { useDeleteBin } from "@/Hooks/Mutations/Bins/useDeleteBin";
+import { Bin } from "@/types/Bin";
+import { Plus } from "lucide-react"; // Import the Plus icon from Lucide
 import { CreateBin } from "@/components/CreateBin"; // Import the CreateBin component
-import { act, useState } from "react";
+import { useState } from "react";
 import { EditBin } from "./EditBin";
 import { useBinStore } from "@/Hooks/Store/BinStore";
   

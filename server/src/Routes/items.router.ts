@@ -273,7 +273,7 @@ ItemsRouter.post(
   async (req: Request, res: Response): Promise<any> => {
     const { data } = req.body;
     let payload: ItemReturnMessage;
-
+    console.log(req.body)
     try {
       const createdItems = await bulkCreateItems(data.values.value.items);
       payload = ItemPayloadBuilder({

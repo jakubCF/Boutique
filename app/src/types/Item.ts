@@ -2,7 +2,7 @@ export type Item = {
     id: number;
     name: string;
     binId: number;
-    bin: {
+    bin?: {
         id: number,
         name: string,
         is_full: boolean

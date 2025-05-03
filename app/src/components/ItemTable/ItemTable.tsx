@@ -62,7 +62,7 @@ const ItemTable: React.FC<ItemTableProps> = () => {
    * Defines the columns for the table using useMemo to optimize performance.
    */
   const { bins } = useBinStore();
-  const { items } = useItemStore()
+  const { items } = useItemStore();
   
   const columns: ColumnDef<Item>[] = useMemo(() => {
       return [
@@ -103,6 +103,7 @@ const ItemTable: React.FC<ItemTableProps> = () => {
                   }
 
                   const bin = row.original.bin;
+                  console.log(row.original)
                   if (!bin) {
                       return false; // Don't show rows with no bin assigned
                   }
@@ -117,7 +118,7 @@ const ItemTable: React.FC<ItemTableProps> = () => {
               size: minColumnWidths.sold,
           },
       ];
-  }, [bins]);
+  }, [items]);
 
   
   const [columnFilters, setColumnFilters] = useState([
@@ -145,6 +146,7 @@ const ItemTable: React.FC<ItemTableProps> = () => {
       getPaginationRowModel: getPaginationRowModel(),
       columnResizeMode: "onChange",
       meta: tableMeta,
+      
   });
 
   return (
