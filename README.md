@@ -53,12 +53,13 @@ Edit
 npm run dev
 4. Visit the app
 Go to http://localhost:3000 in your browser.
+```
 
 🧪 API Reference
+
+```bash
+
 Bin
-ts
-Copy
-Edit
 type Bin = {
   id: number
   name: string
@@ -66,9 +67,7 @@ type Bin = {
   items: Item[]
 }
 Item
-ts
-Copy
-Edit
+
 type Item = {
   id: number
   name: string
@@ -77,10 +76,14 @@ type Item = {
   binId: number
   bin: Bin
 }
+```
+
+```bash
 🧠 Zustand Store (useBoutiqueStore)
-ts
-Copy
-Edit
+```
+
+```bash
+
 const useBoutiqueStore = create<TBoutiqueStore>(() => ({
   bins: [],
   activeBin: null,
@@ -88,6 +91,7 @@ const useBoutiqueStore = create<TBoutiqueStore>(() => ({
   setBins, setActiveBin, clearActiveBin, addBin, removeBin, updateBin, clearBins,
   setItems, addItem, removeItem, clearItems, updateItem, getItemsForTable
 }));
+```
 
 🙏 Credits
 💅 ShadCN/UI
