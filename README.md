@@ -1,238 +1,106 @@
+# 🛍️ Boutique
 
-# Boutique
+![License](https://img.shields.io/github/license/Scott-Duby/Boutique?style=flat-square)
+![Repo Size](https://img.shields.io/github/repo-size/Scott-Duby/Boutique?style=flat-square)
+![Last Commit](https://img.shields.io/github/last-commit/Scott-Duby/Boutique?style=flat-square)
+![Issues](https://img.shields.io/github/issues/Scott-Duby/Boutique?style=flat-square)
+![ShadCN UI](https://img.shields.io/badge/ui-shadcn/ui-blueviolet?logo=tailwindcss&style=flat-square)
 
-Inventory software for poshmark sellers
-
-# Run Locally
-
-Clone the project
-
-## App
-
-```bash
-  git clone https://link-to-project
-```
-
-Go to the project directory
-
-```bash
-  cd app
-```
-
-Install dependencies
-
-```bash
-  yarn
-```
-
-Start the server
-
-```bash
-  yarn dev
-```
-
-## Server
-
-Go to the project directory
-
-```bash
-    cd server
-```
-
-Add db URL to a new .env in the servers root
-
-```bash
-    DATABASE_URL = "your_pg_server"
-```
-
-Install dependencies
-
-```bash
-  yarn
-```
-
-Start the server
-
-```bash
-  yarn watch
-  yarn dev
-```
-
-## Authors
-
-- [Scott Duby](https://www.github.com/Scott-Duby)
-
-# 📦 Boutique API Reference
-
-Base URL: `http://localhost:3000/v1`
-
-## 🧺 Items
-
-### Get All Items
-
-**GET** `/items`  
-**Description:** Retrieve all items from the inventory.
+> Inventory management app for organizing items and bins with inline editing, filters, and state persistence.
 
 ---
 
-### Get Item by ID
+## 🧠 Features
 
-**GET** `/items/:id`  
-**Description:** Retrieve a single item by its ID.  
-**Params:**
-
-- `id`: ID of the item (e.g., `9`)
-
----
-
-### Create Item
-
-**POST** `/items/create/:name`  
-**Description:** Create a new item with a name.  
-**Params:**
-
-- `name`: Name of the item (e.g., `"Green Shirt"`)
+- 🔍 Filterable & sortable item table
+- ✏️ Inline editing (name, sold status, bin assignment)
+- 📦 Bin management modal
+- ♻️ Zustand state management
+- 🪄 Table state persistence (filters, pagination)
+- 💅 Built with ShadCN UI, TanStack Table, and Tailwind CSS
+- 💾 Bulk item creation via modal dialog
 
 ---
 
-### Delete Item
+## 🛠️ Tech Stack
 
-**DELETE** `/items/delete/:id`  
-**Description:** Delete an item by its ID.  
-**Params:**
-
-- `id`: ID of the item (e.g., `21`)
-
----
-
-### Update Item Name
-
-**PATCH** `/items/update/name/:id/:name`  
-**Description:** Update the name of an item.  
-**Params:**
-
-- `id`: ID of the item
-- `name`: New name (e.g., `"Purple Sweater"`)
+- **React 18**
+- **Zustand** – global state
+- **TanStack Table** – table rendering
+- **ShadCN/UI** – component library
+- **Tailwind CSS** – styling
+- **Drizzle ORM** – optional data layer
+- **TypeScript** – type safety
 
 ---
 
-### Update Item Sold Status
+## 🚀 Getting Started
 
-**PATCH** `/items/update/sold/:id/:name`  
-**Description:** Update the sold status of an item.  
-**Params:**
+### 1. Clone the repo
 
-- `id`: ID of the item
-- `name`: Sold flag (`0` or `1`)
+```bash
+git clone https://github.com/Scott-Duby/Boutique.git
+cd Boutique
+2. Install dependencies
+bash
+Copy
+Edit
+npm install
+3. Start the dev server
+bash
+Copy
+Edit
+npm run dev
+4. Visit the app
+Go to http://localhost:3000 in your browser.
 
----
-
-### Bulk Add Items
-
-**POST** `/items/bulk/create`  
-**Description:** Add multiple items in a single request.  
-**Body Example:**
-
-```json
-{
-  "items": [
-    { "name": "Item 1", "binId": 1, "sold": true },
-    { "name": "Item 2", "binId": 2 },
-    { "name": "Item 3" }
-  ]
+🧪 API Reference
+Bin
+ts
+Copy
+Edit
+type Bin = {
+  id: number
+  name: string
+  is_full: boolean
+  items: Item[]
 }
-```
+Item
+ts
+Copy
+Edit
+type Item = {
+  id: number
+  name: string
+  sold: boolean
+  web_url: string
+  binId: number
+  bin: Bin
+}
+🧠 Zustand Store (useBoutiqueStore)
+ts
+Copy
+Edit
+const useBoutiqueStore = create<TBoutiqueStore>(() => ({
+  bins: [],
+  activeBin: null,
+  items: [],
+  setBins, setActiveBin, clearActiveBin, addBin, removeBin, updateBin, clearBins,
+  setItems, addItem, removeItem, clearItems, updateItem, getItemsForTable
+}));
 
----
+🙏 Credits
+💅 ShadCN/UI
 
-## 🗃️ Bins
+🧠 TanStack Table
 
-### Get All Bins
+⚡ Zustand
 
-**GET** `/bins/`  
-**Description:** Retrieve all storage bins.
+🎨 Tailwind CSS
 
----
+📄 License
+MIT © Scott Duby
 
-### Get Bin by ID
-
-**GET** `/bins/:id`  
-**Description:** Retrieve a specific bin by ID.  
-**Params:**
-
-- `id`: ID of the bin (e.g., `2`)
-
----
-
-### Create Bin
-
-**POST** `/bins/create/:name`  
-**Description:** Create a new bin with a name.  
-**Params:**
-
-- `name`: Name of the bin (e.g., `"Long Sleeves 2"`)
-
----
-
-### Delete Bin
-
-**DELETE** `/bins/delete/:id`  
-**Description:** Delete a bin by its ID.  
-**Params:**
-
-- `id`: ID of the bin (e.g., `14`)
-
----
-
-### Update Bin Name
-
-**PATCH** `/bins/update/:id/name/:value`  
-**Description:** Update the name of a bin.  
-**Params:**
-
-- `id`: Bin ID
-- `value`: New name (e.g., `"Shoes 4"`)
-
----
-
-### Update Bin "is_full" Flag
-
-**PATCH** `/bins/update/:id/is_full/:bool`  
-**Description:** Update the "is_full" status of a bin.  
-**Params:**
-
-- `id`: Bin ID
-- `bool`: `0` or `1`
-
----
-
-### Add Item to Bin
-
-**PATCH** `/bins/update/:id/add/item/:item_id`  
-**Description:** Add an item to a bin.  
-**Params:**
-
-- `id`: Bin ID
-- `item_id`: Item ID
-
----
-
-### Remove Item from Bin
-
-**PATCH** `/bins/update/:id/remove/item/:item_id`  
-**Description:** Remove an item from a bin.
-**Note:** If you are trying to connect an item to another bin you only need to call the add route, it is redundant to call both as prisma disconnects old bin and connects new one on mutation call.
-**Params:**
-
-- `id`: Bin ID
-- `item_id`: Item ID
-
----
-
-# Appendix
-
-This project is meant to run locally on home software with no issues, provide your own postgres database and ports to make this run.
-I created this project for my mother, and with all the other thrifters/resellers in mind. This software is for you to do as you please, and if you find any potential issues or improvements please feel free to open an issue on your refactors.
-
-Peace!
-Scott Duby
+yaml
+Copy
+Edit
