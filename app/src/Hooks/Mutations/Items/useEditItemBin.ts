@@ -6,6 +6,7 @@ import axios from "axios";
 import { Row } from "@tanstack/react-table";
 import { toast } from "sonner";
 import { useBinStore } from "@/Hooks/Store/BinStore";
+import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
 
 export const useEditBin = (
     setOpen: (value: boolean) => void,
@@ -18,7 +19,7 @@ export const useEditBin = (
    */
     
   ) =>  {
-    const { bins } = useBinStore(); // Get the bins from the store
+    const bins = useBoutiqueStore((state) => state.bins); // Get the bins from the store
     return useMutation({
       
     mutationFn: async (bin: Bin | null) => {

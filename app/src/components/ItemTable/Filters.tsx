@@ -4,6 +4,8 @@ import { Popover, PopoverTrigger, PopoverContent } from "../@shadcn/ui/popover";
 import { Checkbox } from "../@shadcn/ui/checkbox";
 import { Label } from "../@shadcn/ui/label";
 import { Funnel } from "lucide-react";
+import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
+import { Bin } from "@/types/Bin";
 /**
  * Props for the Filters component.
  */
@@ -20,15 +22,17 @@ export interface IFiltersProps {
    */
   setColumnFilters: React.Dispatch<React.SetStateAction<({
     id: string;
-    value: string;
-  } | {
-    id: string;
-    value: never[] | string[] | { id: number; name: string }[];
+    value: string | Bin[];
   })[]>>
   /**
    * The list of available bins.
    */
   bins: { id: number; name: string }[] | {id: number; name: string}; // List of bins
+}
+interface FiltersProps {
+  columnFilters: { id: string; value: string | Bin[] }[];
+  setColumnFilters: React.Dispatch<React.SetStateAction<[]>>;
+  bins: Bin[];
 }
 
 /**
@@ -40,7 +44,8 @@ export interface IFiltersProps {
  * @param props - The component props.
  * @returns A JSX element representing the filters.
  */
-export function Filters({ columnFilters, setColumnFilters, bins }: IFiltersProps) {
+export function Filters({ columnFilters, setColumnFilters }: IFiltersProps) {
+  const bins = useBoutiqueStore((state) => state.bins)
   const name = (columnFilters.find((f) => f.id === "name")?.value as string) || "";
   const selectedBins = (
     columnFilters.find((f) => 
@@ -62,7 +67,7 @@ export function Filters({ columnFilters, setColumnFilters, bins }: IFiltersProps
       if (id === "bin_name") {
         updatedFilters.push({
           id,
-          value: value as { id: number; name: string }[],
+          value: value as Bin[],
         });
       } else {
         updatedFilters.push({
@@ -82,10 +87,10 @@ export function Filters({ columnFilters, setColumnFilters, bins }: IFiltersProps
    *
    * @param bin - The bin object to toggle.
    */
-  const toggleBinSelection = (bin: { id: number; name: string }) => {
+  const toggleBinSelection = (bin: Bin) => {
     const updatedBins = selectedBins.some((selectedBin) => selectedBin.id === bin.id)
       ? selectedBins.filter((selectedBin) => selectedBin.id !== bin.id)
-      : [...selectedBins, bin];
+      : [...selectedBins, { ...bin, is_full: false, items: [] }];
     onFilterChange("bin_name", updatedBins);
   };
 

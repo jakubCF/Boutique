@@ -3,9 +3,10 @@ import axios from "axios";
 import ItemTable from "./components/ItemTable/ItemTable";
 import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useBinStore } from "./Hooks/Store/BinStore";
 import { useItemStore } from "./Hooks/Store/ItemStore";
+import { useBoutiqueStore } from "./Hooks/Store/UseBoutiqueStore";
 
 
 /**
@@ -44,9 +45,10 @@ function App() {
   // Query + Error handling for fetching items
 
   // Load State
-  const { initBins } = useBinStore();
-  const { initItems } = useItemStore();
-
+  //const { initBins } = useBinStore();
+  //const { initItems } = useItemStore();
+  const setBins = useBoutiqueStore((state) => state.setBins);
+  const setItems = useBoutiqueStore((state) => state.setItems);
   const getItems = results[0];
   const getBins = results[1];
 
@@ -73,12 +75,12 @@ function App() {
 
   useEffect(() => {
     if (getBins.data) {
-      initBins(getBins.data);
+      setBins(getBins.data)
     }
   }, [getBins.data]);
   useEffect(() => {
     if(getItems.data) {
-      initItems(getItems.data)
+      setItems(getItems.data)  
     }
   }, [getItems.data])
 

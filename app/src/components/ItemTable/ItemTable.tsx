@@ -1,15 +1,26 @@
 // table management
 import { ColumnDef, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
+import { ItemTableHeader } from './ItemTableHeader';
+import { ItemTableBody } from './ItemTableBody';
+import { Filters } from './Filters';
+import { createItemTableMeta } from '@/lib/createItemTableMeta';
+import { TablePaginator } from './TablePaginator';
+import BulkCreate from './Cells/BulkCreate';
 
 // state management
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useBoutiqueStore } from '@/Hooks/Store/UseBoutiqueStore';
+import { useItemsForTable } from '@/Hooks/getItemsForTable';
+import { loadTableState, saveTableState } from "@/lib/loadTableState";
+
 
 // Table Components from shadcn/ui
-import { Table} from '../@shadcn/ui/table';
+import { Table } from '../@shadcn/ui/table';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../@shadcn/ui/dialog';
+import { Button } from '../@shadcn/ui/button';
 
 // Icons
 import { Pencil, CirclePlus } from 'lucide-react';
-
 
 // Cells
 import EditableName from './Cells/EditableCell_NAME';
@@ -18,20 +29,10 @@ import EditableBin from './Cells/EditableCell_BIN';
 
 // types
 import { Item } from '@/types/Item';
-
-import { ItemTableHeader } from './ItemTableHeader';
-import { ItemTableBody } from './ItemTableBody';
-import { createItemTableMeta } from '@/lib/createItemTableMeta';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../@shadcn/ui/dialog';
-import { Button } from '../@shadcn/ui/button';
-import BulkCreate from './Cells/BulkCreate';
-import { Filters } from './Filters';
-import { TablePaginator } from './TablePaginator';
-import { BinManager } from '@/components/BinManager';
-import { useBinStore } from '@/Hooks/Store/BinStore';
 import { Bin } from '@/types/Bin';
-import { useItemStore } from '@/Hooks/Store/ItemStore';
 
+// Bin Management
+import { BinManager } from '@/components/BinManager';
 
 /**
  * Props for the ItemTable component.
@@ -41,12 +42,12 @@ interface ItemTableProps { };
 /**
  * Default column widths on load.
  */
-const minColumnWidths = {
-    id: 5,
-    name: 100,
+const minColumnWidths = { // This provides the widths for the columns in the table
+    id: 8,
+    name: 150,
     bin_name: 50,
     sold: 30,
-};
+}; 
 
 /**
  * ItemTable component for displaying and managing items in a table.
@@ -61,8 +62,9 @@ const ItemTable: React.FC<ItemTableProps> = () => {
   /**
    * Defines the columns for the table using useMemo to optimize performance.
    */
-  const { bins } = useBinStore();
-  const { items } = useItemStore();
+  const items = useBoutiqueStore((state) => state.items);
+  const bins = useBoutiqueStore((state) => state.bins )
+  const itemsForTable = useItemsForTable()
   
   const columns: ColumnDef<Item>[] = useMemo(() => {
       return [
@@ -118,10 +120,10 @@ const ItemTable: React.FC<ItemTableProps> = () => {
               size: minColumnWidths.sold,
           },
       ];
-  }, [items]);
+  }, [items, bins]);
 
   
-  const [columnFilters, setColumnFilters] = useState([
+  const [columnFilters, setColumnFilters] = useState<{ id: string; value: string | Bin[] }[]>([
     {
       id: "name",
       value: ""
@@ -130,14 +132,14 @@ const ItemTable: React.FC<ItemTableProps> = () => {
       id: "bin_name",
       value: [] as Bin[]
     }
-  ])
+  ]);
   
   const [createOpen, setCreateOpen] = useState(false); // State for dialog visibility
   const [binOpen, setBinOpen] = useState(false); // State for dialog visibility
 
   const tableMeta = createItemTableMeta();
   const table = useReactTable({
-      data: items,
+      data: itemsForTable,
       state: { columnFilters },
       columns,
       getCoreRowModel: getCoreRowModel(),
@@ -148,6 +150,24 @@ const ItemTable: React.FC<ItemTableProps> = () => {
       meta: tableMeta,
       
   });
+
+
+  const tableStateKey = "itemTableSettings";
+  const [filtersLoaded, setFiltersLoaded] = useState(false);
+
+  useEffect(() => {
+    const storedState = loadTableState<{ columnFilters: typeof columnFilters }>(tableStateKey);
+    if (storedState?.columnFilters) {
+      setColumnFilters(storedState.columnFilters);
+    }
+    setFiltersLoaded(true); // only render table once filters are ready
+  }, []);
+
+  useEffect(() => {
+    if (filtersLoaded) {
+      saveTableState(tableStateKey, { columnFilters });
+    }
+  }, [columnFilters, filtersLoaded]);
 
   return (
     <div className="flex flex-col h-screen"> {/* Flex container for the table and button */}

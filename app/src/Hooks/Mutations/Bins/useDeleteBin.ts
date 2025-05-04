@@ -2,7 +2,7 @@ import { Bin } from "@/types/Bin";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
-import { useBinStore } from "../../Store/BinStore";
+import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
 
 export const useDeleteBin = () => {
   /**
@@ -10,7 +10,7 @@ export const useDeleteBin = () => {
    *
    * @returns {object} - The mutation object containing the edit function and its state.
    */
-  const { removeBin } = useBinStore();
+  const removeBin  = useBoutiqueStore((state) => state.removeBin);
 
   return useMutation({
     mutationFn: async (bin: Bin) => {

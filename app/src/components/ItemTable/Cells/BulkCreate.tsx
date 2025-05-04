@@ -11,7 +11,7 @@ import { Item } from "@/types/Item";
 import { Button } from "../../@shadcn/ui/button";
 import { useBulkCreate } from "@/Hooks/Mutations/Items/useBulkCreate";
 import { X } from "lucide-react";
-import { useBinStore } from "@/Hooks/Store/BinStore";
+import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
 
 /**
  * Props for the BulkCreate component.
@@ -57,7 +57,7 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
     }
   });
 
-  const { bins } = useBinStore();
+  const bins = useBoutiqueStore((state) => state.bins);
 
   const [items, setItems] = React.useState([{ name: "", binId: null, sold: false, web_url: "https://poshmark.com" }]); // State to manage items
 

@@ -24,7 +24,6 @@ export const useUpdateSold = (
       if(!sold) {
         sold = false; // Set sold to false if it was true
       }
-      console.log("sold", sold);
 
       setOpen(false); // Close dialog popup
 

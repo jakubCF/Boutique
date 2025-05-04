@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query"
 import axios from "axios";
 import { toast } from "sonner"
 import { Bin } from "@/types/Bin";
-import { useBinStore } from "@/Hooks/Store/BinStore";
+import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
 
 export const useEditBinName = (setOpen: (open: boolean) => void) => {
     /**
@@ -10,7 +10,9 @@ export const useEditBinName = (setOpen: (open: boolean) => void) => {
      *
      * @returns {object} - The mutation object containing the create function and its state.
      */
-    const { updateBin, activeBin, clearActiveBin} = useBinStore();
+    const updateBin = useBoutiqueStore((state) => state.updateBin);
+    const activeBin = useBoutiqueStore((state) => state.activeBin);
+    const clearActiveBin = useBoutiqueStore((state) => state.clearActiveBin)
     /* 
         I am not happy with the functionality of active bin, I want a better solution for this problem
         activeBin is set when a bins edit button is clicked, can anyone think of a better workaround for this problem?

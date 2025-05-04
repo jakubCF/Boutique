@@ -10,9 +10,10 @@ import { useDeleteBin } from "@/Hooks/Mutations/Bins/useDeleteBin";
 import { Bin } from "@/types/Bin";
 import { Plus } from "lucide-react"; // Import the Plus icon from Lucide
 import { CreateBin } from "@/components/CreateBin"; // Import the CreateBin component
-import { act, useState } from "react";
+import { useState } from "react";
 import { EditBin } from "./EditBin";
 import { useBinStore } from "@/Hooks/Store/BinStore";
+import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
   
   export interface IBinDialogProps {
     open: boolean;
@@ -22,7 +23,8 @@ import { useBinStore } from "@/Hooks/Store/BinStore";
   
   export function BinManager({ open, onOpenChange, bins }: IBinDialogProps) {
     const deleteBin = useDeleteBin();
-    const { activeBin, setActiveBin } = useBinStore()
+    const activeBin = useBoutiqueStore((state) => state.activeBin);
+    const setActiveBin = useBoutiqueStore((state) => state.setActiveBin)
 
     const [createBinOpen, setCreateBinOpen] = useState(false);
     const [editBinOpen, setEditBinOpen] = useState(false);
@@ -84,7 +86,6 @@ import { useBinStore } from "@/Hooks/Store/BinStore";
                       Delete
                     </Button>
                   </div>
-                  <CreateBin open={createBinOpen} onOpenChange={setCreateBinOpen}/>
                   
                 </div>
               ))}
@@ -93,6 +94,7 @@ import { useBinStore } from "@/Hooks/Store/BinStore";
               <EditBin open={editBinOpen} onOpenChange={setEditBinOpen} />
 
             ): null}
+            <CreateBin open={createBinOpen} onOpenChange={setCreateBinOpen}/>
           </div>
         </DialogContent>
       </Dialog>

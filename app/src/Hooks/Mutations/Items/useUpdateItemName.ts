@@ -20,7 +20,6 @@ export const useUpdateItemName = (
     row: any,
     table: any,
     column: any,
-    form: any,
     setOpen: (value: boolean) => void
 ) => {
     return useMutation({
@@ -51,7 +50,7 @@ export const useUpdateItemName = (
         onSuccess: ({ data }) => {
             table.options.meta?.updateData(
                 row.index,
-                column.id,
+                "name",
                 data.items.name // Update local state to prevent refresh
             );
             table.options.meta?.updateData(

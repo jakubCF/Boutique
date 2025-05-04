@@ -33,11 +33,11 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
         onSubmit: ({value}) => {
             updateName.mutate({name: value.name, url: value.web_url}); // pass the new name to the mutation
         },
-
+        
     })
 
     // Mutation Hooks
-    const updateName = useUpdateItemName(row, table, column, form, setOpen);
+    const updateName = useUpdateItemName(row, table, column, setOpen);
     const deleteName = useDeleteItem(row, table, setOpen);
 
     return(

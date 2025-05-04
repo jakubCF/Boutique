@@ -9,6 +9,7 @@ import { useForm } from "@tanstack/react-form";
 import { Label } from "./@shadcn/ui/label";
 import { useBinStore } from "@/Hooks/Store/BinStore";
 import { useEditBinName } from "@/Hooks/Mutations/Bins/useEditBinName";
+import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
   
   export interface IEditBinProps {
     open: boolean
@@ -16,7 +17,7 @@ import { useEditBinName } from "@/Hooks/Mutations/Bins/useEditBinName";
   }
   
   export function EditBin({ open, onOpenChange }: IEditBinProps) {
-    const { activeBin } = useBinStore();
+    const activeBin = useBoutiqueStore((state) => state.activeBin);
     const editBinName = useEditBinName(onOpenChange);
     
     if (!activeBin) {

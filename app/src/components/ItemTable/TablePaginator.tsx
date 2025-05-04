@@ -11,63 +11,98 @@ import {
 import { Table } from '@tanstack/react-table';
 import { Item } from '@/types/Item';
 
-/**
- * Props for the TablePaginator component.
- */
 export interface TablePaginatorProps {
-  /**
-   * The TanStack Table instance.
-   */
   table: Table<Item>;
 }
 
-/**
- * TablePaginator component for rendering pagination controls for a table.
- *
- * This component provides "Previous" and "Next" buttons, page number links,
- * and an ellipsis for large page counts.
- *
- * @param props - The component props.
- * @returns A JSX element representing the table paginator.
- */
 export const TablePaginator: React.FC<TablePaginatorProps> = ({ table }) => {
+  const currentPage = table.getState().pagination.pageIndex;
+  const totalPages = table.getPageCount();
+
+  const maxVisiblePages = 5;
+  const halfRange = Math.floor(maxVisiblePages / 2);
+
+  let startPage = Math.max(currentPage - halfRange, 0);
+  let endPage = startPage + maxVisiblePages - 1;
+
+  if (endPage >= totalPages) {
+    endPage = totalPages - 1;
+    startPage = Math.max(endPage - maxVisiblePages + 1, 0);
+  }
+
+  const pagesToShow = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, idx) => startPage + idx
+  );
+
   return (
     <Pagination className='mt-4 mb-4'>
       <PaginationContent>
-        {/* Previous Button */}
+        {/* Previous */}
         <PaginationItem>
           <PaginationPrevious
             href="#"
-            className =
-                {!table.getCanPreviousPage() ? 'opacity-50 pointer-events-none' : ''}
             onClick={() => table.previousPage()}
-            >
+            className={!table.getCanPreviousPage() ? 'opacity-50 pointer-events-none' : ''}
+          >
             Previous
           </PaginationPrevious>
         </PaginationItem>
 
-        {/* Page Numbers */}
-        {table.getPageCount() > 1 &&
-          table.getPageOptions().map((pageIndex) => (
-            <PaginationItem key={pageIndex}>
+        {/* First Page + Leading Ellipsis */}
+        {startPage > 0 && (
+          <>
+            <PaginationItem>
               <PaginationLink
                 href="#"
-                onClick={() => table.setPageIndex(pageIndex)}
-                className = {table.getState().pagination.pageIndex === pageIndex? 'font-bold text-gray-100 underline': ''}
-                >
-                {pageIndex + 1}
+                onClick={() => table.setPageIndex(0)}
+                className={currentPage === 0 ? 'font-bold text-gray-100 underline' : ''}
+              >
+                1
               </PaginationLink>
             </PaginationItem>
-          ))}
-
-        {/* Ellipsis for Large Page Counts */}
-        {table.getPageCount() > 5 && (
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
+            {startPage > 1 && (
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )}
+          </>
         )}
 
-        {/* Next Button */}
+        {/* Dynamic Page Range */}
+        {pagesToShow.map((pageIndex) => (
+          <PaginationItem key={pageIndex}>
+            <PaginationLink
+              href="#"
+              onClick={() => table.setPageIndex(pageIndex)}
+              className={currentPage === pageIndex ? 'font-bold text-gray-100 underline' : ''}
+            >
+              {pageIndex + 1}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+
+        {/* Trailing Ellipsis + Last Page */}
+        {endPage < totalPages - 1 && (
+          <>
+            {endPage < totalPages - 2 && (
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )}
+            <PaginationItem>
+              <PaginationLink
+                href="#"
+                onClick={() => table.setPageIndex(totalPages - 1)}
+                className={currentPage === totalPages - 1 ? 'font-bold text-gray-100 underline' : ''}
+              >
+                {totalPages}
+              </PaginationLink>
+            </PaginationItem>
+          </>
+        )}
+
+        {/* Next */}
         <PaginationItem>
           <PaginationNext
             href="#"

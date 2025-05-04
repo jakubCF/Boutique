@@ -19,6 +19,7 @@ import { Bin } from '@/types/Bin';
 import { Pencil } from 'lucide-react';
 import { useBinStore } from '@/Hooks/Store/BinStore';
 import { useEditBin } from '@/Hooks/Mutations/Items/useEditItemBin';
+import { useBoutiqueStore } from '@/Hooks/Store/UseBoutiqueStore';
 
 
 /**
@@ -34,7 +35,7 @@ import { useEditBin } from '@/Hooks/Mutations/Items/useEditItemBin';
  */
 const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) => {
 
-    const { bins } = useBinStore(); // grab state
+    const bins = useBoutiqueStore((state) => state.bins); // grab state
     const [open, setOpen] = React.useState(false); // State for dialog open state
 
     // Database query

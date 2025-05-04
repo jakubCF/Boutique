@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query"
 import axios from "axios";
 import { toast } from "sonner"
 import { Bin } from "@/types/Bin";
-import { useBinStore } from "@/Hooks/Store/BinStore";
+import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
 
 export const useCreateBin = (setOpen: (open: boolean) => void) => {
     /**
@@ -10,7 +10,7 @@ export const useCreateBin = (setOpen: (open: boolean) => void) => {
      *
      * @returns {object} - The mutation object containing the create function and its state.
      */
-    const { addBin } = useBinStore()
+    const addBin = useBoutiqueStore((state) => state.addBin)
      return useMutation({
         mutationFn: async (name: string) =>  {
             setOpen(false) // Close the dialog

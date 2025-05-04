@@ -1,4 +1,5 @@
 import { useItemStore } from "@/Hooks/Store/ItemStore";
+import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
 
 /**
  * Creates metadata for an item table, providing functions to manipulate the table data.
@@ -10,7 +11,12 @@ import { useItemStore } from "@/Hooks/Store/ItemStore";
  *   and `updateBinName`.
  */
 export function createItemTableMeta() {
-  const { addItem, updateItem, removeItem } = useItemStore();
+  const addItem = useBoutiqueStore((state) => state.addItem);
+  const removeItem = useBoutiqueStore((state) => state.removeItem);
+  const updateItem = useBoutiqueStore((state) => state.updateItem);
+  const items = useBoutiqueStore((state) => state.items); // Get the current items
+
+
 
   return {
     /**
@@ -25,7 +31,6 @@ export function createItemTableMeta() {
       }
       newRows.forEach((row) => addItem(row)); // Add each new row to the store
     },
-
     /**
      * Updates a specific cell in the table.
      *
@@ -34,16 +39,17 @@ export function createItemTableMeta() {
      * @param value - The new value for the cell.
      */
     updateData: (rowIndex: number, columnId: string, value: any) => {
-      const items = useItemStore.getState().items; // Get the current items
-      const itemToUpdate = items[rowIndex]; // Find the item by index
+      const itemToUpdate = useBoutiqueStore.getState().items[rowIndex];
       if (!itemToUpdate) {
         console.error(`No item found at rowIndex: ${rowIndex}`);
         return;
       }
+      console.log(`Trying to update: ${itemToUpdate.name} to ${value}`)
       updateItem({
         ...itemToUpdate,
         [columnId]: value, // Update the specific column
       });
+      console.log(items)
     },
 
     /**
@@ -52,7 +58,6 @@ export function createItemTableMeta() {
      * @param rowIndex - The index of the row to delete.
      */
     deleteData: (rowIndex: number) => {
-      const items = useItemStore.getState().items; // Get the current items
       const itemToDelete = items[rowIndex]; // Find the item by index
       if (!itemToDelete) {
         console.error(`No item found at rowIndex: ${rowIndex}`);
@@ -68,7 +73,6 @@ export function createItemTableMeta() {
      * @param value - The new bin object. If `null` is provided, the bin assignment is removed.
      */
     updateBinName: (rowIndex: number, value: any) => {
-      const items = useItemStore.getState().items; // Get the current items
       const itemToUpdate = items[rowIndex]; // Find the item by index
       if (!itemToUpdate) {
         console.error(`No item found at rowIndex: ${rowIndex}`);
