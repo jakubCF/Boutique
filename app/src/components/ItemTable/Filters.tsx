@@ -1,11 +1,13 @@
 import * as React from "react";
 import { Input } from "../@shadcn/ui/input";
-import { Popover, PopoverTrigger, PopoverContent } from "../@shadcn/ui/popover";
 import { Checkbox } from "../@shadcn/ui/checkbox";
 import { Label } from "../@shadcn/ui/label";
 import { Funnel } from "lucide-react";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
 import { Bin } from "@/types/Bin";
+import { Button } from "../@shadcn/ui/button";
+import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenuContent, DropdownMenuTrigger } from "../@shadcn/ui/dropdown-menu";
 /**
  * Props for the Filters component.
  */
@@ -29,12 +31,6 @@ export interface IFiltersProps {
    */
   bins: { id: number; name: string }[] | {id: number; name: string}; // List of bins
 }
-interface FiltersProps {
-  columnFilters: { id: string; value: string | Bin[] }[];
-  setColumnFilters: React.Dispatch<React.SetStateAction<[]>>;
-  bins: Bin[];
-}
-
 /**
  * Filters component for filtering items by name and bin.
  *
@@ -103,16 +99,16 @@ export function Filters({ columnFilters, setColumnFilters }: IFiltersProps) {
         onChange={(e) => onFilterChange("name", e.target.value)}
         className="flex-grow text-gray-200 bg-gray-800"
       />
-      <Popover>
-        <PopoverTrigger asChild>
-          <Funnel className="cursor-pointer" size={30} strokeWidth={1.5} />
-        </PopoverTrigger>
-        <PopoverContent className="p-4 w-64 bg-gray-800 opacity-100 text-gray-200">
-          <div className="flex flex-col space-y-2 ">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Funnel className="cursor-pointer text-yellow-500 border-yellow-500 hover:text-white" size={30} strokeWidth={1.5} />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="p-4 w-64 bg-gray-800 opacity-90 text-gray-200">
+          <div className="flex flex-col space-y-2">
             {Array.isArray(bins) && bins.map((bin) => (
-              <div key={bin.id} className="flex items-center space-x-2">
+              <div key={bin.id} className="flex items-center space-x-2 border-gray-600 m-2">
                 <Checkbox
-                  className="cursor-pointer"
+                  className="cursor-pointer w-5 h-5"
                   checked={selectedBins.some((selectedBin) => selectedBin.id === bin.id)}
                   onCheckedChange={() => toggleBinSelection(bin)}
                   id={`bin-${bin.id}`}
@@ -120,9 +116,17 @@ export function Filters({ columnFilters, setColumnFilters }: IFiltersProps) {
                 <Label htmlFor={`bin-${bin.id}`}>{bin.name}</Label>
               </div>
             ))}
+            <Button
+              className="bg-red-400 cursor-pointer hover:bg-red-500"
+              onClick={() => {
+                setColumnFilters((prev) => prev.filter((filter) => filter.id !== "bin_name")); // Remove only the bin_name filter
+              }}
+            >
+              Clear Bins
+            </Button>
           </div>
-        </PopoverContent>
-      </Popover>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

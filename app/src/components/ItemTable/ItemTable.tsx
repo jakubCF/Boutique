@@ -20,7 +20,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../@shadcn/ui/
 import { Button } from '../@shadcn/ui/button';
 
 // Icons
-import { Pencil, CirclePlus } from 'lucide-react';
+import { CirclePlus, Archive } from 'lucide-react';
 
 // Cells
 import EditableName from './Cells/EditableCell_NAME';
@@ -32,7 +32,8 @@ import { Item } from '@/types/Item';
 import { Bin } from '@/types/Bin';
 
 // Bin Management
-import { BinManager } from '@/components/BinManager';
+import { BinManager } from '@/components/BinEditor/BinManager';
+import { toast } from 'sonner';
 
 /**
  * Props for the ItemTable component.
@@ -45,7 +46,7 @@ interface ItemTableProps { };
 const minColumnWidths = { // This provides the widths for the columns in the table
     id: 8,
     name: 150,
-    bin_name: 50,
+    bin_name: 30,
     sold: 30,
 }; 
 
@@ -101,13 +102,13 @@ const ItemTable: React.FC<ItemTableProps> = () => {
                */
               filterFn: (row, _, filterValue) => {
                   if (!filterValue || filterValue.length === 0) {
-                      return true; // Show all rows if no filter is applied
+                    return true; // Show all rows if no filter is applied
                   }
 
                   const bin = row.original.bin;
                   console.log(row.original)
                   if (!bin) {
-                      return false; // Don't show rows with no bin assigned
+                    return false; // Don't show rows with no bin assigned
                   }
 
                   return filterValue.some((selectedBin: { id: number; name: string }) => selectedBin.id === bin.id);
@@ -137,37 +138,55 @@ const ItemTable: React.FC<ItemTableProps> = () => {
   const [createOpen, setCreateOpen] = useState(false); // State for dialog visibility
   const [binOpen, setBinOpen] = useState(false); // State for dialog visibility
 
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
+
+
   const tableMeta = createItemTableMeta();
   const table = useReactTable({
       data: itemsForTable,
-      state: { columnFilters },
+      state: { columnFilters, pagination },
       columns,
       getCoreRowModel: getCoreRowModel(),
       getFilteredRowModel: getFilteredRowModel(),
       getSortedRowModel: getSortedRowModel(),
       getPaginationRowModel: getPaginationRowModel(),
+      onPaginationChange: setPagination,
       columnResizeMode: "onChange",
       meta: tableMeta,
       
   });
 
-
   const tableStateKey = "itemTableSettings";
   const [filtersLoaded, setFiltersLoaded] = useState(false);
 
   useEffect(() => {
-    const storedState = loadTableState<{ columnFilters: typeof columnFilters }>(tableStateKey);
-    if (storedState?.columnFilters) {
-      setColumnFilters(storedState.columnFilters);
+    const storedState = loadTableState<{
+      columnFilters: typeof columnFilters;
+      pagination: typeof pagination;
+    }>(tableStateKey);
+  
+    try {
+      if (storedState?.columnFilters) {
+        setColumnFilters(storedState.columnFilters);
+      }
+      if (storedState?.pagination) {
+        setPagination(storedState.pagination);
+      }
+    } catch (error) {
+      toast.error(`Error loading state ${error}`);
+    } finally {
+      setFiltersLoaded(true);
     }
-    setFiltersLoaded(true); // only render table once filters are ready
   }, []);
 
   useEffect(() => {
     if (filtersLoaded) {
-      saveTableState(tableStateKey, { columnFilters });
+      saveTableState(tableStateKey, {
+        columnFilters,
+        pagination,
+      });
     }
-  }, [columnFilters, filtersLoaded]);
+  }, [columnFilters, pagination, filtersLoaded]);
 
   return (
     <div className="flex flex-col h-screen"> {/* Flex container for the table and button */}
@@ -183,7 +202,7 @@ const ItemTable: React.FC<ItemTableProps> = () => {
             <Button onClick={() => setBinOpen(true)} // Open the dialog
               className="flex-1 font-medium cursor-pointer border-0 hover:bg-green-600 bg-gray-800"
             >
-              <Pencil /> Bins
+              <Archive /> Bins
             </Button>
             <Button
               className="flex-4/5 font-medium cursor-pointer border-0 hover:bg-green-600 bg-gray-800"

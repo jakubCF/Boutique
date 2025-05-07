@@ -1,5 +1,4 @@
-import { useItemStore } from "@/Hooks/Store/ItemStore";
-import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
+import { useBoutiqueStore } from "../Hooks/Store/UseBoutiqueStore";
 
 /**
  * Creates metadata for an item table, providing functions to manipulate the table data.

@@ -1,8 +1,0 @@
-TODO: Change data payload schema for backend
-TODO: Refactor Bin Manager 
-TODO: provide popup confirmation for delete
-TODO: fix bin IDs not matching up after update    
-TODO: turn items into a store
-TODO: fix type error in Filters
-TODO: add giant enum for all the colors
-TODO: import new item fields into creation

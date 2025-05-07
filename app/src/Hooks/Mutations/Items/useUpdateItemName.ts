@@ -19,7 +19,6 @@ import { toast } from "sonner";
 export const useUpdateItemName = (
     row: any,
     table: any,
-    column: any,
     setOpen: (value: boolean) => void
 ) => {
     return useMutation({
@@ -58,7 +57,8 @@ export const useUpdateItemName = (
                 "web_url",
                 data.items.web_url // Update local state to prevent refresh
             );
-            toast.success("Item name updated successfully"); // Show success notification
+            toast.success(`Item updated successfully`); // Show success notification
+            
         },
         /**
          * Callback executed when the mutation fails.

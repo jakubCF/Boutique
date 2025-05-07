@@ -29,7 +29,6 @@
 - **TanStack Table** – table rendering
 - **ShadCN/UI** – component library
 - **Tailwind CSS** – styling
-- **Drizzle ORM** – optional data layer
 - **TypeScript** – type safety
 
 ---
@@ -66,6 +65,7 @@ type Bin = {
   is_full: boolean
   items: Item[]
 }
+
 Item
 
 type Item = {
@@ -76,6 +76,7 @@ type Item = {
   binId: number
   bin: Bin
 }
+
 ```
 
 ```bash

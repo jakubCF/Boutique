@@ -3,10 +3,9 @@ import axios from "axios";
 import ItemTable from "./components/ItemTable/ItemTable";
 import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
-import { useCallback, useEffect } from "react";
-import { useBinStore } from "./Hooks/Store/BinStore";
-import { useItemStore } from "./Hooks/Store/ItemStore";
+import { useEffect } from "react";
 import { useBoutiqueStore } from "./Hooks/Store/UseBoutiqueStore";
+import { Heart } from "lucide-react";
 
 
 /**
@@ -42,13 +41,12 @@ function App() {
       }
     ]
   });
-  // Query + Error handling for fetching items
 
   // Load State
-  //const { initBins } = useBinStore();
-  //const { initItems } = useItemStore();
   const setBins = useBoutiqueStore((state) => state.setBins);
   const setItems = useBoutiqueStore((state) => state.setItems);
+
+  // Set Query Data
   const getItems = results[0];
   const getBins = results[1];
 
@@ -71,7 +69,6 @@ function App() {
       );
     }
   }, [getBins.isError, getBins.error]);
-
 
   useEffect(() => {
     if (getBins.data) {
@@ -109,7 +106,7 @@ function App() {
           }}
         />
         <footer className="relative text-sm text-gray-400 mt-4">
-          Made with ❤️ and <img src="./src/assets/react.svg" className="w-4 inline mb-1" /> for Sarah 2025
+          Made with <Heart className="inline mb-1" strokeWidth={2} color="#f21818" size={18}/> and <img src="./src/assets/react.svg" className="w-4 inline mb-1" /> for Sarah 2025
         </footer>
       </div>
     </div>

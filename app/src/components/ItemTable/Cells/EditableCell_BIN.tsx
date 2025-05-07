@@ -12,12 +12,7 @@ import {
 } from "../../@shadcn/ui/select";
 import { Label } from '../../@shadcn/ui/label';
 import { Button } from '../../@shadcn/ui/button';
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import { toast } from 'sonner';
-import { Bin } from '@/types/Bin';
 import { Pencil } from 'lucide-react';
-import { useBinStore } from '@/Hooks/Store/BinStore';
 import { useEditBin } from '@/Hooks/Mutations/Items/useEditItemBin';
 import { useBoutiqueStore } from '@/Hooks/Store/UseBoutiqueStore';
 

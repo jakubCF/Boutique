@@ -75,7 +75,7 @@ export const createItem = async (name: string) => {
 export const deleteItem = async (id: number) => {
   console.log(id);
   try {
-    let bin = await prisma.item.delete({
+    await prisma.item.delete({
       where: { id: id },
       select: DEFAULT_SELECT,
     });
@@ -138,8 +138,7 @@ export const updateItemUrl = async (id: number, web_url: string) => {
 export const bulkCreateItems = async (items: { name: string; binId?: number, sold: boolean, web_url: string }[]) => {
   try {
     // Use Prisma's createMany for bulk creation
-    console.log(items)
-    const createdItems = await prisma.item.createMany({
+    prisma.item.createMany({
       data: items.map((item) => ({
         name: item.name,
         bin_id: item.binId || null, // Associate binId if provided, otherwise set to null
@@ -173,8 +172,6 @@ export const bulkCreateItems = async (items: { name: string; binId?: number, sol
 
     return fetchedItems;
   } catch (error) {
-    console.error("Error creating items:", error);
-    console.log(error)
     throw error;
   }
 };

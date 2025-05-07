@@ -5,7 +5,6 @@ import { Table } from "@tanstack/react-table";
 import axios from "axios";
 import { Row } from "@tanstack/react-table";
 import { toast } from "sonner";
-import { useBinStore } from "@/Hooks/Store/BinStore";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
 
 export const useEditBin = (

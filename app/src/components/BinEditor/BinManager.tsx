@@ -9,10 +9,9 @@ import { Button } from "@/components/@shadcn/ui/button";
 import { useDeleteBin } from "@/Hooks/Mutations/Bins/useDeleteBin";
 import { Bin } from "@/types/Bin";
 import { Plus } from "lucide-react"; // Import the Plus icon from Lucide
-import { CreateBin } from "@/components/CreateBin"; // Import the CreateBin component
+import { CreateBin } from "@/components/BinEditor/CreateBin"; // Import the CreateBin component
 import { useState } from "react";
-import { EditBin } from "./EditBin";
-import { useBinStore } from "@/Hooks/Store/BinStore";
+import { EditBin } from "@/components/BinEditor/EditBin";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
   
   export interface IBinDialogProps {
@@ -66,6 +65,15 @@ import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
                   <Badge className="text-sm text-gray-200 bg-gray-600 mt-2">
                     {bin.items.length} items
                   </Badge>
+                  {bin.is_full ? (
+                    <Badge className="text-sm text-gray-200 bg-red-800 mt-2">
+                      Full
+                    </Badge>
+                  ) : (
+                    <Badge className="text-sm text-gray-200 bg-green-800 mt-2">
+                      Available
+                    </Badge>
+                  )}
                   <div className="flex space-x-2 mt-4">
                     <Button
                       className="relative overflow-hidden text-gray-200 font-bold py-2 px-4 rounded shadow-lg group bg-gray-600"

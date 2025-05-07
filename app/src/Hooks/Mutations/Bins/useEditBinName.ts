@@ -18,17 +18,33 @@ export const useEditBinName = (setOpen: (open: boolean) => void) => {
         activeBin is set when a bins edit button is clicked, can anyone think of a better workaround for this problem?
      */
      return useMutation({
-        mutationFn: async (name: string) =>  {
+        mutationFn: async ({ name, is_full }: { name: string; is_full: boolean }) =>  {
             setOpen(false) // Close the dialog
             if(!activeBin) {
                 return toast.error("Error: this hook is being called when it shouldn't be")
             }
-
-            const { data } = await axios.patch(
-                `http://localhost:3000/v1/bins/update/${activeBin.id}/name/${name}`
-            )
-            
-            return data.data;
+            if(name == activeBin.name || is_full == activeBin.is_full) {
+                throw Error("No Data Changed, skipping")
+            }
+            else {
+                const { data } = await axios.patch(
+                    `http://localhost:3000/v1/bins/update/${activeBin.id}`,
+                    {
+                        updates: [
+                            {
+                                field: "name",
+                                value: name
+                            },
+                            {
+                                field: "is_full",
+                                value: is_full
+                            }
+                        ]
+                    }
+                )
+                
+                return data.data; 
+            }
         },
         onSuccess: (data: Bin) => {
             toast.success("Bin updated successfully", data);

@@ -3,11 +3,11 @@ import {
   DialogHeader,
   DialogContent,
 } from "@/components/@shadcn/ui/dialog";
-import { Input } from "./@shadcn/ui/input";
-import { Button } from "./@shadcn/ui/button";
+import { Input } from "../@shadcn/ui/input";
+import { Button } from "../@shadcn/ui/button";
 import { useCreateBin } from "@/Hooks/Mutations/Bins/useCreateBin";
 import { useForm } from "@tanstack/react-form";
-import { Label } from "./@shadcn/ui/label";
+import { Label } from "../@shadcn/ui/label";
 
 export interface ICreateBinProps {
   open: boolean;

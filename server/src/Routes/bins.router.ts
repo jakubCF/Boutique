@@ -8,10 +8,12 @@ import {
   updateBinName,
   addItemToBin,
   removeItemFromBin,
+  updateBinFields,
 } from "../Controllers/bins.controller";
-import { param, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 import { BinReturnMessage } from "../utils/Interfaces/BinReturnMessage";
 import { payloadBuilder } from "../utils/BinPayloadBuilder";
+import { BinFieldTypes } from "../utils/FieldTypes";
 
 const BinsRouter = express.Router();
 
@@ -359,6 +361,79 @@ BinsRouter.patch(
 
     return res.status(payload.status_code).send(payload);
   },
+);
+BinsRouter.patch(
+  "/update/:id",
+  [
+    param("id").exists().isInt().toInt(), // Validate that id is an integer
+    body("updates")
+      .isArray({ min: 1 })
+      .withMessage("updates must be an array with at least one update"),
+    body("updates.*.field")
+      .isString()
+      .withMessage("Each update must have a valid field name")
+      .custom((field) => {
+        if (!BinFieldTypes[field]) {
+          throw new Error(`Invalid field: ${field}`);
+        }
+        return true;
+      }),
+    body("updates.*.value").custom((value, { req }) => {
+      const field = req.body.updates.find((update: any) => update.value === value)?.field;
+      const expectedType = BinFieldTypes[field];
+
+      if (!expectedType) {
+        throw new Error(`Cannot validate value for an invalid field: ${field}`);
+      }
+
+      // Validate the value's type
+      if (expectedType === "number" && typeof value !== "number") {
+        throw new Error(`Value for field "${field}" must be a number`);
+      }
+
+      if (expectedType === "string" && typeof value !== "string") {
+        throw new Error(`Value for field "${field}" must be a string`);
+      }
+
+      if (expectedType === "boolean" && typeof value !== "boolean") {
+        throw new Error(`Value for field "${field}" must be a boolean`);
+      }
+
+      return true;
+    }),
+  ],
+  async (req: Request<BinParams>, res: Response): Promise<any> => {
+    const { id } = req.params;
+    const { updates } = req.body;
+
+    let payload: BinReturnMessage;
+
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      return res.status(400).json({ errors: result.array() });
+    }
+
+    try {
+      const updatedItem = await updateBinFields(id, updates);
+      payload = {
+        data: updatedItem,
+        message: "success",
+        status_code: 200,
+        errors: "none",
+        operationComplete: true,
+      };
+    } catch (error) {
+      payload = {
+        data: [],
+        message: "fail",
+        status_code: 500,
+        errors: error.message,
+        operationComplete: false,
+      };
+    }
+
+    return res.status(payload.status_code).json(payload);
+  }
 );
 
 export default BinsRouter;

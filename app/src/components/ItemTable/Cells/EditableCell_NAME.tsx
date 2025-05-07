@@ -22,7 +22,7 @@ import { Link, Pencil } from "lucide-react";
  * @param props - The CellContext props from TanStack React Table.
  * @returns A JSX element representing the editable name cell.
  */
-const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, table}) => {
+const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, table}) => {
     const [open, setOpen] = React.useState(false); // state for dialog state, allows you to programmatically open and close the dialog
 
     const form = useForm({
@@ -37,7 +37,7 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, column, tab
     })
 
     // Mutation Hooks
-    const updateName = useUpdateItemName(row, table, column, setOpen);
+    const updateName = useUpdateItemName(row, table, setOpen);
     const deleteName = useDeleteItem(row, table, setOpen);
 
     return(

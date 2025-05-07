@@ -1,3 +1,4 @@
+import { BinFieldTypes } from "../utils/FieldTypes";
 import { prisma } from "../db/prisma";
 
 const DEFAULT_SELECT = {
@@ -45,7 +46,7 @@ export const createBin = async (name: string) => {
 
 export const deleteBin = async (id: number) => {
   try {
-    let bin = await prisma.bin.delete({
+    await prisma.bin.delete({
       where: { id: id },
       select: DEFAULT_SELECT,
     });
@@ -80,7 +81,6 @@ export const updateBinIsFull = async (id: number, isFull: 1 | 0) => {
     default:
       throw new Error("Invalid value for isFull");
   }
-  console.log(validation);
   try {
     let bin = await prisma.bin.update({
       where: { id: id },
@@ -89,8 +89,6 @@ export const updateBinIsFull = async (id: number, isFull: 1 | 0) => {
     });
     return bin;
   } catch (error) {
-    console.log(error);
-
     throw error;
   }
 };
@@ -129,6 +127,33 @@ export const removeItemFromBin = async (id: number, item_id: number) => {
       },
       select: DEFAULT_SELECT,
     });
+    return bin;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateBinFields = async (id: number, updates: { field: string; value: any }[]) => {
+  try {
+    // Convert the updates array into an object for Prisma
+    const data: Record<string, any> = {};
+    updates.forEach(({ field, value }) => {
+      data[field] = value;
+    });
+
+    // Validate that all fields are valid
+    const invalidFields = Object.keys(data).filter((field) => !BinFieldTypes[field]);
+    if (invalidFields.length > 0) {
+      throw new Error(`Invalid fields: ${invalidFields.join(", ")}`);
+    }
+
+    // Perform the update
+    const bin = await prisma.bin.update({
+      where: { id },
+      data,
+      select: DEFAULT_SELECT,
+    });
+
     return bin;
   } catch (error) {
     throw error;

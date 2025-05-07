@@ -12,6 +12,7 @@ import { Button } from "../../@shadcn/ui/button";
 import { useBulkCreate } from "@/Hooks/Mutations/Items/useBulkCreate";
 import { X } from "lucide-react";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
+import { Badge } from "@/components/@shadcn/ui/badge";
 
 /**
  * Props for the BulkCreate component.
@@ -131,7 +132,7 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
                       onClick={() => updateItem(index, "binId", bin.id)}
                       className="hover:bg-gray-600"
                     >
-                      {bin.name}
+                      {bin.name} {bin.is_full && (<Badge className="bg-red-800">full</Badge>)}
                     </DropdownMenuItem>
                   ))}
                   <DropdownMenuItem onClick={() => updateItem(index, "binId", null)}>
