@@ -23,7 +23,7 @@ function App() {
       {
         queryKey: ["getItems"],
         queryFn: async () => {
-          const { data } = await axios.get("http://localhost:3000/v1/items");
+          const { data } = await axios.get("http://172.17.0.2:3000/v1/items");
         
           if (!data.items) {
             throw new Error("Invalid response structure from /v1/items");
@@ -35,7 +35,7 @@ function App() {
       {
         queryKey: ["getBins"],
         queryFn: async () => {
-          const { data } = await axios.get("http://localhost:3000/v1/bins");
+          const { data } = await axios.get("http://172.17.0.2:3000/v1/bins");
           return data.data;
         }
       }
