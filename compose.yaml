@@ -1,0 +1,32 @@
+services: 
+  nginx: 
+    build: 
+      context: ./app
+    ports: 
+     - 8000:80
+    env_file:
+      - ./app/.env
+    volumes: 
+      - ./app/dist/:/usr/share/nginx/html
+  db:
+    image: postgres:latest
+    container_name: boutique_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "3503"
+      POSTGRES_DB: Boutique
+    ports:
+     - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+  server: 
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+       - DATABASE_URL=postgres://postgres:3503@host.docker.internal:5432/Boutique?schema=public
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - db

@@ -6,6 +6,7 @@ import axios from "axios";
 import { Row } from "@tanstack/react-table";
 import { toast } from "sonner";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
+import { HOST } from "@/App";
 
 export const useEditBin = (
     setOpen: (value: boolean) => void,
@@ -28,7 +29,7 @@ export const useEditBin = (
 
       if (!bin) {
           const currentBin = row.original.bin?.id; // Get the current bin ID
-          queryString = `http://localhost:3000/v1/bins/update/${currentBin}/remove/item/${id}`;
+          queryString = `http://${HOST}/v1/bins/update/${currentBin}/remove/item/${id}`;
             
       }
       else {

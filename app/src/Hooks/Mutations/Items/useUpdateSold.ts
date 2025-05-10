@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import axios from "axios";
 import { Item } from "@/types/Item";
 import { Table, Row, Column } from "@tanstack/react-table";
+import { HOST } from "@/App";
 
 export const useUpdateSold = (
     row: Row<Item>,
@@ -27,7 +28,7 @@ export const useUpdateSold = (
 
       setOpen(false); // Close dialog popup
 
-      return axios.patch(`http://localhost:3000/v1/items/update/${id}`, { updates: 
+      return axios.patch(`http://${HOST}/v1/items/update/${id}`, { updates: 
         [
           { field: "sold", value: sold }
         ]

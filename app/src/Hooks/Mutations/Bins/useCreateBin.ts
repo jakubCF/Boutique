@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "sonner"
 import { Bin } from "@/types/Bin";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
+import { HOST } from "@/App";
 
 export const useCreateBin = (setOpen: (open: boolean) => void) => {
     /**
@@ -16,7 +17,7 @@ export const useCreateBin = (setOpen: (open: boolean) => void) => {
             setOpen(false) // Close the dialog
 
             const { data } = await axios.post(
-                `http://localhost:3000/v1/bins/create/${name}`
+                `http://${HOST}/v1/bins/create/${name}`
             )
 
             return data.data

@@ -28,6 +28,7 @@ export function createItemTableMeta() {
         console.error("createRows expects an array, but received:", newRows);
         return;
       }
+      console.log(newRows)
       newRows.forEach((row) => addItem(row)); // Add each new row to the store
     },
     /**

@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import axios from "axios";
+import { HOST } from "@/App";
 
 export const useBulkCreate = (
     table: any,
@@ -9,12 +10,12 @@ export const useBulkCreate = (
     mutationKey: ["createBulkItems"],
     mutationFn: async (data: unknown) => {
       const response = await axios({
-        url : "http://localhost:3000/v1/items/bulk/create",
+        url : `http://${HOST}/v1/items/bulk/create`,
         data: { data },
         method: "post"
       })
       setOpen(false); // Close the modal after the request
-      
+      console.log(response.data)
       return response
     },
     onError: (error) => {
@@ -22,6 +23,7 @@ export const useBulkCreate = (
       return toast.error("Failed to create items: " + error)
     },
     onSuccess: ({data}) => {
+      console.log(data.items)
       if (Array.isArray(data.items)) {
         table.options.meta?.createRows(data.items);
         toast.success("Items added successfully!");

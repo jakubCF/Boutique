@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "sonner"
 import { Bin } from "@/types/Bin";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
+import { HOST } from "@/App";
 
 export const useEditBinName = (setOpen: (open: boolean) => void) => {
     /**
@@ -23,12 +24,9 @@ export const useEditBinName = (setOpen: (open: boolean) => void) => {
             if(!activeBin) {
                 return toast.error("Error: this hook is being called when it shouldn't be")
             }
-            if(name == activeBin.name || is_full == activeBin.is_full) {
-                throw Error("No Data Changed, skipping")
-            }
             else {
                 const { data } = await axios.patch(
-                    `http://localhost:3000/v1/bins/update/${activeBin.id}`,
+                    `http://${HOST}/v1/bins/update/${activeBin.id}`,
                     {
                         updates: [
                             {

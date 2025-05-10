@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { HOST } from "@/App";
 
 /**
  * Custom hook to handle updating the name of an item.
@@ -32,7 +33,7 @@ export const useUpdateItemName = (
             const id = row.original.id; // Get the item ID from the row
             setOpen(false); // Close the dialog
 
-            return axios.patch(`http://localhost:3000/v1/items/update/${id}`, { 
+            return axios.patch(`http://${HOST}/v1/items/update/${id}`, { 
                 updates: 
                     [ 
                         { field: "name", value: name }, 

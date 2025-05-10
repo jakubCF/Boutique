@@ -5,9 +5,7 @@ import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
 import { useEffect } from "react";
 import { useBoutiqueStore } from "./Hooks/Store/UseBoutiqueStore";
-import { Heart } from "lucide-react";
-
-
+import { Atom, Heart } from "lucide-react";
 /**
  * The main application component.
  *
@@ -17,13 +15,15 @@ import { Heart } from "lucide-react";
  *
  * @returns JSX.Element - The rendered application component.
  */
+export const HOST: string = import.meta.env.VITE_API_HOST;
+
 function App() {
   const results = useQueries({
     queries: [
       {
         queryKey: ["getItems"],
         queryFn: async () => {
-          const { data } = await axios.get("http://172.17.0.2:3000/v1/items");
+          const { data } = await axios.get(`http://${HOST}/v1/items`);
         
           if (!data.items) {
             throw new Error("Invalid response structure from /v1/items");
@@ -35,7 +35,7 @@ function App() {
       {
         queryKey: ["getBins"],
         queryFn: async () => {
-          const { data } = await axios.get("http://172.17.0.2:3000/v1/bins");
+          const { data } = await axios.get(`http://${HOST}/v1/bins`);
           return data.data;
         }
       }
@@ -106,7 +106,7 @@ function App() {
           }}
         />
         <footer className="relative text-sm text-gray-400 mt-4">
-          Made with <Heart className="inline mb-1" strokeWidth={2} color="#f21818" size={18}/> and <img src="./src/assets/react.svg" className="w-4 inline mb-1" /> for Sarah 2025
+          Made with <Heart className="inline mb-1" strokeWidth={2} color="#f21818" size={18}/> and <Atom strokeWidth={2} color="#fffff"className="inline mb-1" /> for Sarah 2025
         </footer>
       </div>
     </div>

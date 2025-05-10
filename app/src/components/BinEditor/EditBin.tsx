@@ -10,7 +10,6 @@ import { Label } from "../@shadcn/ui/label";
 import { useEditBinName } from "@/Hooks/Mutations/Bins/useEditBinName";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
 import TableSkeleton from "../ItemTable/TableSkeleton";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../@shadcn/ui/dropdown-menu";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "../@shadcn/ui/select";
   
   export interface IEditBinProps {
