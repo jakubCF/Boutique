@@ -42,3 +42,5 @@ declare module "@tanstack/react-table" {
     updateBinName: (rowIndex: number, value: unknown | null) => void;
   }
 }
+
+// Removed the module augmentation as it is now defined in a separate type declaration file.

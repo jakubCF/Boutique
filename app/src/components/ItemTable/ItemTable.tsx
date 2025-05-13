@@ -20,7 +20,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../@shadcn/ui/
 import { Button } from '../@shadcn/ui/button';
 
 // Icons
-import { CirclePlus, Archive } from 'lucide-react';
+import { CirclePlus, Archive, ChartColumnBig } from 'lucide-react';
 
 // Cells
 import EditableName from './Cells/EditableCell_NAME';
@@ -34,6 +34,7 @@ import { Bin } from '@/types/Bin';
 // Bin Management
 import { BinManager } from '@/components/BinEditor/BinManager';
 import { toast } from 'sonner';
+import Chart from '../Charts/Chart';
 
 /**
  * Props for the ItemTable component.
@@ -137,6 +138,7 @@ const ItemTable: React.FC<ItemTableProps> = () => {
   
   const [createOpen, setCreateOpen] = useState(false); // State for dialog visibility
   const [binOpen, setBinOpen] = useState(false); // State for dialog visibility
+  const [dataOpen, setDataOpen] = useState(false);
 
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
 
@@ -194,6 +196,7 @@ const ItemTable: React.FC<ItemTableProps> = () => {
         <div className="flex-grow overflow-auto"> {/* Table container with flex-grow */}
           {/* TODO: Fix this god damn piece of shit type error */}
           <Filters columnFilters={columnFilters} setColumnFilters={setColumnFilters} bins={bins} /> 
+
           <Table className="border-gray-200 min-w-[1280px] min-h-[200px] max-h-[200px]">
             <ItemTableHeader table={table} />
             <ItemTableBody table={table} />
@@ -210,9 +213,15 @@ const ItemTable: React.FC<ItemTableProps> = () => {
             >
               <CirclePlus /> Items
             </Button>
+              <Button
+                className="font-medium cursor-pointer border-0 hover:bg-green-600 bg-gray-800"
+                onClick={() => setDataOpen(true)} // Open the dialog
+              >
+                <ChartColumnBig /> Data
+              </Button>
+              <Chart open={dataOpen} onOpenChange={setDataOpen}/>
           </div>
           <TablePaginator table={table} />
-          
         </div>
       </div>
       <BinManager open={binOpen} onOpenChange={setBinOpen} bins={bins} />

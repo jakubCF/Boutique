@@ -138,7 +138,7 @@ export const updateItemUrl = async (id: number, web_url: string) => {
 export const bulkCreateItems = async (items: { name: string; binId?: number, sold: boolean, web_url: string }[]) => {
   try {
     // Use Prisma's createMany for bulk creation
-    items.map(item => console.log(item))
+    await items.map(item => console.log(item))
     await prisma.item.createMany({
       data: items.map((item) => ({
         name: item.name,

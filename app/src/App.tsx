@@ -6,6 +6,7 @@ import { toast, Toaster } from "sonner";
 import { useEffect } from "react";
 import { useBoutiqueStore } from "./Hooks/Store/UseBoutiqueStore";
 import { Atom, Heart } from "lucide-react";
+import Chart from "./components/Charts/Chart";
 /**
  * The main application component.
  *
@@ -91,7 +92,6 @@ function App() {
         </div>
       ) : (
         <div className="w-full max-w-[1400px] max-h-[600px] p-4 bg-gray-700 rounded-lg shadow-lg">
-            {/* Provides the bins to the whole tables tree */}
             <ItemTable />
         </div>
       )}
@@ -106,7 +106,7 @@ function App() {
           }}
         />
         <footer className="relative text-sm text-gray-400 mt-4">
-          Made with <Heart className="inline mb-1" strokeWidth={2} color="#f21818" size={18}/> and <Atom strokeWidth={2} color="#fffff"className="inline mb-1" /> for Sarah 2025
+          Made with <Heart className="inline mb-1" strokeWidth={2} color="#f21818" size={18}/> for Sarah 2025
         </footer>
       </div>
     </div>
