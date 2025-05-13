@@ -5,8 +5,7 @@ import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
 import { useEffect } from "react";
 import { useBoutiqueStore } from "./Hooks/Store/UseBoutiqueStore";
-import { Atom, Heart } from "lucide-react";
-import Chart from "./components/Charts/Chart";
+import { Heart } from "lucide-react";
 /**
  * The main application component.
  *

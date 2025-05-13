@@ -15,4 +15,4 @@ RUN yarn build
 RUN npx prisma generate
 RUN npx prisma db push
 
-CMD sh -c "npx prisma migrate deploy && yarn start"
+CMD sh -c "yarn start"

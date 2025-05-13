@@ -1,11 +1,5 @@
 import { Dialog, DialogTitle, DialogContent } from '../@shadcn/ui/dialog';
 import { useEffect, useState } from 'react';
-import {
-  ResponsiveContainer,
-  RadialBarChart,
-  RadialBar,
-  Legend,
-} from 'recharts';
 import { useBoutiqueStore } from '@/Hooks/Store/UseBoutiqueStore';
 import BinBarChart from './BinBarChart';
 export interface IChartProps {
