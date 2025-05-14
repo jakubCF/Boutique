@@ -1,6 +1,12 @@
 # === Build Stage ===
 FROM node:18-bullseye as builder
 
+# Accept build arg from docker-compose
+ARG VITE_API_HOST
+
+# Pass the env var into the Vite build
+ENV VITE_API_HOST=$VITE_API_HOST
+
 WORKDIR /app
 
 COPY package*.json ./
