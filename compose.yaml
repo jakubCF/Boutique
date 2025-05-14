@@ -4,10 +4,9 @@ services:
       context: ./app
     ports: 
      - 8000:80
-    env_file:
-      - ./app/.env
-    volumes: 
-      - ./app/dist/:/usr/share/nginx/html
+    depends_on:
+       - server
+
   db:
     image: postgres:latest
     container_name: boutique_db
@@ -25,8 +24,12 @@ services:
       context: ./server
       dockerfile: Dockerfile
     environment:
-       - DATABASE_URL=postgres://postgres:3503@host.docker.internal:5432/Boutique?schema=public
+       - DATABASE_URL=postgres://postgres:3503@boutique_db:5432/Boutique?schema=public
     ports: 
       - "3000:3000"
     depends_on:
       - db
+    command: >
+      sh -c "
+      npx prisma db push;
+      yarn start"
