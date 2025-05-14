@@ -9,10 +9,9 @@ COPY . .
 
 EXPOSE 3000
 
-ENV DATABASE_URL=postgres://postgres:3503@host.docker.internal:5432/Boutique
+ENV DATABASE_URL=postgres://postgres:3503@boutique_db:5432/Boutique
 
 RUN yarn build
 RUN npx prisma generate
-RUN npx prisma db push
 
-CMD sh -c "yarn start"
+CMD ["yarn", "start"]
