@@ -42,7 +42,6 @@ function App() {
       }
     ]
   });
-
   // Load State
   const setBins = useBoutiqueStore((state) => state.setBins);
   const setItems = useBoutiqueStore((state) => state.setItems);
@@ -60,8 +59,6 @@ function App() {
       );
     }
   }, [getItems.isError, getItems.error]);
-
-
   useEffect(() => {
     if (getBins.isError && getBins.error) {
       toast.error(
