@@ -3,7 +3,7 @@ services:
     build: 
       context: ./app
       args:
-        VITE_API_HOST: http://172.84.20.11:3000 # Replace with your server's IP address
+        VITE_API_HOST: 172.84.20.11:3000 # Replace with your server's IP address
     ports: 
      - 8000:80
     depends_on:
