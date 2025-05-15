@@ -9,7 +9,7 @@ import { HOST } from "@/App";
  * This hook uses the `useMutation` hook from `@tanstack/react-query` to perform
  * a delete operation on an item. It also provides success and error handling
  * with toast notifications.
- *
+ jjj*
  * @param row - The row object containing the item to be deleted.
  * @param table - The table instance, used to update the table state after deletion.
  * @param column - The column instance (not used in this implementation).
@@ -23,7 +23,7 @@ export const useDeleteItem = (
     setOpen: (value: boolean) => void
 ) => {
     return useMutation({
-        /**
+    /**
          * Mutation function to delete the item.
          *
          * @returns A promise that resolves when the item is successfully deleted.
