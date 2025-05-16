@@ -6,6 +6,7 @@ import { Filters } from './Filters';
 import { createItemTableMeta } from '@/lib/createItemTableMeta';
 import { TablePaginator } from './TablePaginator';
 import BulkCreate from './Cells/BulkCreate';
+import { ColumnSelector } from "@/components/ItemTable/ColumnSelector";
 
 // state management
 import { useEffect, useMemo, useState } from 'react';
@@ -18,18 +19,19 @@ import { loadTableState, saveTableState } from "@/lib/loadTableState";
 import { Table } from '../@shadcn/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../@shadcn/ui/dialog';
 import { Button } from '../@shadcn/ui/button';
-
 // Icons
 import { CirclePlus, Archive, ChartColumnBig } from 'lucide-react';
 
 // Cells
 import EditableName from './Cells/EditableCell_NAME';
+import EditableAll from './Cells/EditableCell_ALL';
 import EditableSold from './Cells/EditableCell_SOLD';
 import EditableBin from './Cells/EditableCell_BIN';
 
 // types
 import { Item } from '@/types/Item';
 import { Bin } from '@/types/Bin';
+import type { SortingState } from '@tanstack/react-table';
 
 // Bin Management
 import { BinManager } from '@/components/BinEditor/BinManager';
@@ -47,9 +49,24 @@ interface ItemTableProps { };
 const minColumnWidths = { // This provides the widths for the columns in the table
     id: 8,
     name: 150,
+    buy_price: 15,
+    listing_price: 15,
+    item_desc: 150,
     bin_name: 30,
     sold: 30,
+    brand: 50,
+    date: 50,
 }; 
+
+const DEFAULT_VISIBLE_COLUMNS = [
+  "id",
+  "name",
+  "brand",
+  "listing_price",
+  "bin_name",
+  "sold",
+  "action",
+];
 
 /**
  * ItemTable component for displaying and managing items in a table.
@@ -85,6 +102,83 @@ const ItemTable: React.FC<ItemTableProps> = () => {
               cell: (props) => <EditableName {...props} />,
               enableSorting: true,
               size: minColumnWidths.name,
+              enableHiding: false,
+          },
+          {
+              accessorKey: "brand",
+              header: "Brand",
+              cell: (props) => <div className="flex justify-between">
+              <div className="flex items-center space-x-2">
+               <span>{props.getValue<string>()}</span>
+              </div>
+              </div>,
+              enableSorting: true,
+              size: minColumnWidths.brand,
+          },
+          {
+            accessorKey: "buy_price",
+            header: "Buy Price",
+            cell: (props) => <div className="flex justify-between">
+              <div className="flex items-center space-x-2">
+               <span>{props.getValue<string>()}</span>
+              </div>
+              </div>,
+            enableSorting: true,
+            size: minColumnWidths.buy_price,
+          },
+          {
+            accessorKey: "listing_price",
+            header: "Listing Price",
+            cell: (props) => <div className="flex justify-between">
+            <div className="flex items-center space-x-2">
+             <span>{props.getValue<string>()}</span>
+            </div>
+            </div>,
+            enableSorting: true,
+            size: minColumnWidths.listing_price,
+          },
+          {
+            accessorKey: "item_desc",
+            header: "Description",
+            cell: (props) => <div className="flex justify-between">
+            <div className="flex items-center space-x-2">
+             <span>{props.getValue<string>().slice(0, 50)}...</span>
+            </div>
+            </div>,
+            enableSorting: true,
+            size: minColumnWidths.name,
+          },
+          {
+              accessorKey: "purchase_date",
+              header: "Purchased date",
+              cell: (props) => {
+                const date = props.getValue<string | null>();
+                return (
+                  <div className="flex justify-between">
+                    <div className="flex items-center space-x-2">
+                      <span>{date ? new Date(date).toLocaleDateString() : "-"}</span>
+                    </div>
+                  </div>
+                );
+              },
+              enableSorting: true,
+              size: minColumnWidths.date,
+          },
+          {
+              accessorKey: "sold_date",
+              header: "Sold date",
+              cell: (props) => {
+                const date = props.getValue<string | null>();
+                return (
+                  <div className="flex justify-between">
+                    <div className="flex items-center space-x-2">
+                      <span>{date ? new Date(date).toLocaleDateString() : "-"}</span>
+                    </div>
+                  </div>
+                );
+              },
+              enableSorting: true,
+              size: minColumnWidths.date,
           },
           {
               accessorFn: (row) => row.bin?.name, // Use a function to access the nested property
@@ -120,12 +214,53 @@ const ItemTable: React.FC<ItemTableProps> = () => {
               header: "Sold?",
               cell: (props: any) => <EditableSold {...props} />,
               size: minColumnWidths.sold,
+              filterFn: (row, _, filterValue: boolean[]) => {
+                if (!filterValue || filterValue.length === 0) return true;
+                return filterValue.includes(row.getValue("sold"));
+              }
+          },
+          {
+            id: "actions",
+            header: "Actions", // You can use an icon or "Edit"
+            size: 30,
+            cell: (props: any) => <EditableAll {...props} />,
+            enableHiding: false,
           },
       ];
   }, [items, bins]);
 
-  
-  const [columnFilters, setColumnFilters] = useState<{ id: string; value: string | Bin[] }[]>([
+    // Prepare list of all column IDs to build initial visibility
+  const allColumnIds = useMemo(() => {
+  return columns
+    .map((col) => col.id ?? (col as any).accessorKey)
+    .filter(Boolean) as string[];
+}, [columns]);
+
+    // Load column visibility from localStorage or use default
+  const getInitialVisibility = (): Record<string, boolean> => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("columnVisibility");
+      if (saved) return JSON.parse(saved);
+    }
+    const visibility: Record<string, boolean> = {};
+    allColumnIds.forEach((col) => {
+      visibility[col] = DEFAULT_VISIBLE_COLUMNS.includes(col);
+    });
+    return visibility;
+  };
+
+  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>(
+    getInitialVisibility
+  );
+  // Update localStorage when columnVisibility changes
+  useEffect(() => {
+    localStorage.setItem("columnVisibility", JSON.stringify(columnVisibility));
+  }, [columnVisibility]);
+
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'id', desc: false } // default sort by `id` ascending
+  ]);
+  const [columnFilters, setColumnFilters] = useState<{ id: string; value: string | Bin[] | boolean []}[]>([
     {
       id: "name",
       value: ""
@@ -133,6 +268,10 @@ const ItemTable: React.FC<ItemTableProps> = () => {
     {
       id: "bin_name",
       value: [] as Bin[]
+    },
+    {
+      id: "sold",
+      value: [false],
     }
   ]);
   
@@ -142,12 +281,13 @@ const ItemTable: React.FC<ItemTableProps> = () => {
 
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
 
-
   const tableMeta = createItemTableMeta();
   const table = useReactTable({
       data: itemsForTable,
-      state: { columnFilters, pagination },
+      state: { columnFilters, pagination, columnVisibility, sorting},
       columns,
+      onSortingChange: setSorting, // ← handle updates
+      onColumnVisibilityChange: setColumnVisibility,
       getCoreRowModel: getCoreRowModel(),
       getFilteredRowModel: getFilteredRowModel(),
       getSortedRowModel: getSortedRowModel(),
@@ -160,6 +300,9 @@ const ItemTable: React.FC<ItemTableProps> = () => {
 
   const tableStateKey = "itemTableSettings";
   const [filtersLoaded, setFiltersLoaded] = useState(false);
+  const handleApplyVisibility = (visibility: Record<string, boolean>) => {
+    setColumnVisibility(visibility);
+  };
 
   useEffect(() => {
     const storedState = loadTableState<{
@@ -220,6 +363,7 @@ const ItemTable: React.FC<ItemTableProps> = () => {
                 <ChartColumnBig /> Data
               </Button>
               <Chart open={dataOpen} onOpenChange={setDataOpen}/>
+              <ColumnSelector table={table} onApply={handleApplyVisibility} />
           </div>
           <TablePaginator table={table} />
         </div>

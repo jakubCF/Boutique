@@ -1,41 +1,28 @@
 import { ValidationError } from "express-validator";
 
+interface Bin {
+  id: number;
+  name: string;
+  is_full: boolean;
+}
+
+interface Item {
+  id: number;
+  name: string;
+  bin: Bin | null;
+  bin_id?: number;
+  sold?: boolean;
+  buy_price: number | null;
+  listing_price: number | null;
+  item_desc: string | null;
+  purchase_date?: Date | null;
+  sold_date?: Date | null;
+  brand?: string | null;
+}
 export interface ItemReturnMessage {
   message: string | "success" | "fail";
-  items:
-    | {
-        id: number;
-        name: string;
-        bin: {
-          id: number;
-          name: string;
-          is_full: boolean;
-        };
-        bin_id: number;
-      }[]
-    | {
-        id: number;
-        name: string;
-        bin: {
-          id: number;
-          name: string;
-          is_full: boolean;
-        };
-        bin_id: number;
-      }
-    |
-    {
-      id: number;
-      name: string;
-      bin: {
-        id: number;
-        name: string;
-        is_full: boolean;
-      } | null;
-      sold: boolean;
-    }[]
-  | [];
+  items: Item | Item[] | [];
   operationComplete: boolean;
-  errors: Error[] | "none" | Error | ValidationError[];
+  errors: Error | Error[] | ValidationError[] | "none";
   status_code: number;
 }

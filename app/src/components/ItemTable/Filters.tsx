@@ -17,14 +17,14 @@ export interface IFiltersProps {
    */
   columnFilters: {
     id: string;
-    value: string | string[] | { id: number; name: string }[];
+    value: string | string[] | { id: number; name: string }[] | boolean[] | boolean;
   }[];
   /**
    * A function to update the column filters.
    */
   setColumnFilters: React.Dispatch<React.SetStateAction<({
     id: string;
-    value: string | Bin[];
+    value: string | Bin[] | boolean[];
   })[]>>
   /**
    * The list of available bins.
@@ -90,6 +90,30 @@ export function Filters({ columnFilters, setColumnFilters }: IFiltersProps) {
     onFilterChange("bin_name", updatedBins);
   };
 
+  const soldFilter = columnFilters.find((f) => f.id === "sold")?.value as boolean[] || [];
+
+  const toggleSoldFilter = (value: boolean) => {
+  const currentFilter = columnFilters.find((f) => f.id === "sold");
+  const current: boolean[] = Array.isArray(currentFilter?.value)
+    ? (currentFilter!.value as boolean[])
+    : [];
+
+  let newValues: boolean[];
+
+  if (current.includes(value)) {
+    newValues = current.filter((v) => v !== value);
+  } else {
+    newValues = [...current, value];
+  }
+
+  setColumnFilters((prev) => {
+    const otherFilters = prev.filter((f) => f.id !== "sold");
+    return newValues.length > 0
+      ? [...otherFilters, { id: "sold", value: newValues }]
+      : otherFilters;
+  });
+};
+
   return (
     <div className="flex items-center space-x-4 p-4 bg-muted rounded-md">
       <Input
@@ -124,6 +148,30 @@ export function Filters({ columnFilters, setColumnFilters }: IFiltersProps) {
             >
               Clear Bins
             </Button>
+          </div>
+           {/* Sold Filter */}
+          <div className="flex flex-col space-y-2">
+            <Label className="text-sm text-gray-300 m-2">Sold Status</Label>
+            <div className="flex flex-col space-y-2">
+              <div className="flex items-center space-x-2 border-gray-600 m-2">
+                <Checkbox
+                  id="sold-yes"
+                  className="cursor-pointer w-5 h-5"
+                  checked={Array.isArray(soldFilter) && soldFilter.includes(true)}
+                  onCheckedChange={() => toggleSoldFilter(true)}
+                />
+                <Label htmlFor="sold-yes">Yes</Label>
+              </div>
+              <div className="flex items-center space-x-2 border-gray-600 m-2">
+                <Checkbox
+                  id="sold-no"
+                  className="cursor-pointer w-5 h-5"
+                  checked={Array.isArray(soldFilter) && soldFilter.includes(false)}
+                  onCheckedChange={() => toggleSoldFilter(false)}
+                />
+                <Label htmlFor="sold-no">No</Label>
+              </div>
+            </div>
           </div>
         </DropdownMenuContent>
       </DropdownMenu>

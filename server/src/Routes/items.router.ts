@@ -294,6 +294,42 @@ ItemsRouter.post(
     .optional()
     .isString()
     .withMessage("item_desc must be a valid string"),
+  body("items.*.brand")
+    .optional()
+    .isString()
+    .withMessage("brand must be a valid string"),
+  body("items.*.purchase_date")
+    .optional()
+    .isDate()
+    .withMessage("purchase_date must be a valid date"),
+  body("items.*.sold_date")
+    .optional()
+    .isDate()
+    .withMessage("sold_date must be a valid date"),
+  body("items.*.made_in")
+    .optional()
+    .isString()
+    .withMessage("made_in must be a valid string"),
+  body("items.*.posh_category")
+    .optional()
+    .isString()
+    .withMessage("posh_category must be a valid string"),
+  body("items.*.posh_picture_url")
+    .optional()
+    .isString()
+    .withMessage("posh_picture_url must be a valid string"),
+  body("items.*.posh_created_at")
+    .optional()
+    .isDate()
+    .withMessage("posh_created_at must be a valid date"),
+  body("items.*.posh_size")
+    .optional()
+    .isString()
+    .withMessage("posh_size must be a valid string"),
+  body("items.*.posh_root_ancestor_post_id")
+    .optional()
+    .isString()
+    .withMessage("posh_root_ancestor_post_id must be a valid string"),
   async (req: Request, res: Response): Promise<any> => {
     const { data } = req.body;
     let payload: ItemReturnMessage;

@@ -50,7 +50,7 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
   // Initialize the form
   const form = useForm({
     defaultValues: {
-      items: [{ name: "", binId: null, sold: false, web_url: "https://poshmark.com" }], // Default structure for items
+      items: [{ name: "", binId: null, sold: false, web_url: "https://poshmark.com", buy_price: null, listing_price: null, item_desc: null }], // Default structure for items
     },
     onSubmit: async (values) => {
       // Send the data to the server
@@ -60,11 +60,11 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
 
   const bins = useBoutiqueStore((state) => state.bins);
 
-  const [items, setItems] = React.useState([{ name: "", binId: null, sold: false, web_url: "https://poshmark.com" }]); // State to manage items
+  const [items, setItems] = React.useState([{ name: "", binId: null, sold: false, web_url: "https://poshmark.com", buy_price: null, listing_price: null, item_desc: null }]); // State to manage items
 
   // Handle adding a new item
   const addItem = () => {
-    setItems([...items, { name: "", binId: null, sold: false, web_url: "https://poshmark.com" }]);
+    setItems([...items, { name: "", binId: null, sold: false, web_url: "https://poshmark.com", buy_price: null, listing_price: null, item_desc: null }]);
   };
 
   // Handle removing an item
@@ -114,7 +114,39 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
                 required
               />
             </div>
-  
+            {/* Buy Price */}
+            <div>
+              <label className="text-sm font-medium text-gray-200">Buy Price</label>
+              <input
+                type="number"
+                value={item.buy_price ?? ""}
+                onChange={(e) => updateItem(index, "buy_price", Number(e.target.value))}
+                placeholder="Enter buy price"
+                className="rounded p-2 w-full text-gray-200 border-gray-600 border-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+              />
+            </div>
+            {/* Listing Price */}
+            <div>
+              <label className="text-sm font-medium text-gray-200">Listing Price</label>
+              <input
+                type="number"
+                value={item.listing_price ?? ""}
+                onChange={(e) => updateItem(index, "listing_price", Number(e.target.value))}
+                placeholder="Enter listing price"
+                className="rounded p-2 w-full text-gray-200 border-gray-600 border-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+              />
+            </div>
+            {/* Item Description */}
+            <div>
+              <label className="text-sm font-medium text-gray-200">Item Description</label>
+              <input
+                type="text"
+                value={item.item_desc ?? ""}
+                onChange={(e) => updateItem(index, "item_desc", e.target.value)}
+                placeholder="Enter item description"
+                className="rounded p-2 w-full text-gray-200 border-gray-600 border-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+              />
+            </div>
             {/* Bin Dropdown */}
             <div>
               <label className="block text-sm font-medium text-gray-200">Bin</label>

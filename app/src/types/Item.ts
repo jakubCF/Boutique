@@ -9,4 +9,10 @@ export type Item = {
     } | null;
     sold: boolean;
     web_url: string;
+    buy_price: number;
+    listing_price: number;
+    item_desc: string;
+    brand: string;
+    purchase_date: Date;
+    sold_date: Date;
 }

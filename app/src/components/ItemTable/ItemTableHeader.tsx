@@ -3,6 +3,7 @@ import { flexRender, Table } from '@tanstack/react-table';
 import { Item } from '@/types/Item';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 
+
 /**
  * Props for the ItemTableHeader component.
  */
