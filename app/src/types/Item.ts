@@ -13,6 +13,13 @@ export type Item = {
     listing_price: number;
     item_desc: string;
     brand: string;
-    purchase_date: Date;
-    sold_date: Date;
+    purchase_date: Date | null;
+    sold_date: Date | null;
+    made_in: string;
+    posh_category: string;
+    posh_picture_url: string;
+    posh_created_at: Date | null;
+    posh_size: string;
+    posh_root_ancestor_post_id: string;
+
 }

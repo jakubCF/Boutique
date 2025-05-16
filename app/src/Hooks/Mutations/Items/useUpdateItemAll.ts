@@ -29,19 +29,13 @@ export const useUpdateItemAll = (
          * @param name - The new name for the item.
          * @returns A promise that resolves when the item's name is successfully updated.
          */
-        mutationFn: ({ name, url, buy_price, listing_price, item_desc} : {name: string, url: string, buy_price: number, listing_price: number, item_desc: string}) => {
+        mutationFn:(updatedFields: { field: string; value: any }[]) => {
             const id = row.original.id; // Get the item ID from the row
             setOpen(false); // Close the dialog
 
             return axios.patch(`http://${HOST}/v1/items/update/${id}`, { 
                 updates: 
-                    [ 
-                        { field: "name", value: name }, 
-                        { field: "web_url", value: url },
-                        { field: "buy_price", value: buy_price },
-                        { field: "listing_price", value: listing_price },
-                        { field: "item_desc", value: item_desc }
-                    ] 
+                    updatedFields
                 } 
             ); // Perform the update request
         },
@@ -75,6 +69,46 @@ export const useUpdateItemAll = (
                 row.index,
                 "item_desc",
                 data.items.item_desc // Update local state to prevent refresh
+            );
+            table.options.meta?.updateData(
+                row.index,
+                "made_in",
+                data.items.made_in // Update local state to prevent refresh
+            );
+            table.options.meta?.updateData(
+                row.index,
+                "purchase_date",
+                data.items.purchase_date // Update local state to prevent refresh
+            );
+            table.options.meta?.updateData(
+                row.index,
+                "sold_date",
+                data.items.sold_date // Update local state to prevent refresh
+            );
+            table.options.meta?.updateData(
+                row.index,
+                "posh_size",
+                data.items.posh_size // Update local state to prevent refresh
+            );
+            table.options.meta?.updateData(
+                row.index,
+                "posh_category",
+                data.items.posh_category // Update local state to prevent refresh
+            );
+            table.options.meta?.updateData(
+                row.index,
+                "posh_picture_url",
+                data.items.posh_picture_url // Update local state to prevent refresh
+            );
+            table.options.meta?.updateData(
+                row.index,
+                "posh_created_at",
+                data.items.posh_created_at // Update local state to prevent refresh
+            );
+            table.options.meta?.updateData(
+                row.index,
+                "posh_root_ancestor_post_id",
+                data.items.posh_root_ancestor_post_id // Update local state to prevent refresh
             );
             toast.success(`Item updated successfully`); // Show success notification
             
