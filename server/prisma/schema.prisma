@@ -18,8 +18,26 @@ model Bin {
 model Item {
   id     Int     @id @default(autoincrement())
   name   String  @db.VarChar(256)
+  brand  String?  @db.VarChar(256)
+  buy_price     Float?
+  listing_price Float?
+  item_desc     String? @db.Text
+  purchase_date  DateTime?
+  sold_date      DateTime?
   sold   Boolean @default(false)
-  web_url String? @default("https://poshmark.com") @db.VarChar(256)
+  web_url       String?  @unique @db.VarChar(256)
+  made_in String? @db.VarChar(50)
+  posh_category String? @db.VarChar(256)
+  posh_picture_url String? @db.VarChar(256)
+  posh_created_at DateTime?
+  posh_root_ancestor_post_id String? @db.VarChar(256)
+  posh_size String? @db.VarChar(20)
   bin   Bin? @relation(fields: [bin_id], references: [id], onDelete: SetNull)
   bin_id Int?
+}
+
+model settings {
+  id Int @id @default(autoincrement())
+  key String @db.VarChar(50)
+  value String @db.VarChar(256)
 }

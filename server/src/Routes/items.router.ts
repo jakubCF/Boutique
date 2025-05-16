@@ -18,9 +18,21 @@ import { FieldTypes } from "../utils/FieldTypes";
 interface ItemParams {
   id: number;
   name: string;
-  bin_id: number;
-  sold: 1 | 0; // 1 = sold, 0 = not sold
-  web_url: string;
+  bin_id?: number;
+  sold?: 1 | 0; // 1 = sold, 0 = not sold
+  web_url?: string;
+  buy_price?: number;
+  listing_price?: number;
+  item_desc?: string;
+  brand?: string;
+  purchase_date?: Date;
+  sold_date?: Date;
+  made_in?: string;
+  posh_category?: string;
+  posh_picture_url?: string;
+  posh_created_at?: Date;
+  posh_size?: string;
+  posh_root_ancestor_post_id?: string;
 }
 
 // Define the default select for the item
@@ -270,6 +282,18 @@ ItemsRouter.post(
     .optional()
     .isURL()
     .withMessage("url must be a valid URL"),
+  body("items.*.buy_price")
+    .optional()
+    .isNumeric()
+    .withMessage("buy_price must be a valid number"),
+  body("items.*.listing_price")
+    .optional()
+    .isNumeric()
+    .withMessage("listing_price must be a valid number"),
+  body("items.*.item_desc")
+    .optional()
+    .isString()
+    .withMessage("item_desc must be a valid string"),
   async (req: Request, res: Response): Promise<any> => {
     const { data } = req.body;
     let payload: ItemReturnMessage;
