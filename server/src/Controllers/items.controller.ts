@@ -50,7 +50,6 @@ export const updateItemFields = async (id: number, updates: { field: string; val
       where: { id },
       data,
       select: DEFAULT_SELECT,
-      order: { id: "asc" },
     });
 
     return item;
@@ -80,7 +79,6 @@ export const createItem = async (name: string) => {
         name: name,
       },
       select: DEFAULT_SELECT,
-      order: { id: "asc" },
     });
     return item;
   } catch (error) {
@@ -93,7 +91,6 @@ export const deleteItem = async (id: number) => {
     await prisma.item.delete({
       where: { id: id },
       select: DEFAULT_SELECT,
-      order: { id: "asc" },
     });
     return true;
   } catch (error) {
@@ -107,7 +104,6 @@ export const updateItemName = async (id: number, name: string) => {
       where: { id: id },
       data: { name: name },
       select: DEFAULT_SELECT,
-      order: { id: "asc" },
     });
     return item;
   } catch (error) {
@@ -132,7 +128,6 @@ export const updateItemSold = async (id: number, sold: 1 | 0) => {
       where: { id: id },
       data: { sold: validation },
       select: DEFAULT_SELECT,
-      order: { id: "asc" },
     });
     return item;
   } catch (error) {
@@ -146,7 +141,6 @@ export const updateItemUrl = async (id: number, web_url: string) => {
       where: { id: id },
       data: { web_url: web_url },
       select: DEFAULT_SELECT,
-      order: { id: "asc" },
     });
     return item;
   } catch (error) {
