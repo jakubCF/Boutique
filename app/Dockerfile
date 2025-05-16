@@ -1,5 +1,5 @@
 # === Build Stage ===
-FROM node:18-bullseye as builder
+FROM node:18-bullseye AS builder
 
 # Accept build arg from docker-compose
 ARG VITE_API_HOST
@@ -10,6 +10,9 @@ ENV VITE_API_HOST=$VITE_API_HOST
 WORKDIR /app
 
 COPY package*.json ./
+# Enable corepack to respect "packageManager" field in package.json
+RUN corepack enable
+RUN corepack prepare yarn@4.9.1 --activate
 RUN yarn install
 
 # Copy source code
