@@ -4,6 +4,9 @@ import { Input } from "@/components/@shadcn/ui/input"
 import { Button } from "@/components/@shadcn/ui/button"
 import { useEffect, useState } from "react"
 import axios from "@/lib/axios"
+// Icons
+import { Settings } from 'lucide-react';
+import { Description } from "@radix-ui/react-dialog"
 
 
 export const SettingsButton = () => {
@@ -39,9 +42,10 @@ export const SettingsButton = () => {
     <div className="flex justify-between">
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild >
-        <Button className="font-medium cursor-pointer border-0 hover:bg-green-600 bg-gray-800">Settings</Button>
+        <Button className="font-medium cursor-pointer border-0 hover:bg-green-600 bg-gray-800"><Settings />Settings</Button>
       </DialogTrigger>
       <DialogContent className="p-4 bg-gray-800 opacity-100 text-gray-200">
+        <Description className="text-gray-200 hidden">Customize your settings here.</Description>
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
         </DialogHeader>

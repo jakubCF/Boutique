@@ -9,6 +9,7 @@ import { DialogHeader } from "../../@shadcn/ui/dialog";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../@shadcn/ui/select";
 import { useUpdateSold } from "@/Hooks/Mutations/Items/useUpdateSold";
 import { Pencil } from "lucide-react";
+import { Description } from "@radix-ui/react-dialog";
 
 // Extend TableMeta to include updateData
 declare module "@tanstack/react-table" {
@@ -50,6 +51,7 @@ const EditableSold: FC<CellContext<Item, unknown>> = ({ getValue, row, column, t
           <Pencil size={20}/>
         </DialogTrigger>
         <DialogContent className="text-center bg-gray-800 opacity-90">
+          <Description className="hidden">Change the sold status</Description>
           <DialogHeader>
             <DialogTitle className="text-center text-gray-200">Edit Sold Status</DialogTitle>
             <form

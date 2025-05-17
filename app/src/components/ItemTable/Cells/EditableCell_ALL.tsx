@@ -22,6 +22,7 @@ import {
 } from "../../@shadcn/ui/select";
 import { normalizePoshmarkUrl } from "@/utils/normalizeUrl";
 import { toast } from "sonner";
+import { Description } from "@radix-ui/react-dialog";
 
 /**
  * EditableName component for rendering an editable name within a table cell.
@@ -134,6 +135,7 @@ const EditableAll:FC<CellContext<Item, unknown>> = ({row, table}) => {
                 <Pencil size={20}/>    
             </DialogTrigger> 
             <DialogContent className="text-center bg-gray-800 opacity-95 lg:max-w-4xl">
+                <Description className="hidden">Edit all field for this item</Description>
                 <DialogHeader>
                 <DialogTitle className="text-center text-gray-200">Edit item</DialogTitle>
                 <form  className="space-y-4" onSubmit={(e) => e.preventDefault()}>

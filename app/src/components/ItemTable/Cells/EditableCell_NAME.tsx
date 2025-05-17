@@ -11,6 +11,7 @@ import { useUpdateItemName } from "@/Hooks/Mutations/Items/useUpdateItemName";
 import { useDeleteItem } from "@/Hooks/Mutations/Items/useDeleteItem";
 import { Link, Pencil } from "lucide-react";
 import { normalizePoshmarkUrl } from "@/utils/normalizeUrl";
+import { Description } from "@radix-ui/react-dialog";
 
 /**
  * EditableName component for rendering an editable name within a table cell.
@@ -56,6 +57,7 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, table}) => 
                 <Pencil size={20}/>    
             </DialogTrigger> 
             <DialogContent className="text-center bg-gray-800 opacity-90">
+                <Description className="hidden">Edit name and web url</Description>
                 <DialogHeader>
                 <DialogTitle className="text-center text-gray-200">Edit {getValue<string>()}?</DialogTitle>
                 <form  className="space-y-8" onSubmit={(e) => e.preventDefault()}>

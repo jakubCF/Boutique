@@ -15,6 +15,7 @@ import { Button } from '../../@shadcn/ui/button';
 import { Pencil } from 'lucide-react';
 import { useEditBin } from '@/Hooks/Mutations/Items/useEditItemBin';
 import { useBoutiqueStore } from '@/Hooks/Store/UseBoutiqueStore';
+import { Description } from '@radix-ui/react-dialog';
 
 
 /**
@@ -56,6 +57,7 @@ const EditableBin: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) =
                 <Pencil size={20}/>
             </DialogTrigger>
             <DialogContent className="text-center bg-gray-800 text-gray-200 opacity-90">
+                <Description className="hidden">Edit your Bins</Description>
                 <DialogHeader>
                 <DialogTitle className="text-center">Edit {getValue<string>()}?</DialogTitle>
                 <form  className="space-y-8" onSubmit={(e) => {

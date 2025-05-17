@@ -384,8 +384,8 @@ const ItemTable: React.FC<ItemTableProps> = () => {
                 <ChartColumnBig /> Data
               </Button>
               <Chart open={dataOpen} onOpenChange={setDataOpen}/>
-              <ColumnSelector table={table} onApply={handleApplyVisibility} />
-              <SettingsButton />
+              <ColumnSelector table={table} onApply={handleApplyVisibility} /> {/* Column selector */} 
+              <SettingsButton /> {/* Settings button */}
           </div>
           <TablePaginator table={table} />
         </div>
