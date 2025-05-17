@@ -13,6 +13,7 @@ import { useBulkCreate } from "@/Hooks/Mutations/Items/useBulkCreate";
 import { X } from "lucide-react";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
 import { Badge } from "@/components/@shadcn/ui/badge";
+import { normalizePoshmarkUrl } from "@/utils/normalizeUrl";
 
 /**
  * Props for the BulkCreate component.
@@ -50,7 +51,7 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
   // Initialize the form
   const form = useForm({
     defaultValues: {
-      items: [{ name: "", binId: null, sold: false, web_url: "https://poshmark.com", buy_price: null, listing_price: null, item_desc: null }], // Default structure for items
+      items: [{ name: "", binId: null, sold: false, web_url: "", buy_price: null, listing_price: null, item_desc: null }], // Default structure for items
     },
     onSubmit: async (values) => {
       // Send the data to the server
@@ -60,11 +61,11 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
 
   const bins = useBoutiqueStore((state) => state.bins);
 
-  const [items, setItems] = React.useState([{ name: "", binId: null, sold: false, web_url: "https://poshmark.com", buy_price: null, listing_price: null, item_desc: null }]); // State to manage items
+  const [items, setItems] = React.useState([{ name: "", binId: null, sold: false, web_url: "", buy_price: null, listing_price: null, item_desc: null }]); // State to manage items
 
   // Handle adding a new item
   const addItem = () => {
-    setItems([...items, { name: "", binId: null, sold: false, web_url: "https://poshmark.com", buy_price: null, listing_price: null, item_desc: null }]);
+    setItems([...items, { name: "", binId: null, sold: false, web_url: "", buy_price: null, listing_price: null, item_desc: null }]);
   };
 
   // Handle removing an item
@@ -108,7 +109,7 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
               <input
                 type="text"
                 value={item.web_url}
-                onChange={(e) => updateItem(index, "web_url", e.target.value)}
+                onChange={(e) => updateItem(index, "web_url", normalizePoshmarkUrl(e.target.value))}
                 placeholder="Enter web URL"
                 className="rounded p-2 w-full text-gray-200 border-gray-600 border-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
                 required

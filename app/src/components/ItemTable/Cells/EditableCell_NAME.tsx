@@ -10,6 +10,7 @@ import { Label } from "../../@shadcn/ui/label";
 import { useUpdateItemName } from "@/Hooks/Mutations/Items/useUpdateItemName";
 import { useDeleteItem } from "@/Hooks/Mutations/Items/useDeleteItem";
 import { Link, Pencil } from "lucide-react";
+import { normalizePoshmarkUrl } from "@/utils/normalizeUrl";
 
 /**
  * EditableName component for rendering an editable name within a table cell.
@@ -31,7 +32,7 @@ const EditableName:FC<CellContext<Item, unknown>> = ({getValue, row, table}) => 
             web_url: row.original.web_url // get value from the cell
         },
         onSubmit: ({value}) => {
-            updateName.mutate({name: value.name, url: value.web_url}); // pass the new name to the mutation
+            updateName.mutate({name: value.name, url: normalizePoshmarkUrl(value.web_url)}); // pass the new name to the mutation
         },
         
     })

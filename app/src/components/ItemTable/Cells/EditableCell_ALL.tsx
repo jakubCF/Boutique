@@ -20,6 +20,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "../../@shadcn/ui/select";
+import { normalizePoshmarkUrl } from "@/utils/normalizeUrl";
+import { toast } from "sonner";
 
 /**
  * EditableName component for rendering an editable name within a table cell.
@@ -93,7 +95,7 @@ const EditableAll:FC<CellContext<Item, unknown>> = ({row, table}) => {
 
             const changedFields = getChangedFields(row.original, {
                 name: value.name,
-                web_url: value.web_url,
+                web_url: normalizePoshmarkUrl(value.web_url),
                 buy_price: value.buy_price,
                 listing_price: value.listing_price,
                 item_desc: value.item_desc,
@@ -108,6 +110,11 @@ const EditableAll:FC<CellContext<Item, unknown>> = ({row, table}) => {
                 posh_root_ancestor_post_id: value.posh_root_ancestor_post_id
             });
 
+            if (changedFields.length === 0) {
+                toast.error("No changes made.");
+                setOpen(false);
+                return;
+            }
             updateItem.mutate(changedFields);
         },
         
