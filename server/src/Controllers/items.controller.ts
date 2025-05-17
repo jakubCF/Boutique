@@ -24,7 +24,13 @@ const DEFAULT_SELECT = {
 
 export const getItems = async () => {
   try {
-    let items = await prisma.item.findMany({ select: DEFAULT_SELECT });
+    let items = await prisma.item.findMany({ 
+          select: DEFAULT_SELECT, 
+          orderBy: [
+            { posh_created_at: 'desc' },
+            { id: 'desc' }
+            ], 
+        });
     return items;
   } catch (error) {
     throw error;

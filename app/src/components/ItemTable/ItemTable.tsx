@@ -279,7 +279,7 @@ const ItemTable: React.FC<ItemTableProps> = () => {
   }, [columnVisibility]);
 
   const [sorting, setSorting] = useState<SortingState>([
-    { id: 'id', desc: false } // default sort by `id` ascending
+ //   { id: 'id', desc: false } // default sort by `id` ascending
   ]);
   const [columnFilters, setColumnFilters] = useState<{ id: string; value: string | Bin[] | boolean []}[]>([
     {
