@@ -1,6 +1,7 @@
 import express from "express";
 import BinsRouter from "./bins.router";
 import ItemsRouter from "./items.router";
+import { PoshRouter } from "./posh.router";
 
 const RouteHandler = express.Router();
 
@@ -12,11 +13,13 @@ const RouteHandler = express.Router();
             - Message, Response Code || Data
 */
 RouteHandler.use((_, __, next) => {
-    setTimeout(() => {
-      next();
-    }, 300); // 3-millisecond delay
-  });
+  setTimeout(() => {
+    next();
+  }, 300); // 3-millisecond delay
+});
 RouteHandler.use("/bins", BinsRouter);
 RouteHandler.use("/items", ItemsRouter);
+RouteHandler.use("/posh", PoshRouter);
 
 export default RouteHandler;
+

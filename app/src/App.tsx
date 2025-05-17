@@ -5,8 +5,8 @@ import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
 import { useEffect } from "react";
 import { useBoutiqueStore } from "./Hooks/Store/UseBoutiqueStore";
-import { Atom, Heart } from "lucide-react";
-import Chart from "./components/Charts/Chart";
+import { Heart } from "lucide-react";
+
 /**
  * The main application component.
  *
@@ -25,22 +25,22 @@ function App() {
         queryKey: ["getItems"],
         queryFn: async () => {
           const { data } = await axios.get(`http://${HOST}/v1/items`);
-        
+
           if (!data.items) {
             throw new Error("Invalid response structure from /v1/items");
           }
-        
+
           return data.items;
-        }
+        },
       },
       {
         queryKey: ["getBins"],
         queryFn: async () => {
           const { data } = await axios.get(`http://${HOST}/v1/bins`);
           return data.data;
-        }
-      }
-    ]
+        },
+      },
+    ],
   });
   // Load State
   const setBins = useBoutiqueStore((state) => state.setBins);
@@ -50,34 +50,35 @@ function App() {
   const getItems = results[0];
   const getBins = results[1];
 
-
   useEffect(() => {
     if (getItems.isError && getItems.error) {
       toast.error(
-        `Error fetching items: ${(getItems.error as Error).message ||
-          "Something went wrong"}`
+        `Error fetching items: ${
+          (getItems.error as Error).message || "Something went wrong"
+        }`,
       );
     }
   }, [getItems.isError, getItems.error]);
   useEffect(() => {
     if (getBins.isError && getBins.error) {
       toast.error(
-        `Error fetching bins: ${(getBins.error as Error).message ||
-          "Something went wrong"}`
+        `Error fetching bins: ${
+          (getBins.error as Error).message || "Something went wrong"
+        }`,
       );
     }
   }, [getBins.isError, getBins.error]);
 
   useEffect(() => {
     if (getBins.data) {
-      setBins(getBins.data)
+      setBins(getBins.data);
     }
   }, [getBins.data]);
   useEffect(() => {
-    if(getItems.data) {
-      setItems(getItems.data)  
+    if (getItems.data) {
+      setItems(getItems.data);
     }
-  }, [getItems.data])
+  }, [getItems.data]);
 
   return (
     <div className="bg-gray-800 text-gray-200 min-h-screen flex flex-col items-center justify-center">
@@ -89,7 +90,7 @@ function App() {
         </div>
       ) : (
         <div className="w-full max-w-[1400px] max-h-[600px] p-4 bg-gray-700 rounded-lg shadow-lg">
-            <ItemTable />
+          <ItemTable />
         </div>
       )}
 
@@ -103,7 +104,14 @@ function App() {
           }}
         />
         <footer className="relative text-sm text-gray-400 mt-4">
-          Made with <Heart className="inline mb-1" strokeWidth={2} color="#f21818" size={18}/> for Sarah 2025
+          Made with{" "}
+          <Heart
+            className="inline mb-1"
+            strokeWidth={2}
+            color="#f21818"
+            size={18}
+          />{" "}
+          for Sarah 2025
         </footer>
       </div>
     </div>
