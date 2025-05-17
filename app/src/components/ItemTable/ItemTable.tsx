@@ -27,6 +27,7 @@ import EditableName from './Cells/EditableCell_NAME';
 import EditableAll from './Cells/EditableCell_ALL';
 import EditableSold from './Cells/EditableCell_SOLD';
 import EditableBin from './Cells/EditableCell_BIN';
+import GenericTableCell from './Cells/GenericCell';
 
 // types
 import { Item } from '@/types/Item';
@@ -107,44 +108,28 @@ const ItemTable: React.FC<ItemTableProps> = () => {
           {
               accessorKey: "brand",
               header: "Brand",
-              cell: (props) => <div className="flex justify-between">
-              <div className="flex items-center space-x-2">
-               <span>{props.getValue<string>()}</span>
-              </div>
-              </div>,
+              cell: (props) => <GenericTableCell value={props.getValue<string>()} />,
               enableSorting: true,
               size: minColumnWidths.brand,
           },
           {
             accessorKey: "buy_price",
             header: "Buy Price",
-            cell: (props) => <div className="flex justify-between">
-              <div className="flex items-center space-x-2">
-               <span>{props.getValue<string>()}</span>
-              </div>
-              </div>,
+            cell: (props) => <GenericTableCell value={props.getValue<string>()} />,
             enableSorting: true,
             size: minColumnWidths.buy_price,
           },
           {
             accessorKey: "listing_price",
             header: "Listing Price",
-            cell: (props) => <div className="flex justify-between">
-            <div className="flex items-center space-x-2">
-             <span>{props.getValue<string>()}</span>
-            </div>
-            </div>,
+            cell: (props) => <GenericTableCell value={props.getValue<string>()} />,
             enableSorting: true,
             size: minColumnWidths.listing_price,
           },
           {
             accessorKey: "item_desc",
             header: "Description",
-            cell: (props) => <div className="flex justify-between">
-            <div className="flex items-center space-x-2">
-             <span>{props.getValue<string>().slice(0, 50)}...</span>
-            </div>
-            </div>,
+            cell: (props) => <GenericTableCell value={props.getValue<string>().slice(0, 50)} />,
             enableSorting: true,
             size: minColumnWidths.name,
           },
@@ -218,6 +203,39 @@ const ItemTable: React.FC<ItemTableProps> = () => {
                 if (!filterValue || filterValue.length === 0) return true;
                 return filterValue.includes(row.getValue("sold"));
               }
+          },
+          {
+            accessorKey: "made_in",
+            header: "Made in",
+            cell: (props) => <GenericTableCell value={props.getValue<string>()} />,
+          },
+          {
+            accessorKey: "size",
+            header: "Size",
+            cell: (props) => <GenericTableCell value={props.getValue<string>()} />,
+          },
+          {
+            accessorKey: "posh_category",
+            header: "Category",
+            cell: (props) => <GenericTableCell value={props.getValue<string>()} />,
+          },
+          //posh_picture_url
+          {
+            accessorKey: "posh_picture_url",
+            header: "Picture",
+            cell: (props) => <GenericTableCell value={props.getValue<string>()} />,
+          },
+          //posh_created_at
+          {
+            accessorKey: "posh_created_at",
+            header: "Created at",
+            cell: (props) => <GenericTableCell value={props.getValue<string>()} />,
+          },
+          //posh_root_ancestor_post_id
+          {
+            accessorKey: "posh_root_ancestor_post_id",
+            header: "Root ancestor post id",
+            cell: (props) => <GenericTableCell value={props.getValue<string>()} />,
           },
           {
             id: "actions",
@@ -334,7 +352,7 @@ const ItemTable: React.FC<ItemTableProps> = () => {
   }, [columnFilters, pagination, filtersLoaded]);
 
   return (
-    <div className="flex flex-col h-screen"> {/* Flex container for the table and button */}
+    <div className="flex flex-col"> {/* Flex container for the table and button */}
       <div className="flex flex-col flex-grow overflow-hidden"> {/* Ensure the table and button are in the same column */}
         <div className="flex-grow overflow-auto"> {/* Table container with flex-grow */}
           {/* TODO: Fix this god damn piece of shit type error */}
