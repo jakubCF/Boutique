@@ -90,7 +90,7 @@ function App() {
           Failed to load data. Please try again later.
         </div>
       ) : (
-        <div className="w-full max-w-[1400px] max-h-[600px] p-4 bg-gray-700 rounded-lg shadow-lg">
+        <div className="w-full max-w-[1400px] p-4 bg-gray-700 rounded-lg shadow-lg">
             <ItemTable />
         </div>
       )}
