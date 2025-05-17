@@ -9,7 +9,9 @@ ENV VITE_API_HOST=$VITE_API_HOST
 
 WORKDIR /app
 
-COPY package*.json ./
+# Copy only dependency-related files first (for better Docker caching)
+COPY package.json yarn.lock .yarnrc.yml ./
+
 # Enable corepack to respect "packageManager" field in package.json
 RUN corepack enable
 RUN corepack prepare yarn@4.9.1 --activate
@@ -17,7 +19,7 @@ RUN yarn install
 
 # Copy source code
 COPY . .  
-RUN yarn build  # Or: npm run build
+RUN yarn build 
 
 # === Final Stage ===
 FROM nginx:alpine
