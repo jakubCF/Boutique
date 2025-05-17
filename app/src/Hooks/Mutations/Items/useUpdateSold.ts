@@ -1,9 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { Item } from "@/types/Item";
 import { Table, Row, Column } from "@tanstack/react-table";
-import { HOST } from "@/App";
 
 export const useUpdateSold = (
     row: Row<Item>,
@@ -28,7 +27,7 @@ export const useUpdateSold = (
 
       setOpen(false); // Close dialog popup
 
-      return axios.patch(`http://${HOST}/v1/items/update/${id}`, { updates: 
+      return axios.patch(`/v1/items/update/${id}`, { updates: 
         [
           { field: "sold", value: sold }
         ]

@@ -1,7 +1,6 @@
-import axios from "axios";
+import axios from "@/lib/axios";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { HOST } from "@/App";
 
 /**
  * Custom hook to handle the deletion of an item.
@@ -32,7 +31,7 @@ export const useDeleteItem = (
             let id = row.original.id;
 
             setOpen(false); // Close the delete confirmation dialog
-            return axios.delete(`http://${HOST}/v1/items/delete/${id}`); // Perform the delete request
+            return axios.delete(`/v1/items/delete/${id}`); // Perform the delete request
         },
         /**
          * Callback executed when the mutation is successful.

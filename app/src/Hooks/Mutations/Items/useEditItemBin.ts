@@ -2,11 +2,10 @@ import { Bin } from "@/types/Bin";
 import { Item } from "@/types/Item";
 import { useMutation } from "@tanstack/react-query";
 import { Table } from "@tanstack/react-table";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { Row } from "@tanstack/react-table";
 import { toast } from "sonner";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
-import { HOST } from "@/App";
 
 export const useEditBin = (
     setOpen: (value: boolean) => void,
@@ -29,11 +28,10 @@ export const useEditBin = (
 
       if (!bin) {
           const currentBin = row.original.bin?.id; // Get the current bin ID
-          queryString = `http://${HOST}/v1/bins/update/${currentBin}/remove/item/${id}`;
-            
+          queryString = `/v1/bins/update/${currentBin}/remove/item/${id}`;
       }
       else {
-          queryString = `http://localhost:3000/v1/bins/update/${bin.id}/add/item/${id}`;
+          queryString = `/v1/bins/update/${bin.id}/add/item/${id}`;
       }
 
       setOpen(false); // Close the dialog

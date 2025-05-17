@@ -1,7 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import axios from "axios";
-import { HOST } from "@/App";
+import axios from "@/lib/axios";
 
 export const useBulkCreate = (
     table: any,
@@ -10,7 +9,7 @@ export const useBulkCreate = (
     mutationKey: ["createBulkItems"],
     mutationFn: async (data: unknown) => {
       const response = await axios({
-        url : `http://${HOST}/v1/items/bulk/create`,
+        url : `/v1/items/bulk/create`,
         data: { data },
         method: "post"
       })

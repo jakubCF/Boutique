@@ -1,9 +1,8 @@
 import { useMutation } from "@tanstack/react-query"
-import axios from "axios";
+import axios from "@/lib/axios";
 import { toast } from "sonner"
 import { Bin } from "@/types/Bin";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
-import { HOST } from "@/App";
 
 export const useEditBinName = (setOpen: (open: boolean) => void) => {
     /**
@@ -26,7 +25,7 @@ export const useEditBinName = (setOpen: (open: boolean) => void) => {
             }
             else {
                 const { data } = await axios.patch(
-                    `http://${HOST}/v1/bins/update/${activeBin.id}`,
+                    `/v1/bins/update/${activeBin.id}`,
                     {
                         updates: [
                             {

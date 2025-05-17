@@ -1,5 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "@/lib/axios";
 import ItemTable from "./components/ItemTable/ItemTable";
 import TableSkeleton from "./components/ItemTable/TableSkeleton";
 import { toast, Toaster } from "sonner";
@@ -23,7 +23,7 @@ function App() {
       {
         queryKey: ["getItems"],
         queryFn: async () => {
-          const { data } = await axios.get(`http://${HOST}/v1/items`);
+          const { data } = await axios.get(`/v1/items`);
         
           if (!data.items) {
             throw new Error("Invalid response structure from /v1/items");
@@ -35,7 +35,7 @@ function App() {
       {
         queryKey: ["getBins"],
         queryFn: async () => {
-          const { data } = await axios.get(`http://${HOST}/v1/bins`);
+          const { data } = await axios.get(`/v1/bins`);
           return data.data;
         }
       }

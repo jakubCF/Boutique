@@ -1,9 +1,8 @@
 import { Bin } from "@/types/Bin";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { toast } from "sonner";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
-import { HOST } from "@/App";
 
 export const useDeleteBin = () => {
   /**
@@ -15,7 +14,7 @@ export const useDeleteBin = () => {
 
   return useMutation({
     mutationFn: async (bin: Bin) => {
-        const { status } = await axios.delete(`http://${HOST}/v1/bins/delete/${bin.id}`);
+        const { status } = await axios.delete(`/v1/bins/delete/${bin.id}`);
 
         return {status: status, bin: bin};
     },

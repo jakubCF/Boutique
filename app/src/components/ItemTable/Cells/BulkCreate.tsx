@@ -225,7 +225,7 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
         {/* Submit Button */}
         <Button
           type="submit"
-          className="bg-green-500 hover:bg-green-400 "
+          className="bg-green-500 hover:bg-green-400 cursor-pointer"
           style={{
             color: "white", // Tailwind's text-white
             padding: "8px 16px", // Tailwind's px-4 py-2
