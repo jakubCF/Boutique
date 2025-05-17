@@ -1,6 +1,7 @@
 import express from "express";
 import BinsRouter from "./bins.router";
 import ItemsRouter from "./items.router";
+import SettingsRouter from "./settings.routes";
 
 const RouteHandler = express.Router();
 
@@ -18,5 +19,6 @@ RouteHandler.use((_, __, next) => {
   });
 RouteHandler.use("/bins", BinsRouter);
 RouteHandler.use("/items", ItemsRouter);
+RouteHandler.use("/settings", SettingsRouter);
 
 export default RouteHandler;

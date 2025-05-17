@@ -37,7 +37,7 @@ model Item {
 
 model settings {
   id    Int    @id @default(autoincrement())
-  key   String @db.VarChar(50)
+  key   String @unique @db.VarChar(50)
   value String @db.VarChar(256)
 }
 
