@@ -52,7 +52,7 @@ export function ColumnSelector<T>({ table }: ColumnSelectorProps<T>) {
         </div>
         <div className="pt-4 flex justify-end space-x-2">
           <Button
-            className="bg-green-600 hover:bg-green-500 mb-1"
+            className="bg-green-600 hover:bg-green-500 mb-1 cursor-pointer"
             onClick={applyChanges}
           >
             Apply
