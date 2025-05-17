@@ -39,6 +39,9 @@ import { BinManager } from '@/components/BinEditor/BinManager';
 import { toast } from 'sonner';
 import Chart from '../Charts/Chart';
 
+// Settings
+import { SettingsButton } from "@/components/SettingsDialog";
+
 /**
  * Props for the ItemTable component.
  */
@@ -382,6 +385,7 @@ const ItemTable: React.FC<ItemTableProps> = () => {
               </Button>
               <Chart open={dataOpen} onOpenChange={setDataOpen}/>
               <ColumnSelector table={table} onApply={handleApplyVisibility} />
+              <SettingsButton />
           </div>
           <TablePaginator table={table} />
         </div>
