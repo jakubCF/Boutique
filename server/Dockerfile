@@ -2,8 +2,13 @@ FROM node:18-bullseye
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
-RUN yarn
+# Copy only dependency-related files first (for better Docker caching)
+COPY package.json yarn.lock .yarnrc.yml ./
+
+# Enable corepack to respect "packageManager" field in package.json
+RUN corepack enable
+RUN corepack prepare yarn@4.9.1 --activate
+RUN yarn install
 
 COPY . .
 
