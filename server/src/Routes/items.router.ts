@@ -33,6 +33,8 @@ interface ItemParams {
   posh_created_at?: Date;
   posh_size?: string;
   posh_root_ancestor_post_id?: string;
+  posh_user?: string;
+  sysdate?: Date;
 }
 
 // Define the default select for the item
@@ -330,6 +332,14 @@ ItemsRouter.post(
     .optional()
     .isString()
     .withMessage("posh_root_ancestor_post_id must be a valid string"),
+  body("items.*.posh_user")
+    .optional()
+    .isString()
+    .withMessage("posh_user must be a valid string"),
+  body("items.*.sysdate")
+    .optional()
+    .isDate()
+    .withMessage("sysdate must be a valid date"),
   async (req: Request, res: Response): Promise<any> => {
     const { data } = req.body;
     let payload: ItemReturnMessage;

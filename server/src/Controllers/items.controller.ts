@@ -19,7 +19,9 @@ const DEFAULT_SELECT = {
   posh_picture_url: true,
   posh_created_at: true,
   posh_size: true,
-  posh_root_ancestor_post_id: true
+  posh_root_ancestor_post_id: true,
+  posh_user: true,
+  sysdate: true
 };
 
 export const getItems = async () => {
@@ -154,7 +156,26 @@ export const updateItemUrl = async (id: number, web_url: string) => {
   }
 };
 
-export const bulkCreateItems = async (items: { name: string; binId?: number, sold: boolean, web_url: string, buy_price: number | null, listing_price: number | null, item_desc: string | null, brand: string | null, purchase_date: Date | null, sold_date: Date | null }[]) => {
+export const bulkCreateItems = async (items: 
+      { name: string, 
+        binId?: number,
+        sold: boolean, 
+        web_url: string, 
+        buy_price: number | null, 
+        listing_price: number | null, 
+        item_desc: string | null, 
+        brand: string | null, 
+        purchase_date: Date | null, 
+        sold_date: Date | null, 
+        made_in: string | null,
+        posh_category: string | null,
+        posh_picture_url: string | null,
+        posh_created_at: Date | null,
+        posh_size: string | null,
+        posh_root_ancestor_post_id: string | null,
+        posh_user: string | null,
+        sysdate: Date | null
+      }[]) => {
   try {
     // Use Prisma's createMany for bulk creation
     await items.map(item => console.log(item))
@@ -168,8 +189,16 @@ export const bulkCreateItems = async (items: { name: string; binId?: number, sol
         listing_price: item.listing_price || null, // Associate listing_price if provided, otherwise set to null  
         item_desc: item.item_desc || null,
         brand: item.brand || null,
-        purchase_date: item.purchase_date || null,
-        sold_date: item.sold_date || null
+        purchase_date: item.purchase_date ? new Date(item.purchase_date).toISOString() : null,
+        sold_date: item.sold_date ? new Date(item.sold_date).toISOString() : null,
+        made_in: item.made_in || null,
+        posh_category: item.posh_category || null,
+        posh_picture_url: item.posh_picture_url || null,
+        posh_created_at: item.posh_created_at ? new Date(item.posh_created_at).toISOString() : null,
+        posh_size: item.posh_size || null,
+        posh_root_ancestor_post_id: item.posh_root_ancestor_post_id || null,
+        posh_user: item.posh_user || null,
+        sysdate: item.sysdate ? new Date(item.sysdate).toISOString() : new Date().toISOString(),
       })),
       skipDuplicates: true, // Avoid duplicate entries
     });
