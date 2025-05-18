@@ -232,6 +232,12 @@ const ItemTable: React.FC<ItemTableProps> = () => {
           {
             accessorKey: "posh_created_at",
             header: "Created at",
+            cell: (props) => { const date = props.getValue<string | null>(); return <GenericTableCell value={date ? new Date(date).toLocaleDateString() : "-"}/>} //<GenericTableCell value={props.getValue<string>()} />,
+          },
+          //posh_user
+          {
+            accessorKey: "posh_user",
+            header: "Posh User",
             cell: (props) => <GenericTableCell value={props.getValue<string>()} />,
           },
           //posh_root_ancestor_post_id

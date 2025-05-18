@@ -6,6 +6,7 @@ import { toast, Toaster } from "sonner";
 import { useEffect } from "react";
 import { useBoutiqueStore } from "./Hooks/Store/UseBoutiqueStore";
 import { Heart } from "lucide-react";
+import { SettingsProvider } from "./context/SettingsContext";
 /**
  * The main application component.
  *
@@ -18,6 +19,7 @@ import { Heart } from "lucide-react";
 export const HOST: string = import.meta.env.VITE_API_HOST;
 
 function App() {
+
   const results = useQueries({
     queries: [
       {
@@ -82,6 +84,7 @@ function App() {
   }, [getItems.data])
 
   return (
+    <SettingsProvider>
     <div className="bg-gray-800 text-gray-200 min-h-screen flex flex-col items-center justify-center">
       {getItems.isLoading || getBins.isLoading ? (
         <TableSkeleton />
@@ -109,6 +112,7 @@ function App() {
         </footer>
       </div>
     </div>
+    </SettingsProvider>
   );
 }
 

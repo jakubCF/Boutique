@@ -14,6 +14,7 @@ import { X } from "lucide-react";
 import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
 import { Badge } from "@/components/@shadcn/ui/badge";
 import { normalizePoshmarkUrl } from "@/utils/normalizeUrl";
+import { useSettings } from "@/context/SettingsContext";
 
 /**
  * Props for the BulkCreate component.
@@ -48,10 +49,13 @@ declare module "@tanstack/react-table" {
  */
 const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) => {
   const createBulk = useBulkCreate(table, setState); // Custom hook for bulk creation
+  const { getSetting } = useSettings();
+  const poshUser = getSetting("posh_user");
+
   // Initialize the form
   const form = useForm({
     defaultValues: {
-      items: [{ name: "", binId: null, sold: false, web_url: "", buy_price: null, listing_price: null, item_desc: null }], // Default structure for items
+      items: [{ name: "", binId: null, sold: false, web_url: "", buy_price: null, listing_price: null, purchase_date: null, posh_user: poshUser, sysdate: new Date().toISOString() }], // Default structure for items
     },
     onSubmit: async (values) => {
       // Send the data to the server
@@ -61,11 +65,11 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
 
   const bins = useBoutiqueStore((state) => state.bins);
 
-  const [items, setItems] = React.useState([{ name: "", binId: null, sold: false, web_url: "", buy_price: null, listing_price: null, item_desc: null }]); // State to manage items
+  const [items, setItems] = React.useState([{ name: "", binId: null, sold: false, web_url: "", buy_price: null, listing_price: null, purchase_date: null, posh_user: poshUser, sysdate: new Date().toISOString() }]); // State to manage items
 
   // Handle adding a new item
   const addItem = () => {
-    setItems([...items, { name: "", binId: null, sold: false, web_url: "", buy_price: null, listing_price: null, item_desc: null }]);
+    setItems([...items, { name: "", binId: null, sold: false, web_url: "", buy_price: null, listing_price: null, purchase_date: null, posh_user: poshUser, sysdate: new Date().toISOString() }]);
   };
 
   // Handle removing an item
@@ -116,7 +120,7 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
               />
             </div>
             {/* Buy Price */}
-            <div>
+            <div className="max-w-36">
               <label className="text-sm font-medium text-gray-200">Buy Price</label>
               <input
                 type="number"
@@ -127,7 +131,7 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
               />
             </div>
             {/* Listing Price */}
-            <div>
+            <div className="max-w-36">
               <label className="text-sm font-medium text-gray-200">Listing Price</label>
               <input
                 type="number"
@@ -137,13 +141,16 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
                 className="rounded p-2 w-full text-gray-200 border-gray-600 border-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
-            {/* Item Description */}
+            {/* Purchase Date*/}
             <div>
-              <label className="text-sm font-medium text-gray-200">Item Description</label>
+              <label className="text-sm font-medium text-gray-200">Purchase Date</label>
               <input
-                type="text"
-                value={item.item_desc ?? ""}
-                onChange={(e) => updateItem(index, "item_desc", e.target.value)}
+                type="date"
+                value={ item.purchase_date ? new Date(item.purchase_date).toISOString().split("T")[0] : ""} 
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            updateItem(index, "purchase_date", value ? new Date(value) : null);
+                    }}
                 placeholder="Enter item description"
                 className="rounded p-2 w-full text-gray-200 border-gray-600 border-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
@@ -193,10 +200,30 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
                 <option value="yes">Yes</option>
                 <option value="no">No</option>
               </select>
-            
-              {/* Remove Button */}
-
             </div>
+            {/* posh_user hidden */}
+            <div className="hidden">
+              <label className="text-sm font-medium text-gray-200">posh user</label>
+              <input
+                type="text"
+                value={item.posh_user ?? ""}
+                onChange={(e) => updateItem(index, "posh_user", e.target.value)}
+                placeholder="Enter user name"
+                className="rounded p-2 w-full text-gray-200 border-gray-600 border-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+              />
+            </div>
+            {/* sysdate hidden */}
+            <div className="hidden">
+              <label className="text-sm font-medium text-gray-200">sysdate</label>
+              <input
+                type="date"
+                value={item.sysdate ? new Date(item.sysdate).toISOString().split("T")[0] : ""}
+                onChange={(e) => updateItem(index, "sysdate", e.target.value ? new Date(e.target.value) : null)}
+                placeholder="Enter sysdate"
+                className="rounded p-2 w-full text-gray-200 border-gray-600 border-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+              />
+            </div>
+            {/* Remove Button */}
             <X
                 onClick={() => removeItem(index) }
                 className="text-red-500 cursor-pointer hover:text-red-400 border-gray-200 mt-4 "
@@ -204,8 +231,6 @@ const BulkCreate: React.FunctionComponent<IBulkProps> = ({ table, setState }) =>
                 scale={10}
                />
           </div>
-  
-
         ))}
   
         {/* Add Item Button */}

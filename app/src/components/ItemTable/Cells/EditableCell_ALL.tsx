@@ -284,6 +284,9 @@ const EditableAll:FC<CellContext<Item, unknown>> = ({row, table}) => {
                     {/* Action buttons */}
                     <Button className="text-gray-200 bg-green-600 cursor-pointer" onClick={form.handleSubmit}>Submit</Button>
                     <Button className="m-2 text-gray-200 cursor-pointer" style={{backgroundColor: "#9c2828"}} onClick={() => {
+                        // confirm delete
+                        const confirm = window.confirm("Are you sure you want to delete this item?");
+                        if (!confirm) return;
                         deleteItem.mutate();
                     }}>Delete</Button>
                 </form>
