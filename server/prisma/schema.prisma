@@ -29,10 +29,12 @@ model Item {
   posh_category              String?   @db.VarChar(256)
   posh_picture_url           String?   @db.VarChar(256)
   posh_created_at            DateTime?
-  posh_root_ancestor_post_id String?   @db.VarChar(256)
+  posh_root_ancestor_post_id String?   @unique @db.VarChar(256)
   posh_size                  String?   @db.VarChar(20)
+  posh_user                  String?   @db.VarChar(50)
   bin                        Bin?      @relation(fields: [bin_id], references: [id], onDelete: SetNull)
   bin_id                     Int?
+  sysdate                    DateTime?
 }
 
 model settings {
@@ -41,18 +43,4 @@ model settings {
   value String @db.VarChar(256)
 }
 
-// Stage table for new items
-model L0_item {
-  name                       String    @db.VarChar(256)
-  brand                      String?   @db.VarChar(256)
-  listing_price              Float?
-  item_desc                  String?   @db.Text
-  sold_date                  DateTime?
-  sold                       Boolean   @default(false)
-  web_url                    String    @unique @db.VarChar(256)
-  posh_size                  String?   @db.VarChar(20)
-  posh_category              String?   @db.VarChar(256)
-  posh_picture_url           String?   @db.VarChar(256)
-  posh_created_at            DateTime?
-  posh_root_ancestor_post_id String?   @db.VarChar(256)
-}
+

@@ -4,11 +4,35 @@ import RouteHandler from "./Routes/RouteHandlerV1";
 import cors from "cors"
 import morgan from "morgan";
 import { PrismaClient } from '@prisma/client';
+import { runScraper } from "./services/poshmarkScraper";
+import { fetchSettingsMap } from "./utils/settings";
 
 const prisma = new PrismaClient();
 
 const REQUIRED_SETTINGS = ["posh_url", "posh_user", "scrape_interval"];
 
+const startScraperScheduler = async () => {
+  try {
+  const settings = await fetchSettingsMap();
+  const intervalHours = parseInt(settings["scrape_interval"] || "12", 10);
+  const intervalMs = intervalHours * 60 * 60 * 1000;
+
+  console.log(`Starting scraper every ${intervalHours} hours`);
+
+  // Initial run
+  await runScraper();
+
+// Schedule next run based on current DB value
+    setTimeout(startScraperScheduler, intervalMs);
+  } catch (error) {
+    console.error("Scraper error:", error);
+
+    // Retry after default 12h if something fails
+    setTimeout(startScraperScheduler, 12 * 60 * 60 * 1000);
+  }
+};
+
+// Check if required settings in db are present
 async function startupCheck() {
   try {
     const existingSettings = await prisma.settings.findMany({
@@ -46,7 +70,7 @@ async function startupCheck() {
   }
 }
 
-// Helper: Define default values here
+// Helper: Define default values for settings here
 function getDefaultValueForKey(key: string): string {
   const defaults: Record<string, string> = {
     posh_url: "https://poshmark.ca",
@@ -55,6 +79,8 @@ function getDefaultValueForKey(key: string): string {
   };
   return defaults[key] || "";
 }
+
+// Main
 const main = async () => {
   const app = express();
   const port = 3000;
@@ -74,7 +100,8 @@ const main = async () => {
 
 async function startServer() {
   await startupCheck();
-
+  // Start scraper
+  startScraperScheduler();
   // ... start Express app, HTTP server, etc.
   main();
 }
