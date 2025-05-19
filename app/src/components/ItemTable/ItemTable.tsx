@@ -69,7 +69,7 @@ const DEFAULT_VISIBLE_COLUMNS = [
   "listing_price",
   "bin_name",
   "sold",
-  "action",
+  "actions",
 ];
 
 /**
