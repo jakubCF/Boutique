@@ -4,6 +4,7 @@ import { CellContext } from "@tanstack/react-table";
 import { Button } from "../../@shadcn/ui/button";
 import { useForm } from "@tanstack/react-form";
 import { Label } from "../../@shadcn/ui/label";
+import { Input } from "../../@shadcn/ui/input";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "../../@shadcn/ui/dialog";
 import { DialogHeader } from "../../@shadcn/ui/dialog";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../@shadcn/ui/select";
@@ -29,19 +30,23 @@ declare module "@tanstack/react-table" {
  * @param props - The CellContext props from TanStack React Table.
  * @returns A JSX element representing the editable "sold" status cell.
  */
-const EditableSold: FC<CellContext<Item, unknown>> = ({ getValue, row, column, table }) => {
+const EditableSold: FC<CellContext<Item, unknown>> = ({ getValue, row, table }) => {
   const [open, setOpen] = React.useState(false); // State for dialog open state
   const form = useForm({
     defaultValues: {
       sold: getValue<boolean>(),
+      sold_date: row.original.sold_date,
     },
     onSubmit: ({ value }) => {
       const newSold = value.sold;
-      updateSoldById.mutate(newSold);
+      updateSoldById.mutate({
+        sold: newSold,
+        sold_date: value.sold_date || null,
+      });
     },
   });
 
-  const updateSoldById = useUpdateSold(row, table, setOpen, form, column); // Custom hook for updating sold status
+  const updateSoldById = useUpdateSold(row, table, setOpen, form); // Custom hook for updating sold status
 
   return (
     <div className="flex justify-between">
@@ -64,6 +69,17 @@ const EditableSold: FC<CellContext<Item, unknown>> = ({ getValue, row, column, t
               <DialogDescription className="text-center text-gray-200">
                 Are you sure you want to edit the sold status?
               </DialogDescription>
+              <form.Field name="sold_date" children={( field ) => (
+                  <div className="flex flex-col items-center space-y-2">
+                      <Label htmlFor="sold_date" className="text-gray-200">Sold Date</Label>
+                      <Input className="text-gray-200 w-[240px] text-right" id="sold_date" type="date" value={
+                              field.state.value ? new Date(field.state.value).toISOString().split("T")[0] : ""} 
+                              onChange={(e) => {
+                                  const value = e.target.value;
+                                  field.handleChange(value ? new Date(value) : null);
+                          }} />
+                  </div>
+              )} />
               <form.Field
                 name="sold"
                 children={(field) => (

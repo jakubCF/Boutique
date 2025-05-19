@@ -76,6 +76,7 @@ const EditableAll:FC<CellContext<Item, unknown>> = ({row, table}) => {
             made_in: row.original.made_in,
             purchase_date: row.original.purchase_date,
             sold_date: row.original.sold_date,
+            sold: row.original.sold,
             posh_size: row.original.posh_size,
             posh_category: row.original.posh_category,
             posh_picture_url: row.original.posh_picture_url,
@@ -104,6 +105,7 @@ const EditableAll:FC<CellContext<Item, unknown>> = ({row, table}) => {
                 made_in: value.made_in,
                 purchase_date: value.purchase_date,
                 sold_date: value.sold_date,
+                sold: value.sold,
                 posh_size: value.posh_size,
                 posh_category: value.posh_category,
                 posh_picture_url: value.posh_picture_url,
@@ -227,6 +229,7 @@ const EditableAll:FC<CellContext<Item, unknown>> = ({row, table}) => {
                                     }} />
                             </div>    
                         )} />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <form.Field name="sold_date" children={( field ) => (
                             <div>
                                 <Label htmlFor="sold_date" className="text-gray-200 m-0.5">Sold Date</Label>
@@ -238,6 +241,24 @@ const EditableAll:FC<CellContext<Item, unknown>> = ({row, table}) => {
                                     }} />
                             </div>
                         )} />
+                        <form.Field name="sold" children={( field ) => (
+                            <div>
+                                <Label htmlFor="sold" className="text-gray-200 m-0.5">Sold</Label>
+                                <Select
+                                    value={field.state.value ? "Yes" : "No"}
+                                    onValueChange={(value) => field.setValue(value === "Yes")}
+                                >
+                                    <SelectTrigger className="w-full text-gray-200" >
+                                    <SelectValue placeholder="Select status" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-gray-800 opacity-100">
+                                    <SelectItem value="Yes" className="bg-green-600 hover:bg-green-500 mb-1">Yes</SelectItem>
+                                    <SelectItem value="No" className="bg-red-500">No</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )} />
+                        </div>
                     </div>
                     {/* Grid row for posh_created_at and posh_category */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

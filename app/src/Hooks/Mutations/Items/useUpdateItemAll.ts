@@ -86,6 +86,11 @@ export const useUpdateItemAll = (
             );
             table.options.meta?.updateData(
                 row.index,
+                "sold",
+                data.items.sold // Update local state to prevent refresh
+            );
+            table.options.meta?.updateData(
+                row.index,
                 "posh_size",
                 data.items.posh_size // Update local state to prevent refresh
             );
