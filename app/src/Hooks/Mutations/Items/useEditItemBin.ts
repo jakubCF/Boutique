@@ -28,10 +28,10 @@ export const useEditBin = (
 
       if (!bin) {
           const currentBin = row.original.bin?.id; // Get the current bin ID
-          queryString = `/v1/bins/update/${currentBin}/remove/item/${id}`;
+          queryString = `/bins/update/${currentBin}/remove/item/${id}`;
       }
       else {
-          queryString = `/v1/bins/update/${bin.id}/add/item/${id}`;
+          queryString = `/bins/update/${bin.id}/add/item/${id}`;
       }
 
       setOpen(false); // Close the dialog

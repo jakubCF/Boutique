@@ -32,7 +32,7 @@ export const useUpdateItemName = (
             const id = row.original.id; // Get the item ID from the row
             setOpen(false); // Close the dialog
 
-            return axios.patch(`/v1/items/update/${id}`, { 
+            return axios.patch(`/items/update/${id}`, { 
                 updates: 
                     [ 
                         { field: "name", value: name }, 

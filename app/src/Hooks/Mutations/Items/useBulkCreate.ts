@@ -9,7 +9,7 @@ export const useBulkCreate = (
     mutationKey: ["createBulkItems"],
     mutationFn: async (data: unknown) => {
       const response = await axios({
-        url : `/v1/items/bulk/create`,
+        url : `/items/bulk/create`,
         data: { data },
         method: "post"
       })

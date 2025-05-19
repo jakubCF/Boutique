@@ -15,7 +15,7 @@ export const SettingsButton = () => {
 
   useEffect(() => {
     if (open) {
-      axios.get("/v1/settings").then(res => {
+      axios.get("/settings").then(res => {
         setSettings(res.data.settings || [])
       })
     }
@@ -31,7 +31,7 @@ export const SettingsButton = () => {
 
   const saveSettings = async () => {
     try {
-      await axios.post("/v1/settings", { settings })
+      await axios.post("/settings", { settings })
       setOpen(false)
     } catch (err) {
       console.error("Failed to save settings", err)

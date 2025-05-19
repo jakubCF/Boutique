@@ -16,7 +16,7 @@ export const useCreateBin = (setOpen: (open: boolean) => void) => {
             setOpen(false) // Close the dialog
 
             const { data } = await axios.post(
-                `/v1/bins/create/${name}`
+                `/bins/create/${name}`
             )
 
             return data.data

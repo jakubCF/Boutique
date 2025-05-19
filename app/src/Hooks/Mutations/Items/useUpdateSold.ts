@@ -32,7 +32,7 @@ export const useUpdateSold = (
 
       setOpen(false); // Close dialog popup
 
-      return axios.patch(`/v1/items/update/${id}`, { updates: 
+      return axios.patch(`/items/update/${id}`, { updates: 
         [
           { field: "sold", value: data.sold },
           { field: "sold_date", value: data.sold_date }

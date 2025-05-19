@@ -14,7 +14,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const [settings, setSettings] = useState<Setting[] | null>(null);
 
   useEffect(() => {
-    axios.get("/v1/settings").then(res => {
+    axios.get("/settings").then(res => {
       setSettings(res.data?.settings || []);
     }).catch(err => {
       console.error("Failed to load settings:", err);

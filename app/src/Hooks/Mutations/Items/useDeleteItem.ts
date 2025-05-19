@@ -31,7 +31,7 @@ export const useDeleteItem = (
             let id = row.original.id;
 
             setOpen(false); // Close the delete confirmation dialog
-            return axios.delete(`/v1/items/delete/${id}`); // Perform the delete request
+            return axios.delete(`/items/delete/${id}`); // Perform the delete request
         },
         /**
          * Callback executed when the mutation is successful.

@@ -25,7 +25,7 @@ export const useEditBinName = (setOpen: (open: boolean) => void) => {
             }
             else {
                 const { data } = await axios.patch(
-                    `/v1/bins/update/${activeBin.id}`,
+                    `/bins/update/${activeBin.id}`,
                     {
                         updates: [
                             {
