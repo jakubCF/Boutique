@@ -1,3 +1,56 @@
+
+# POSHMARK ITEMS INFORMATION SYSTEM
+
+Build on top of app made by [Scott-Duby](https://github.com/Scott-Duby/Boutique)
+First take on node.js and typescript (I don't know what I'm doing here)
+
+## ADDED
+
+- additional fields for items
+- edit popup for all fields at one place
+- column selector
+- filter for sold
+- data scraper
+- basic data logging on DB level (no API endpoint)
+
+## Fields
+
+id
+name
+brand  
+buy_price
+listing_price
+item_desc
+purchase_date
+sold_date
+sold
+web_url
+made_in
+posh_category
+posh_picture_url
+posh_created_at
+posh_root_ancestor_post_id
+posh_size
+posh_user
+bin
+bin_id
+sysdate
+
+## DOCKER
+
+Recomended to use Docker Compose
+
+```bash
+git clone
+docker compose up -d --build
+```
+
+## Disclaimer
+
+Disclaimer: This data scraper is intended for educational purposes only. Users are responsible for ensuring compliance with each website’s terms of service and must check the site's robots.txt file before scraping any data.
+
+-- original
+
 # 🛍️ Boutique
 
 ![License](https://img.shields.io/github/license/Scott-Duby/Boutique?style=flat-square)
