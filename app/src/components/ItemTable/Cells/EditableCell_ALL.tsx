@@ -136,7 +136,7 @@ const EditableAll:FC<CellContext<Item, unknown>> = ({row, table}) => {
             <DialogTrigger className='cursor-pointer hover:text-green-100'>
                 <Pencil size={20}/>    
             </DialogTrigger> 
-            <DialogContent className="text-center bg-gray-800 opacity-95 lg:max-w-4xl">
+            <DialogContent className="text-center bg-gray-800 opacity-95 lg:max-w-4xl max-h-[80vh] overflow-y-auto">
                 <Description className="hidden">Edit all field for this item</Description>
                 <DialogHeader>
                 <DialogTitle className="text-center text-gray-200">Edit item</DialogTitle>
