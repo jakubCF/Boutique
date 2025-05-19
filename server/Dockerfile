@@ -15,6 +15,8 @@ RUN yarn install
 
 COPY . .
 
+RUN chmod +x ./start.sh
+
 EXPOSE 3000
 
 ENV DATABASE_URL=postgres://postgres:3503@boutique_db:5432/Boutique
