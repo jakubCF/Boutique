@@ -43,4 +43,28 @@ model settings {
   value String @db.VarChar(256)
 }
 
-
+model ItemHistory {
+  id                         Int       @id @default(autoincrement())
+  item_id                    Int       // Foreign key to original item
+  name                       String
+  brand                      String?
+  buy_price                  Float?
+  listing_price              Float?
+  item_desc                  String?
+  purchase_date              DateTime?
+  sold_date                  DateTime?
+  sold                       Boolean
+  web_url                    String?
+  made_in                    String?
+  posh_category              String?
+  posh_picture_url           String?
+  posh_created_at            DateTime?
+  posh_root_ancestor_post_id String?
+  posh_size                  String?
+  posh_user                  String?
+  bin_id                     Int?
+  sysdate                    DateTime?
+  
+  changed_at                 DateTime  @default(now())
+  change_type                String    // e.g. 'CREATE', 'UPDATE', 'DELETE'
+}

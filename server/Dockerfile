@@ -1,5 +1,8 @@
 FROM node:18-bullseye
 
+# Install PostgreSQL client
+RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /usr/src/app
 
 # Copy only dependency-related files first (for better Docker caching)

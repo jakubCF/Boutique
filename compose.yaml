@@ -4,6 +4,7 @@ services:
       context: ./app
       args:
         VITE_API_HOST: http://localhost:3000 # Replace with your server's protocol and IP address
+    restart: always
     ports: 
      - 8000:80
     depends_on:
@@ -25,13 +26,11 @@ services:
     build: 
       context: ./server
       dockerfile: Dockerfile
+    restart: always
     environment:
        - DATABASE_URL=postgres://postgres:3503@boutique_db:5432/Boutique?schema=public
     ports: 
       - "3000:3000"
     depends_on:
       - db
-    command: >
-      sh -c "
-      npx prisma db push;
-      yarn start"
+    command: ["/bin/sh", "-c", "./start.sh"]
