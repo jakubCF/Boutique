@@ -31,7 +31,7 @@ import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
-          className="bg-gray-800 rounded-lg border-0 h-screen w-screen shadow-lg p-6"
+          className="bg-gray-800 rounded-lg border-0 h-screen w-screen shadow-lg p-6 max-h-[90vh]"
           style={{
             maxWidth: "900px", // Set the maximum width of the dialog
             minWidth: "90%", // Set the width relative to the viewport
@@ -47,8 +47,8 @@ import { useBoutiqueStore } from "@/Hooks/Store/UseBoutiqueStore";
               Bin Management
             </DialogTitle>
           </DialogHeader>
-          <div className="flex-1 overflow-y-auto mt-4">
-            <div className="grid grid-cols-4 grid-rows-4 gap-2 p-4 overflow-y-scroll">
+          <div className="flex-1 mt-4 overflow-y-auto">
+            <div className="grid grid-cols-4 grid-rows-4 gap-2 p-4">
               {/* Add New Bin Box */}
               <Button 
                 className="h-full w-full bg-green-600 hover:bg-green-500 cursor-pointer text-gray-200 col-span-1"

@@ -136,10 +136,11 @@ const EditableAll:FC<CellContext<Item, unknown>> = ({row, table}) => {
             <DialogTrigger className='cursor-pointer hover:text-green-100'>
                 <Pencil size={20}/>    
             </DialogTrigger> 
-            <DialogContent className="text-center bg-gray-800 opacity-95 lg:max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogContent className="text-center bg-gray-800 opacity-95 lg:max-w-4xl max-h-[95vh]">
                 <Description className="hidden">Edit all field for this item</Description>
                 <DialogHeader>
                 <DialogTitle className="text-center text-gray-200">Edit item</DialogTitle>
+                <div className="overflow-y-auto max-h-[80vh] px-2">
                 <form  className="space-y-4" onSubmit={(e) => e.preventDefault()}>
                     <DialogDescription className="text-center text-gray-200">Are you sure you want to edit this item?</DialogDescription>
                     {/* Grid row for name and web_url */}
@@ -311,6 +312,7 @@ const EditableAll:FC<CellContext<Item, unknown>> = ({row, table}) => {
                         deleteItem.mutate();
                     }}>Delete</Button>
                 </form>
+                </div>
                 </DialogHeader>
             </DialogContent>
             </Dialog>

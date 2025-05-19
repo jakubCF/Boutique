@@ -407,7 +407,7 @@ const ItemTable: React.FC<ItemTableProps> = () => {
             display: "flex", // Use flexbox for layout
             flexDirection: "column", // Arrange children vertically
           }}
-          className='bg-gray-800 opacity-90'
+          className='bg-gray-800 opacity-90 max-h-[90vh]'
         >
           <DialogHeader>
             <DialogTitle className='text-gray-200'>Create New Items</DialogTitle>
