@@ -30,7 +30,7 @@ model Item {
   posh_picture_url           String?   @db.VarChar(256)
   posh_created_at            DateTime?
   posh_root_ancestor_post_id String?   @unique @db.VarChar(256)
-  posh_size                  String?   @db.VarChar(20)
+  posh_size                  String?   @db.VarChar(128)
   posh_user                  String?   @db.VarChar(50)
   bin                        Bin?      @relation(fields: [bin_id], references: [id], onDelete: SetNull)
   bin_id                     Int?
