@@ -12,16 +12,8 @@ IF ERRORLEVEL 1 (
     exit /b 1
 )
 
-echo Getting server image ID...
-FOR /F "delims=" %%i IN ('docker compose images -q server') DO set IMAGE_ID=%%i
-
-IF NOT DEFINED IMAGE_ID (
-    echo Failed to get image ID.
-    exit /b 1
-)
-
 echo Tagging image as %IMAGE_NAME%...
-docker tag %IMAGE_ID% %IMAGE_NAME%
+docker tag boutique-server %IMAGE_NAME%
 
 echo Logging in to Docker Hub...
 docker login
