@@ -46,22 +46,22 @@ model settings {
 model ItemHistory {
   id                         Int       @id @default(autoincrement())
   item_id                    Int       // Foreign key to original item
-  name                       String
-  brand                      String?
+  name                       String @db.VarChar(256)
+  brand                      String? @db.VarChar(256)
   buy_price                  Float?
   listing_price              Float?
-  item_desc                  String?
+  item_desc                  String? @db.Text
   purchase_date              DateTime?
   sold_date                  DateTime?
   sold                       Boolean
-  web_url                    String?
-  made_in                    String?
-  posh_category              String?
-  posh_picture_url           String?
+  web_url                    String? @db.VarChar(256)
+  made_in                    String? @db.VarChar(50)
+  posh_category              String? @db.VarChar(256)
+  posh_picture_url           String? @db.VarChar(256)
   posh_created_at            DateTime?
-  posh_root_ancestor_post_id String?
-  posh_size                  String?
-  posh_user                  String?
+  posh_root_ancestor_post_id String? @db.VarChar(256)
+  posh_size                  String? @db.VarChar(128)
+  posh_user                  String?  @db.VarChar(50)
   bin_id                     Int?
   sysdate                    DateTime?
   
