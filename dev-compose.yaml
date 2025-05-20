@@ -1,3 +1,4 @@
+# // for development and building the app
 services: 
   nginx: 
     build: 

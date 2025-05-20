@@ -1,0 +1,30 @@
+# All you need to run the app - ip-of-your-host:8000
+services: 
+  nginx: 
+    image: jakubvlcek/boutique-nginx:latest
+    restart: always
+    volumes:
+     - ./nginx.conf:/etc/nginx/nginx.conf
+    ports: 
+     - 8000:80
+    depends_on:
+       - server
+
+  db:
+    image: postgres:latest
+    container_name: boutique_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "3503"
+      POSTGRES_DB: Boutique
+    volumes:
+      - ./data:/var/lib/postgresql/data
+  server: 
+    image: jakubvlcek/boutique-nginx:latest
+    restart: always
+    environment:
+       - DATABASE_URL=postgres://postgres:3503@boutique_db:5432/Boutique?schema=public
+    depends_on:
+      - db
+    command: ["/bin/sh", "-c", "./start.sh"]
