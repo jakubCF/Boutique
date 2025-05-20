@@ -21,7 +21,7 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
   server: 
-    image: jakubvlcek/boutique-nginx:latest
+    image: jakubvlcek/boutique-server:latest
     restart: always
     environment:
        - DATABASE_URL=postgres://postgres:3503@boutique_db:5432/Boutique?schema=public
