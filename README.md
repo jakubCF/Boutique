@@ -4,6 +4,8 @@
 Build on top of app made by [Scott-Duby](https://github.com/Scott-Duby/Boutique)
 First take on node.js and typescript (I don't know what I'm doing here)
 
+Demo with dummy data available: [Boutique App](https://demo-boutique.jakubvlcek.cz/)
+
 ## ADDED
 
 - additional fields for items
@@ -13,7 +15,7 @@ First take on node.js and typescript (I don't know what I'm doing here)
 - data scraper
 - basic data logging on DB level (no API endpoint)
 
-## Fields
+## Fields Item
 
 id
 name
@@ -36,20 +38,10 @@ bin
 bin_id
 sysdate
 
-## DOCKER
-
-Recomended to use Docker Compose
-
-```bash
-git clone
-docker compose up -d --build
-```
-
 ## Disclaimer
 
 Disclaimer: This data scraper is intended for educational purposes only. Users are responsible for ensuring compliance with each website’s terms of service and must check the site's robots.txt file before scraping any data.
 
--- original
 
 # 🛍️ Boutique
 
@@ -91,20 +83,9 @@ Disclaimer: This data scraper is intended for educational purposes only. Users a
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/Scott-Duby/Boutique.git
-cd Boutique
-2. Install dependencies
-bash
-Copy
-Edit
-npm install
-3. Start the dev server
-bash
-Copy
-Edit
-npm run dev
-4. Visit the app
-Go to http://localhost:3000 in your browser.
+Download docker-compose.yaml & nginx.conf
+docker compose up -d
+Go to http://hsot:8000 in your browser.
 ```
 
 🧪 API Reference
@@ -120,31 +101,41 @@ type Bin = {
 }
 
 Item
-
 type Item = {
-  id: number
-  name: string
-  sold: boolean
-  web_url: string
-  binId: number
-  bin: Bin
+    id: number;
+    name: string;
+    binId: number;
+    bin?: {
+        id: number,
+        name: string,
+        is_full: boolean
+    };
+    sold: boolean;
+    web_url: string;
+    buy_price: number;
+    listing_price: number;
+    item_desc: string;
+    brand: string;
+    purchase_date: Date;
+    sold_date: Date;
+    made_in: string;
+    posh_category: string;
+    posh_picture_url: string;
+    posh_created_at: Date;
+    posh_size: string;
+    posh_root_ancestor_post_id: string;
+}
+
+Settings
+type Setting {
+  key: string;
+  value: string;
 }
 
 ```
 
 ```bash
 🧠 Zustand Store (useBoutiqueStore)
-```
-
-```bash
-
-const useBoutiqueStore = create<TBoutiqueStore>(() => ({
-  bins: [],
-  activeBin: null,
-  items: [],
-  setBins, setActiveBin, clearActiveBin, addBin, removeBin, updateBin, clearBins,
-  setItems, addItem, removeItem, clearItems, updateItem, getItemsForTable
-}));
 ```
 
 🙏 Credits
@@ -158,7 +149,3 @@ const useBoutiqueStore = create<TBoutiqueStore>(() => ({
 
 📄 License
 MIT © Scott Duby
-
-yaml
-Copy
-Edit
