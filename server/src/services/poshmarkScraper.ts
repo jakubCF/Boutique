@@ -78,16 +78,24 @@ export const runScraper = async () => {
     posh_picture_url: item.picture_url,
     listing_price: item.price,
     posh_created_at: new Date(item.created_at),
-    posh_root_ancestor_post_id: item.root_ancestor_post_id,
+    posh_root_ancestor_post_id: item.root_ancestor_post_id || null,
     posh_user: item.posh_user,
     sysdate: new Date()
     }));
 
+    // Split items into those with and without post IDs
+    const itemsWithPostId = scrapedItems.filter(item => item.posh_root_ancestor_post_id !== null);
+    const itemsWithoutPostId = scrapedItems.filter(item => item.posh_root_ancestor_post_id === null);
+
     const existingItems = await prisma.item.findMany({
         where: {
             OR: [
-            { web_url: { in: scrapedItems.map(i => i.web_url) } },
-            { posh_root_ancestor_post_id: { in: scrapedItems.map(i => i.posh_root_ancestor_post_id) } },
+                { web_url: { in: scrapedItems.map(i => i.web_url) } },
+                { 
+                    posh_root_ancestor_post_id: { 
+                        in: itemsWithPostId.map(i => i.posh_root_ancestor_post_id)
+                    } 
+                },
             ]
         },
         select: {
@@ -99,9 +107,12 @@ export const runScraper = async () => {
     const existingUrls = new Set(existingItems.map(i => i.web_url));
     const existingPostIds = new Set(existingItems.map(i => i.posh_root_ancestor_post_id));
 
-    const newItems = scrapedItems.filter(
-    item => !existingUrls.has(item.web_url) && !existingPostIds.has(item.posh_root_ancestor_post_id)
-    );
+    const newItems = [
+        ...itemsWithoutPostId.filter(item => !existingUrls.has(item.web_url)),
+        ...itemsWithPostId.filter(
+            item => !existingUrls.has(item.web_url) && !existingPostIds.has(item.posh_root_ancestor_post_id)
+        )
+    ];
 
     const relistedItems = scrapedItems.filter(
     item => !existingUrls.has(item.web_url) && existingPostIds.has(item.posh_root_ancestor_post_id)
